@@ -262,16 +262,46 @@ const ProductTabs = ({
             </div>
 
             {[
-              { name: "Garanti Bankası", cardName: "Bonus Card", accentColor: "#00a651", bgColor: "#f0fdf4", borderColor: "#86efac", installments: [2,3,4,6,9,12], freeUpTo: 6 },
-              { name: "Axess", cardName: "Axess Card", accentColor: "#e30613", bgColor: "#fff5f5", borderColor: "#fca5a5", installments: [2,3,4,6,9,12], freeUpTo: 6 },
-              { name: "QNB Finansbank", cardName: "CardFinans", accentColor: "#6d28d9", bgColor: "#faf5ff", borderColor: "#c4b5fd", installments: [2,3,4,6,9,12], freeUpTo: 6 },
-              { name: "Halkbank", cardName: "Paraf", accentColor: "#003399", bgColor: "#eff6ff", borderColor: "#93c5fd", installments: [2,3,4,6,9,12], freeUpTo: 6 },
-              { name: "İş Bankası", cardName: "Maximum Card", accentColor: "#003087", bgColor: "#eff6ff", borderColor: "#93c5fd", installments: [2,3,4,6,9,12], freeUpTo: 6 },
-              { name: "Yapı Kredi", cardName: "World Card", accentColor: "#0066cc", bgColor: "#eff6ff", borderColor: "#93c5fd", installments: [2,3,4,6,9,12], freeUpTo: 6 },
+              {
+                name: "Ziraat Bankası", cardName: "Bankkart", accentColor: "#c8102e", bgColor: "#fff5f5", borderColor: "#fca5a5", installments: [2,3,4,6,9,12], freeUpTo: 6,
+                logo: (<svg width="90" height="32" viewBox="0 0 120 40" fill="none"><rect width="120" height="40" rx="4" fill="#c8102e"/><text x="8" y="26" fontFamily="Arial" fontWeight="900" fontSize="13" fill="white">ZİRAAT</text><text x="8" y="38" fontFamily="Arial" fontWeight="400" fontSize="9" fill="rgba(255,255,255,0.85)">BANKASI</text><circle cx="104" cy="20" r="14" fill="white" opacity="0.15"/><path d="M97 20 Q104 10 111 20 Q104 30 97 20Z" fill="white" opacity="0.4"/></svg>),
+              },
+              {
+                name: "İş Bankası", cardName: "Maximum Card", accentColor: "#003087", bgColor: "#eff6ff", borderColor: "#93c5fd", installments: [2,3,4,6,9,12], freeUpTo: 6,
+                logo: (<svg width="90" height="32" viewBox="0 0 120 40" fill="none"><rect width="120" height="40" rx="4" fill="#003087"/><text x="8" y="26" fontFamily="Arial" fontWeight="900" fontSize="16" fill="white">iş</text><text x="28" y="26" fontFamily="Arial" fontWeight="700" fontSize="13" fill="white">BANKASI</text><rect x="95" y="8" width="18" height="24" rx="2" fill="#e30613"/><rect x="99" y="12" width="10" height="16" rx="1" fill="white" opacity="0.9"/></svg>),
+              },
+              {
+                name: "Garanti BBVA", cardName: "Bonus Card", accentColor: "#00a651", bgColor: "#f0fdf4", borderColor: "#86efac", installments: [2,3,4,6,9,12], freeUpTo: 6,
+                logo: (<svg width="90" height="32" viewBox="0 0 120 40" fill="none"><rect width="120" height="40" rx="4" fill="#00a651"/><text x="8" y="24" fontFamily="Arial" fontWeight="900" fontSize="12" fill="white">GARANTİ</text><text x="8" y="36" fontFamily="Arial" fontWeight="900" fontSize="10" fill="white">BBVA</text><circle cx="105" cy="20" r="13" fill="white" opacity="0.2"/><text x="96" y="25" fontFamily="Arial" fontWeight="900" fontSize="14" fill="white">B</text></svg>),
+              },
+              {
+                name: "Yapı Kredi", cardName: "World Card", accentColor: "#1a3d8f", bgColor: "#eff6ff", borderColor: "#93c5fd", installments: [2,3,4,6,9,12], freeUpTo: 6,
+                logo: (<svg width="90" height="32" viewBox="0 0 120 40" fill="none"><rect width="120" height="40" rx="4" fill="#1a3d8f"/><text x="8" y="24" fontFamily="Arial" fontWeight="900" fontSize="11" fill="white">YAPI KREDİ</text><circle cx="100" cy="14" r="9" fill="#00aeef"/><circle cx="110" cy="14" r="9" fill="#e30613" opacity="0.85"/><text x="93" y="34" fontFamily="Arial" fontWeight="700" fontSize="8" fill="rgba(255,255,255,0.8)">World</text></svg>),
+              },
+              {
+                name: "Akbank", cardName: "Axess Card", accentColor: "#e30613", bgColor: "#fff5f5", borderColor: "#fca5a5", installments: [2,3,4,6,9,12], freeUpTo: 6,
+                logo: (<svg width="90" height="32" viewBox="0 0 120 40" fill="none"><rect width="120" height="40" rx="4" fill="#e30613"/><text x="8" y="26" fontFamily="Arial" fontWeight="900" fontSize="16" fill="white">akbank</text><rect x="90" y="8" width="24" height="24" rx="12" fill="white" opacity="0.2"/><text x="95" y="24" fontFamily="Arial" fontWeight="900" fontSize="14" fill="white">a</text></svg>),
+              },
+              {
+                name: "Halkbank", cardName: "Paraf Card", accentColor: "#003399", bgColor: "#eff6ff", borderColor: "#93c5fd", installments: [2,3,4,6,9,12], freeUpTo: 6,
+                logo: (<svg width="90" height="32" viewBox="0 0 120 40" fill="none"><rect width="120" height="40" rx="4" fill="#003399"/><text x="8" y="26" fontFamily="Arial" fontWeight="900" fontSize="14" fill="white">HALKBANK</text><rect x="95" y="10" width="18" height="20" rx="2" fill="#e30613"/><rect x="99" y="14" width="10" height="12" rx="1" fill="white" opacity="0.9"/></svg>),
+              },
+              {
+                name: "Vakıfbank", cardName: "World Card", accentColor: "#f7a600", bgColor: "#fffbeb", borderColor: "#fde68a", installments: [2,3,4,6,9,12], freeUpTo: 6,
+                logo: (<svg width="90" height="32" viewBox="0 0 120 40" fill="none"><rect width="120" height="40" rx="4" fill="#f7a600"/><text x="8" y="26" fontFamily="Arial" fontWeight="900" fontSize="13" fill="#1a1a1a">VAKIFBANK</text><path d="M100 8 L114 20 L100 32 L86 20 Z" fill="white" opacity="0.25"/><path d="M103 14 L111 20 L103 26 L95 20 Z" fill="white" opacity="0.4"/></svg>),
+              },
+              {
+                name: "Denizbank", cardName: "Bonus Card", accentColor: "#0066b2", bgColor: "#eff6ff", borderColor: "#93c5fd", installments: [2,3,4,6,9,12], freeUpTo: 6,
+                logo: (<svg width="90" height="32" viewBox="0 0 120 40" fill="none"><rect width="120" height="40" rx="4" fill="#0066b2"/><text x="8" y="26" fontFamily="Arial" fontWeight="900" fontSize="14" fill="white">DENİZBANK</text><path d="M95 28 Q100 18 105 28 Q110 18 115 28" stroke="white" strokeWidth="2.5" fill="none" opacity="0.7"/><path d="M93 32 Q99 22 105 32 Q111 22 117 32" stroke="white" strokeWidth="2" fill="none" opacity="0.4"/></svg>),
+              },
+              {
+                name: "QNB Finansbank", cardName: "CardFinans", accentColor: "#6d28d9", bgColor: "#faf5ff", borderColor: "#c4b5fd", installments: [2,3,4,6,9,12], freeUpTo: 6,
+                logo: (<svg width="90" height="32" viewBox="0 0 120 40" fill="none"><rect width="120" height="40" rx="4" fill="#6d28d9"/><text x="8" y="22" fontFamily="Arial" fontWeight="900" fontSize="11" fill="white">QNB</text><text x="8" y="34" fontFamily="Arial" fontWeight="700" fontSize="9" fill="rgba(255,255,255,0.85)">FİNANSBANK</text><circle cx="105" cy="20" r="12" fill="white" opacity="0.15"/><text x="98" y="25" fontFamily="Arial" fontWeight="900" fontSize="16" fill="white">Q</text></svg>),
+              },
             ].map(bank => (
-              <div key={bank.name} style={{ border: `1px solid ${bank.borderColor}`, borderRadius: 2, overflow: "hidden" }}>
+              <div key={bank.name} style={{ border: `1px solid ${bank.borderColor}`, borderRadius: 8, overflow: "hidden", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
                 <div style={{ background: bank.bgColor, borderBottom: `1px solid ${bank.borderColor}`, padding: "14px 20px", display: "flex", alignItems: "center", gap: 16 }}>
-                  <span style={{ fontFamily: "Montserrat, sans-serif", fontSize: 13, fontWeight: 700, color: bank.accentColor }}>{bank.name}</span>
+                  <div style={{ flexShrink: 0, borderRadius: 6, overflow: "hidden", boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}>{bank.logo}</div>
                   <div style={{ width: 1, height: 32, background: bank.borderColor }} />
                   <span style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#888", letterSpacing: "0.08em" }}>
                     {bank.cardName} ile <strong style={{ color: bank.accentColor }}>faizsiz {bank.freeUpTo} taksit</strong>
