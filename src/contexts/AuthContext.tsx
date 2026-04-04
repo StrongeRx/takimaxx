@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "@/lib/firebase";
 
 interface User {
   name: string;
@@ -8,7 +10,7 @@ interface User {
 }
 
 interface StoredUser extends User {
-  passwordHash: string; // PBKDF2: "pbkdf2$<salt>$<hash>" formatı
+  passwordHash: string;
   createdAt?: string;
 }
 
@@ -20,6 +22,7 @@ interface AuthContextType {
   user: User | null;
   isLoggedIn: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   register: (name: string, email: string, password: string, phone?: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   updateUser: (data: Partial<User>) => void;
@@ -33,8 +36,13 @@ const generateSalt = (): string => {
   return Array.from(arr).map(b => b.toString(16).padStart(2, "0")).join("");
 };
 
-const hexToBytes = (hex: string): Uint8Array =>
-  new Uint8Array(hex.match(/.{2}/g)!.map(b => parseInt(b, 16)));
+const hexToBytes = (hex: string): ArrayBuffer => {
+  const bytes = hex.match(/.{2}/g)!.map(b => parseInt(b, 16));
+  const buffer = new ArrayBuffer(bytes.length);
+  const view = new Uint8Array(buffer);
+  bytes.forEach((b, i) => { view[i] = b; });
+  return buffer;
+};
 
 const bytesToHex = (bytes: ArrayBuffer): string =>
   Array.from(new Uint8Array(bytes)).map(b => b.toString(16).padStart(2, "0")).join("");
@@ -67,7 +75,7 @@ const verifyPassword = async (password: string, storedHash: string): Promise<boo
     return (await hashPassword(password, salt)) === storedHash;
   }
   if (storedHash.startsWith("tkx_")) return legacyHash(password) === storedHash;
-  return password === storedHash; // plaintext fallback
+  return password === storedHash;
 };
 
 // ─── localStorage ─────────────────────────────────────────────────────────────
@@ -75,10 +83,10 @@ const verifyPassword = async (password: string, storedHash: string): Promise<boo
 const STORAGE_USERS_KEY   = "takimax_users";
 const STORAGE_SESSION_KEY = "takimax_session";
 
-const loadUsers  = (): StoredUser[] => { try { const r = localStorage.getItem(STORAGE_USERS_KEY);   return r ? JSON.parse(r) : []; } catch { return []; } };
-const saveUsers  = (u: StoredUser[]) => localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(u));
-const loadSession = (): User | null  => { try { const r = localStorage.getItem(STORAGE_SESSION_KEY); return r ? JSON.parse(r) : null; } catch { return null; } };
-const saveSession = (u: User | null) => u ? localStorage.setItem(STORAGE_SESSION_KEY, JSON.stringify(u)) : localStorage.removeItem(STORAGE_SESSION_KEY);
+const loadUsers   = (): StoredUser[] => { try { const r = localStorage.getItem(STORAGE_USERS_KEY);   return r ? JSON.parse(r) : []; } catch { return []; } };
+const saveUsers   = (u: StoredUser[]) => localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(u));
+const loadSession = (): User | null   => { try { const r = localStorage.getItem(STORAGE_SESSION_KEY); return r ? JSON.parse(r) : null; } catch { return null; } };
+const saveSession = (u: User | null)  => u ? localStorage.setItem(STORAGE_SESSION_KEY, JSON.stringify(u)) : localStorage.removeItem(STORAGE_SESSION_KEY);
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
 
@@ -104,7 +112,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!found) return { success: false, error: "E-posta veya şifre hatalı." };
     const hashToCheck = found.passwordHash ?? found.password ?? "";
     if (!(await verifyPassword(password, hashToCheck))) return { success: false, error: "E-posta veya şifre hatalı." };
-    // Eski formatı PBKDF2'ye yükselt
     if (!hashToCheck.startsWith("pbkdf2$")) {
       const upgraded = await hashPassword(password);
       saveUsers(all.map(u => u.email.toLowerCase() === email.toLowerCase() ? { ...u, passwordHash: upgraded, password: undefined } : u));
@@ -112,6 +119,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const sessionUser: User = { name: found.name, email: found.email, phone: found.phone };
     setUser(sessionUser); saveSession(sessionUser);
     return { success: true };
+  }, []);
+
+  // ─── Google ile Giriş ─────────────────────────────────────────────────────
+  const loginWithGoogle = useCallback(async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const firebaseUser = result.user;
+      const sessionUser: User = {
+        name: firebaseUser.displayName ?? "Kullanıcı",
+        email: firebaseUser.email ?? "",
+        avatar: firebaseUser.photoURL ?? undefined,
+      };
+      // Kullanıcı daha önce kayıtlı değilse localStorage'a kaydet
+      const all = loadUsers();
+      if (!all.find(u => u.email.toLowerCase() === sessionUser.email.toLowerCase())) {
+        saveUsers([...all, { ...sessionUser, passwordHash: "google_oauth", createdAt: new Date().toLocaleDateString("tr-TR") }]);
+      }
+      setUser(sessionUser);
+      saveSession(sessionUser);
+      return { success: true };
+    } catch (err: unknown) {
+      const error = err as { code?: string };
+      if (error.code === "auth/popup-closed-by-user") return { success: false, error: "Giriş penceresi kapatıldı." };
+      return { success: false, error: "Google ile giriş başarısız oldu." };
+    }
   }, []);
 
   const logout = useCallback(() => { setUser(null); saveSession(null); }, []);
@@ -139,7 +171,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, isLoggedIn: !!user, login, register, logout, updateUser, changePassword }}>
+    <AuthContext.Provider value={{ user, isLoggedIn: !!user, login, loginWithGoogle, register, logout, updateUser, changePassword }}>
       {children}
     </AuthContext.Provider>
   );
