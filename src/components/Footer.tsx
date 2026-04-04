@@ -197,6 +197,26 @@ const Footer = () => {
         <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 12, color: "rgba(255,255,255,0.5)", marginTop: 20, marginBottom: 0, textAlign: "center", fontWeight: 500 }}>
           © 2026 Takimax. Tüm hakları saklıdır.
         </p>
+        <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 10, marginBottom: 0, textAlign: "center" }}>
+          Coded by{" "}
+          <a
+            href="https://www.instagram.com/macosgun/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textDecoration: "none",
+              background: "linear-gradient(90deg, #1a6fd4, #4facf7, #1a6fd4)",
+              backgroundSize: "200% auto",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              animation: "shimmer 2.5s linear infinite",
+            }}
+          >
+            Macosgun
+          </a>
+        </p>
       </div>
 
       {/* ══ MASAÜSTÜ ══ */}
@@ -247,6 +267,26 @@ const Footer = () => {
 
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", textAlign: "center", padding: "14px 32px" }}>
           <p style={{ fontSize: 12, color: "#fff", margin: 0, fontWeight: 500, letterSpacing: "0.03em" }}>© 2026 Takimax. Tüm hakları saklıdır.</p>
+          <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 6, marginBottom: 0 }}>
+            Coded by{" "}
+            <a
+              href="https://www.instagram.com/macosgun/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                textDecoration: "none",
+                background: "linear-gradient(90deg, #1a6fd4, #4facf7, #1a6fd4)",
+                backgroundSize: "200% auto",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                animation: "shimmer 2.5s linear infinite",
+              }}
+            >
+              Macosgun
+            </a>
+          </p>
         </div>
 
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
