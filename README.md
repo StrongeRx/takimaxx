@@ -1,0 +1,2 @@
+# takı-max
+Geliştirme sürecinde 

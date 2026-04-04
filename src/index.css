@@ -1,0 +1,243 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 30 20% 98%;
+    --foreground: 0 0% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+
+    --primary: 0 0% 10%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 35 30% 95%;
+    --secondary-foreground: 0 0% 10%;
+
+    --muted: 30 15% 94%;
+    --muted-foreground: 0 0% 45%;
+
+    --accent: 38 55% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 30 15% 90%;
+    --input: 30 15% 90%;
+    --ring: 38 55% 55%;
+
+    --radius: 0.25rem;
+
+    --gold: 38 55% 55%;
+    --gold-light: 38 45% 75%;
+    --gold-dark: 38 60% 40%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --font-heading: 'Montserrat', sans-serif;
+    --font-body: 'Montserrat', sans-serif;
+  }
+
+  .dark {
+    --background: 0 0% 5%;
+    --foreground: 30 20% 95%;
+    --card: 0 0% 8%;
+    --card-foreground: 30 20% 95%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 30 20% 95%;
+    --primary: 30 20% 95%;
+    --primary-foreground: 0 0% 5%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 30 20% 95%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 30 10% 60%;
+    --accent: 38 55% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 38 55% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+/* Marquee animation */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+}
+
+/* Product card hover */
+.product-card-img {
+  transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-card-img {
+  transform: scale(1.05);
+}
+
+/* Category overlay */
+.category-overlay {
+  background: linear-gradient(to top, hsla(0, 0%, 0%, 0.5) 0%, transparent 60%);
+}
+
+/* ════════════════════════════════════════
+   MOBİL GENEL İYİLEŞTİRMELER
+════════════════════════════════════════ */
+
+/* Dokunmatik hedef boyutları */
+@media (max-width: 640px) {
+  button, a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Yumuşak kaydırma */
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Ürün kartı — mobil tipografi */
+  .product-card-body h3 {
+    font-size: 11.5px !important;
+    min-height: 32px !important;
+    margin-bottom: 6px !important;
+    line-height: 1.4 !important;
+  }
+
+  .product-card-body p {
+    font-size: 9px !important;
+  }
+
+  /* Fiyat — mobil */
+  .product-price-main {
+    font-size: 16px !important;
+  }
+
+  /* Sepet drawer — mobilde tam genişlik */
+  .cart-drawer {
+    max-width: 100% !important;
+  }
+
+  /* Announcement bar — daha küçük font */
+  .animate-marquee span {
+    font-size: 10px !important;
+    letter-spacing: 0.12em !important;
+  }
+
+  /* Kategori grid — mobil padding */
+  .cat-grid {
+    gap: 8px !important;
+  }
+
+  /* Ürün detay — mobil butonlar tam genişlik */
+  .product-detail-btns {
+    flex-direction: column !important;
+  }
+}
+
+/* Tablet */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .product-grid-inner {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+/* Güvenli alan — iPhone notch */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .cart-drawer-footer,
+  .checkout-nav-bar {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  }
+}
+/* ── Mobil genel düzeltmeler ── */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Sayfa geçişlerinde scroll koruması */
+body.scroll-locked {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+
+/* Mobil dokunma iyileştirmeleri */
+@media (max-width: 768px) {
+  button, a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Footer mobil grid düzelt */
+  .footer-mobile {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* PageLayout banner mobil */
+  .pl-banner h1 {
+    font-size: 22px !important;
+  }
+}
+/* ── Header offset — fixed AnnouncementBar (36px) + Header (desktop 60px, mobil 54px) ── */
+@media (max-width: 1024px) {
+  .page-wrapper {
+    padding-top: 90px !important;
+  }
+}
+
+/* ── Header offset global fix ── */
+:root {
+  --header-offset: 96px;
+}
+@media (max-width: 1024px) {
+  :root {
+    --header-offset: 90px;
+  }
+}
+.header-offset {
+  padding-top: var(--header-offset) !important;
+}
