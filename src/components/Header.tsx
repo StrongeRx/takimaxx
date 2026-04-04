@@ -253,8 +253,17 @@ const Header = () => {
     setFilterCategory(""); setFilterDiscount(false); setFilterInStock(false);
   }, []);
 
-  // location değişince mobil menüyü ve aramayı kapat
-  useEffect(() => { setMobileOpen(false); closeSearch(); }, [location.pathname, closeSearch]);
+  // BUG FIX #5: location değişince mobil menüyü ve aramayı kapat
+  // closeSearch dep array yerine direkt state reset — döngüsel bağımlılığı önler
+  useEffect(() => {
+    setMobileOpen(false);
+    setSearchOpen(false);
+    setSearchQuery("");
+    setActiveResultIdx(-1);
+    setFilterCategory("");
+    setFilterDiscount(false);
+    setFilterInStock(false);
+  }, [location.pathname]);
 
   const handleSearch = useCallback(() => {
     const q = searchQuery.trim();
@@ -314,7 +323,7 @@ const Header = () => {
 
           {/* SOL */}
           <div id="hdr-left" style={{ display: "flex", alignItems: "center" }}>
-            <button id="hdr-hamburger" onClick={() => setMobileOpen(v => !v)} style={{ background: "none", border: "none", cursor: "pointer", padding: "8px", color: "#111", display: "none", alignItems: "center" }} aria-label="Menü">
+            <button id="hdr-hamburger" onClick={() => { closeSearch(); setMobileOpen(v => !v); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "8px", color: "#111", display: "none", alignItems: "center" }} aria-label="Menü">
               {mobileOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
@@ -333,7 +342,7 @@ const Header = () => {
           <div id="hdr-right" style={{ display: "flex", alignItems: "center", gap: 0, flexShrink: 0, justifyContent: "flex-end" }}>
 
             {/* Arama */}
-            <IconBtn onClick={() => { setSearchOpen(v => !v); if (!searchOpen) setTimeout(() => inputRef.current?.focus(), 100); }} label="Arama" active={searchOpen}>
+            <IconBtn onClick={() => { if (mobileOpen) return; setSearchOpen(v => !v); if (!searchOpen) setTimeout(() => inputRef.current?.focus(), 100); }} label="Arama" active={searchOpen}>
               <Search size={20} />
             </IconBtn>
 
@@ -491,7 +500,7 @@ const Header = () => {
       )}
 
       {/* ══ GELİŞMİŞ ARAMA PANELİ ══ */}
-      <div style={{ position: "fixed", top: 96, left: 0, right: 0, zIndex: 125, background: "#fff", borderBottom: searchOpen ? "1px solid #ede9e2" : "none", boxShadow: searchOpen ? "0 8px 32px rgba(0,0,0,0.09)" : "none", maxHeight: searchOpen ? 600 : 0, overflow: "hidden", transition: "max-height 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s" }}>
+      <div style={{ position: "fixed", top: 96, left: 0, right: 0, zIndex: 129, background: "#fff", borderBottom: searchOpen ? "1px solid #ede9e2" : "none", boxShadow: searchOpen ? "0 8px 32px rgba(0,0,0,0.09)" : "none", maxHeight: searchOpen ? 600 : 0, overflow: "hidden", transition: "max-height 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s" }}>
         <div style={{ maxWidth: 860, margin: "0 auto", padding: "18px 32px 22px" }}>
 
           {/* Input satırı */}
@@ -744,7 +753,7 @@ const Header = () => {
 
       {/* Arama overlay */}
       {searchOpen && (
-        <div onClick={closeSearch} style={{ position: "fixed", inset: 0, zIndex: 118, background: "rgba(0,0,0,0.18)", backdropFilter: "blur(1px)", animation: "searchBgFade 0.25s ease" }} />
+        <div onClick={closeSearch} style={{ position: "fixed", inset: 0, zIndex: 128, background: "rgba(0,0,0,0.18)", backdropFilter: "blur(1px)", animation: "searchBgFade 0.25s ease" }} />
       )}
 
       {/* Responsive */}
