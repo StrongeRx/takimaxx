@@ -537,7 +537,10 @@ const ProductGrid = ({ mode = "bestsellers" }: ProductGridProps) => {
   const filtered = useMemo(() => {
     let list = [...allProducts];
     if (mode === "new_arrivals") {
-      list = list.sort((a, b) => a.reviews - b.reviews).slice(0, 12);
+      // BUG FIX #3: az review = yeni ürün mantigi yanlis.
+      // Urunler products.ts'deki sirasina gore "yeni" sayilir —
+      // listedeki son 12 urun en yeni kabul edilir.
+      list = list.slice(-12).reverse();
     } else {
       list = list.sort((a, b) => b.reviews - a.reviews);
     }
