@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 import { signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "@/lib/firebase";
+import { auth, googleProvider, facebookProvider } from "@/lib/firebase";
 
 interface User {
   name: string;
@@ -23,6 +23,7 @@ interface AuthContextType {
   isLoggedIn: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
+  loginWithFacebook: () => Promise<{ success: boolean; error?: string }>;
   register: (name: string, email: string, password: string, phone?: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   updateUser: (data: Partial<User>) => void;
@@ -146,6 +147,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  // ─── Facebook ile Giriş ───────────────────────────────────────────────────
+  const loginWithFacebook = useCallback(async () => {
+    try {
+      const result = await signInWithPopup(auth, facebookProvider);
+      const firebaseUser = result.user;
+      const sessionUser: User = {
+        name: firebaseUser.displayName ?? "Kullanıcı",
+        email: firebaseUser.email ?? "",
+        avatar: firebaseUser.photoURL ?? undefined,
+      };
+      const all = loadUsers();
+      if (!all.find(u => u.email.toLowerCase() === sessionUser.email.toLowerCase())) {
+        saveUsers([...all, { ...sessionUser, passwordHash: "facebook_oauth", createdAt: new Date().toLocaleDateString("tr-TR") }]);
+      }
+      setUser(sessionUser);
+      saveSession(sessionUser);
+      return { success: true };
+    } catch (err: unknown) {
+      const error = err as { code?: string };
+      if (error.code === "auth/popup-closed-by-user") return { success: false, error: "Giriş penceresi kapatıldı." };
+      return { success: false, error: "Facebook ile giriş başarısız oldu." };
+    }
+  }, []);
+
   const logout = useCallback(() => { setUser(null); saveSession(null); }, []);
 
   const updateUser = useCallback((data: Partial<User>) => {
@@ -171,7 +196,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, isLoggedIn: !!user, login, loginWithGoogle, register, logout, updateUser, changePassword }}>
+    <AuthContext.Provider value={{ user, isLoggedIn: !!user, login, loginWithGoogle, loginWithFacebook, register, logout, updateUser, changePassword }}>
       {children}
     </AuthContext.Provider>
   );

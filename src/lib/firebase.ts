@@ -2,7 +2,7 @@
 // ⚠️ Firebase konsolundan aldığın config bilgilerini buraya yapıştır!
 
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCG3SI1pIKIptpMYfz7c0-7tWzVMWVPgrk",
@@ -18,3 +18,4 @@ const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
+export const facebookProvider = new FacebookAuthProvider();
