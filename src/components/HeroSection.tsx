@@ -1,7 +1,12 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import sliderImg from "@/assets/takimaxslider.webp";
-import sliderImg2 from "@/assets/takimaxslider.webp"; // İkinci slide için kendi görselinizi ekleyin
+
+// 📌 İKİNCİ SLIDE GÖRSELİ — Kendi görselinizi eklemek için:
+// 1. src/assets/ klasörüne görseli kopyalayın (örn: slider2.webp)
+// 2. Aşağıdaki satırı uncomment yapın ve SLIDE_2_IMAGE'ı kaldırın:
+// import sliderImg2 from "@/assets/slider2.webp";
+const SLIDE_2_IMAGE = "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=1400&h=520&fit=crop&crop=center";
 
 /* ─── Slide Tipi ─────────────────────────────────────────────────────────── */
 interface Slide {
@@ -17,8 +22,7 @@ interface Slide {
 }
 
 // ✅ Tüm slide'lar burada tanımlanır — ayrı bir yerde overwrite gerekmez.
-// İkinci slide'ın görselini değiştirmek için: src/assets/ klasörüne
-// kendi görselinizi ekleyin ve sliderImg2 importunu güncelleyin.
+// Kendi görselinizi ekleyince SLIDE_2_IMAGE yerine sliderImg2 kullanın.
 const SLIDES: Slide[] = [
   {
     image: sliderImg,
@@ -32,7 +36,7 @@ const SLIDES: Slide[] = [
     schemaDesc: "925 ayar gümüş ve paslanmaz çelik takı koleksiyonları",
   },
   {
-    image: sliderImg2,
+    image: SLIDE_2_IMAGE,
     imageAlt: "Takimax Kadın Aksesuar – Altın ve Gümüş Kolye, Küpe, Bileklik",
     label: "Yeni Gelenler",
     title: "Kadın Aksesuar",
