@@ -8,6 +8,7 @@ import AnnouncementBar from "@/components/AnnouncementBar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { saveOrder } from "@/lib/orderStorage";
+import PhoneInput, { CountryCode, COUNTRY_CODES } from "@/components/PhoneInput";
 
 type Step = 1 | 2 | 3 | 4;
 
@@ -285,6 +286,7 @@ const Checkout = () => {
     zip: "",
     saveAddress: false,
   });
+  const [phoneCountry, setPhoneCountry] = useState<CountryCode>(COUNTRY_CODES[0]);
 
   // BUG FIX #2: user login sonradan gelirse adres formunu güncelle
   // Kullanici zaten bir sey yazmissa uzerine yazma
@@ -357,8 +359,8 @@ const Checkout = () => {
     if (!address.email) e.email = "E-posta zorunludur.";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address.email)) e.email = "Geçerli e-posta girin.";
     if (!address.phone) e.phone = "Telefon zorunludur.";
-    else if (!/^(0|\+90)?[5][0-9]{9}$/.test(address.phone.replace(/\s/g, "")))
-      e.phone = "Geçerli telefon: 05xx xxx xx xx";
+    else if (!/^[\d\s\-]{6,15}$/.test(address.phone.replace(/\s/g, "")))
+      e.phone = "Geçerli bir telefon numarası giriniz.";
     if (!address.addressLine.trim()) e.addressLine = "Adres zorunludur.";
     if (!address.city.trim()) e.city = "Şehir zorunludur.";
     return e;
@@ -715,9 +717,14 @@ const Checkout = () => {
                   </div>
                   <div>
                     <label style={lbl}>Telefon *</label>
-                    <input className="checkout-input" type="tel" value={address.phone} autoComplete="tel" inputMode="tel"
-                      onChange={e => { setAddress({ ...address, phone: e.target.value }); setErrors({ ...errors, phone: "" }); }}
-                      style={inp(!!errors.phone)} placeholder="05xx xxx xx xx" />
+                    <PhoneInput
+                      value={address.phone}
+                      countryCode={phoneCountry}
+                      onChange={v => { setAddress({ ...address, phone: v }); setErrors({ ...errors, phone: "" }); }}
+                      onCountryChange={setPhoneCountry}
+                      hasError={!!errors.phone}
+                      inputClassName="checkout-input"
+                    />
                     {errors.phone && <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 5 }}>⚠ {errors.phone}</p>}
                   </div>
                   <div style={{ gridColumn: "1 / -1" }}>

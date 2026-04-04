@@ -5,7 +5,8 @@ import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { useAuth } from "@/contexts/AuthContext";
-import { Eye, EyeOff, Mail, Lock, ArrowRight, Sparkles, User, Phone, Check } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, ArrowRight, Sparkles, User, Check } from "lucide-react";
+import PhoneInput, { CountryCode, COUNTRY_CODES } from "@/components/PhoneInput";
 
 /* ─── Şifre Güç Hesaplama ─── */
 const getPasswordStrength = (password: string): { score: number; label: string; color: string } => {
@@ -56,6 +57,7 @@ const Login = () => {
 
   // Kayıt formu
   const [regForm, setRegForm] = useState({ fullName: "", email: "", phone: "", password: "", confirmPassword: "" });
+  const [regCountry, setRegCountry] = useState<CountryCode>(COUNTRY_CODES[0]); // Türkiye varsayılan
   const [regErrors, setRegErrors] = useState<Record<string, string>>({});
   const [regError, setRegError] = useState("");
   const [showRegPassword, setShowRegPassword] = useState(false);
@@ -113,7 +115,7 @@ const Login = () => {
     if (!regForm.fullName.trim()) e.fullName = "Ad Soyad zorunludur.";
     if (!regForm.email) e.email = "E-posta zorunludur.";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(regForm.email)) e.email = "Geçerli bir e-posta giriniz.";
-    if (regForm.phone && !/^[0-9\s+-]{10,15}$/.test(regForm.phone.replace(/\s/g, ""))) e.phone = "Geçerli telefon: 05xx xxx xx xx";
+    if (regForm.phone && !/^[\d\s\-]{6,15}$/.test(regForm.phone.replace(/\s/g, ""))) e.phone = "Geçerli bir telefon numarası giriniz.";
     return e;
   };
 
@@ -141,7 +143,8 @@ const Login = () => {
     if (Object.keys(errs).length > 0) { setRegErrors(errs); return; }
     setRegErrors({});
     setIsRegLoading(true);
-    const result = await register(regForm.fullName.trim(), regForm.email, regForm.password, regForm.phone.trim() || undefined);
+    const fullPhone = regForm.phone.trim() ? `${regCountry.code} ${regForm.phone.trim()}` : undefined;
+    const result = await register(regForm.fullName.trim(), regForm.email, regForm.password, fullPhone);
     setIsRegLoading(false);
     if (!result.success) { setRegError(result.error || "Kayıt sırasında bir hata oluştu."); return; }
     setForm(prev => ({ ...prev, email: regForm.email }));
@@ -480,10 +483,13 @@ const Login = () => {
                       <label style={{ display: "block", fontFamily: "'Montserrat', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", color: "#888", textTransform: "uppercase", marginBottom: 7 }}>
                         Telefon <span style={{ color: "#ccc", fontWeight: 400, textTransform: "none" }}>(isteğe bağlı)</span>
                       </label>
-                      <div style={{ position: "relative" }}>
-                        <Phone size={15} style={{ position: "absolute", left: 15, top: "50%", transform: "translateY(-50%)", color: "#c9a96e", pointerEvents: "none" }} />
-                        <input type="tel" value={regForm.phone} onChange={e => { setRegForm(p => ({ ...p, phone: e.target.value })); setRegErrors(p => ({ ...p, phone: "" })); }} placeholder="05xx xxx xx xx" className={`auth-input ${regErrors.phone ? "error" : ""}`} autoComplete="tel" />
-                      </div>
+                      <PhoneInput
+                        value={regForm.phone}
+                        countryCode={regCountry}
+                        onChange={v => { setRegForm(p => ({ ...p, phone: v })); setRegErrors(p => ({ ...p, phone: "" })); }}
+                        onCountryChange={setRegCountry}
+                        hasError={!!regErrors.phone}
+                      />
                       {regErrors.phone && <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 4 }}>{regErrors.phone}</p>}
                     </div>
                     <button type="submit" className="auth-btn-primary" style={{ marginTop: 4 }}><span>Devam Et</span><ArrowRight size={14} /></button>
