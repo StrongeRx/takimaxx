@@ -286,6 +286,18 @@ const Checkout = () => {
     saveAddress: false,
   });
 
+  // BUG FIX #2: user login sonradan gelirse adres formunu güncelle
+  // Kullanici zaten bir sey yazmissa uzerine yazma
+  useEffect(() => {
+    if (!user) return;
+    setAddress(prev => ({
+      ...prev,
+      fullName: prev.fullName || user.name || "",
+      email:    prev.email    || user.email || "",
+      phone:    prev.phone    || user.phone || "",
+    }));
+  }, [user]);
+
   const [shippingMethod, setShippingMethod] = useState<"standard" | "express">("standard");
 
   const [payment, setPayment] = useState({
@@ -957,7 +969,7 @@ const Checkout = () => {
                   <strong style={{ color: "#111" }}>#{orderId}</strong> numaralı siparişiniz başarıyla oluşturuldu.
                 </p>
                 <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 13, color: "#aaa", marginBottom: 36 }}>
-                  Onay e-postası <strong style={{ color: "#555" }}>{address.email}</strong> adresine gönderildi.
+                  {address.email ? (<>Onay e-postası <strong style={{ color: "#555" }}>{address.email}</strong> adresine gönderildi.</>) : "Siparişiniz başarıyla alındı."}
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 300, margin: "0 auto" }}>
                   <Link to="/siparis-takibi" style={{
