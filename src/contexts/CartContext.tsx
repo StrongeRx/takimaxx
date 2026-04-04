@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useEffect, useMemo, type ReactNode, type Dispatch, type SetStateAction } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, useMemo, useRef, type ReactNode, type Dispatch, type SetStateAction } from "react";
 import type { Product } from "@/data/products";
 
 const SHIPPING_FEE = 49.90;
@@ -74,10 +74,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [appliedCoupon, setAppliedCouponState] = useState<AppliedCoupon | null>(initial.appliedCoupon);
   const [giftWrap, setGiftWrap] = useState(initial.giftWrap);
-  const [onAddToCart, setOnAddToCartFn] = useState<((product: Product) => void) | undefined>(undefined);
+  // BUG FIX #4: onAddToCart ref ile tutulur — stale closure sorununu önler
+  // useState kullansaydık addToCart her callback değişiminde yeniden oluşurdu
+  const onAddToCartRef = useRef<((product: Product) => void) | undefined>(undefined);
 
   const setOnAddToCart = useCallback((fn: (product: Product) => void) => {
-    setOnAddToCartFn(() => fn);
+    onAddToCartRef.current = fn;
   }, []);
 
   // items, appliedCoupon veya giftWrap değişince localStorage'a kaydet
@@ -109,8 +111,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       }
       return [...prev, { product, quantity: addable }];
     });
-    if (onAddToCart) onAddToCart(product);
-  }, [onAddToCart]);
+    if (onAddToCartRef.current) onAddToCartRef.current(product);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const removeFromCart = useCallback((productId: string) => {
     setItems((prev) => prev.filter((item) => item.product.id !== productId));
@@ -161,7 +163,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       totalItems, totalPrice,
       appliedCoupon, setAppliedCoupon, discountAmount,
       isCartOpen, setIsCartOpen,
-      onAddToCart, setOnAddToCart,
+      onAddToCart: onAddToCartRef.current, setOnAddToCart,
       giftWrap, setGiftWrap,
     }}>
       {children}
