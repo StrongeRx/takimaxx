@@ -4,6 +4,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useAuth } from "@/contexts/AuthContext";
 import logoSvg from "@/assets/logo.svg";
+import AlertMsg from "@/components/AlertMsg";
 import cardLogos from "@/assets/card-logos.webp";
 import bankLogos from "@/assets/bank-logos.webp";
 
@@ -182,8 +183,8 @@ const Footer = () => {
                 <input type="email" value={email} onChange={e => { setEmail(e.target.value); setEmailStatus("idle"); }} onKeyDown={e => e.key === "Enter" && handleSubmit()} placeholder="E-posta adresinizi yazın..." style={{ flex: 1, background: "transparent", border: "none", outline: "none", fontSize: 13, color: "#fff", padding: "10px 12px", minWidth: 0, fontFamily: "Montserrat, sans-serif" }} />
                 <button onClick={handleSubmit} style={{ background: "transparent", border: "none", cursor: "pointer", fontSize: 13, fontWeight: 700, color: "#c9a96e", padding: "10px 14px", whiteSpace: "nowrap", fontFamily: "Montserrat, sans-serif" }}>Gönder</button>
               </div>
-              {emailStatus === "error" && <p style={{ fontSize: 11, color: "#ff4d4d", marginTop: 6 }}>⚠ Lütfen geçerli bir e-posta adresi giriniz.</p>}
-              {emailStatus === "success" && <p style={{ fontSize: 11, color: "#4caf50", marginTop: 6 }}>✓ E-posta adresiniz başarıyla kaydedildi!</p>}
+              {emailStatus === "error" && <AlertMsg dark type="error" title="Geçersiz E-posta" message="Lütfen geçerli bir e-posta adresi giriniz." />}
+              {emailStatus === "success" && <AlertMsg dark type="success" title="Başarılı" message="E-posta adresiniz başarıyla kaydedildi!" />}
             </div>
           )}
         </div>
@@ -259,8 +260,8 @@ const Footer = () => {
                 <input type="email" value={email} onChange={e => { setEmail(e.target.value); setEmailStatus("idle"); }} onKeyDown={e => e.key === "Enter" && handleSubmit()} placeholder="E-posta adresinizi yazın..." style={{ flex: 1, background: "transparent", border: "none", outline: "none", fontSize: 13, color: "#fff", padding: 12, minWidth: 0, fontFamily: "Montserrat, sans-serif" }} />
                 <button onClick={handleSubmit} style={{ background: "transparent", border: "none", cursor: "pointer", fontSize: 13, fontWeight: 700, color: "#c9a96e", padding: "12px 16px", whiteSpace: "nowrap", fontFamily: "Montserrat, sans-serif" }}>Gönder</button>
               </div>
-              {emailStatus === "error" && <p style={{ fontSize: 11, color: "#ff4d4d", marginTop: 6 }}>⚠ Lütfen geçerli bir e-posta adresi giriniz.</p>}
-              {emailStatus === "success" && <p style={{ fontSize: 11, color: "#4caf50", marginTop: 6 }}>✓ E-posta adresiniz başarıyla kaydedildi!</p>}
+              {emailStatus === "error" && <AlertMsg dark type="error" title="Geçersiz E-posta" message="Lütfen geçerli bir e-posta adresi giriniz." />}
+              {emailStatus === "success" && <AlertMsg dark type="success" title="Başarılı" message="E-posta adresiniz başarıyla kaydedildi!" />}
             </div>
           </div>
         </div>

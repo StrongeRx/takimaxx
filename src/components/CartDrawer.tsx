@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { X, Minus, Plus, ShoppingBag, Trash2, Tag, Truck, ChevronRight, Gift } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { Link } from "react-router-dom";
+import { FieldError } from "@/components/AlertMsg";
 // Kupon listesi — yeni admin panelinden yönetilecek
 const STATIC_COUPONS: Record<string, { type: "percent" | "fixed" | "shipping"; value: number; label: string }> = {
   "TAKIMAX10": { type: "percent", value: 10,  label: "%10 İndirim" },
@@ -186,9 +187,7 @@ const CartDrawer = () => {
                     </div>
                     {/* Stok limit uyarısı */}
                     {item.quantity >= item.product.stock && (
-                      <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 10, fontWeight: 600, color: "#e53e3e", marginTop: 5 }}>
-                        ⚠ Bu üründen en fazla {item.product.stock} adet alabilirsiniz
-                      </p>
+                      <FieldError msg={`Bu üründen en fazla ${item.product.stock} adet alabilirsiniz.`} />
                     )}
                   </div>
                 </li>
@@ -253,7 +252,7 @@ const CartDrawer = () => {
                           onMouseLeave={e => (e.currentTarget.style.background = "#111")}
                         >Uygula</button>
                       </div>
-                      {couponError && <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 6 }}>{couponError}</p>}
+                      {couponError && <FieldError msg={couponError} />}
                       <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 10, color: "#ccc", marginTop: 6 }}>
                         Demo kodlar: TAKIMAX10 · HOSGELDIN · KARGO0
                       </p>

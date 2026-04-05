@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import { FieldError } from "@/components/AlertMsg";
 
 const CONTACT_INFO = {
   phone: "+90 (212) 000 00 00", // ← GERÇEK TELEFON NUMARANIZI YAZIN
@@ -60,9 +61,7 @@ const Contact = () => {
     color: "#888", marginBottom: 7,
   };
 
-  const ErrMsg = ({ msg }: { msg?: string }) => msg
-    ? <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#dc2626", marginTop: 5 }}>{msg}</p>
-    : null;
+  const ErrMsg = ({ msg }: { msg?: string }) => <FieldError msg={msg} />;
 
   return (
     <div className="header-offset" style={{ minHeight: "100vh", background: "#faf9f7", display: "flex", flexDirection: "column", paddingTop: 96 }}>

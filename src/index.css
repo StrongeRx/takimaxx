@@ -168,7 +168,7 @@
 
   /* Announcement bar — daha küçük font */
   .animate-marquee {
-    animation: marquee 6s linear infinite;
+    animation: marquee 8s linear infinite;
   }
   .animate-marquee span {
     font-size: 10px !important;
@@ -248,4 +248,8 @@ body.scroll-locked {
 }
 .header-offset {
   padding-top: var(--header-offset) !important;
+}
+@keyframes tmNotifPop {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);    }
 }

@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import Header from "@/components/Header";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
+import AlertMsg, { FieldError } from "@/components/AlertMsg";
 import SEO from "@/components/SEO";
 import { useAuth } from "@/contexts/AuthContext";
 import { Eye, EyeOff, Mail, Lock, ArrowRight, Sparkles, User, Check } from "lucide-react";
@@ -344,9 +345,7 @@ const Login = () => {
                       </div>
                     )}
                     {loginError && (
-                      <div style={{ background: "#fff5f5", border: "1px solid #fed7d7", borderRadius: 8, padding: "12px 16px", marginBottom: 18 }}>
-                        <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 12, color: "#e53e3e", margin: 0 }}>⚠ {loginError}</p>
-                      </div>
+                      <AlertMsg type="error" title="Giriş Başarısız" message={loginError} style={{ marginBottom: 18 }} />
                     )}
                     <form onSubmit={handleSubmit} noValidate style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                       <div>
@@ -355,7 +354,7 @@ const Login = () => {
                           <Mail size={15} style={{ position: "absolute", left: 15, top: "50%", transform: "translateY(-50%)", color: "#c9a96e", pointerEvents: "none" }} />
                           <input type="email" value={form.email} onChange={e => { setForm({ ...form, email: e.target.value }); setErrors({ ...errors, email: "" }); setLoginError(""); }} placeholder="ornek@email.com" className={`auth-input ${errors.email ? "error" : ""}`} autoComplete="email" />
                         </div>
-                        {errors.email && <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 4 }}>{errors.email}</p>}
+                        {errors.email && <FieldError msg={errors.email} />}
                       </div>
                       <div>
                         <label style={{ display: "block", fontFamily: "'Montserrat', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", color: "#888", textTransform: "uppercase", marginBottom: 7 }}>Şifre</label>
@@ -364,7 +363,7 @@ const Login = () => {
                           <input type={showPassword ? "text" : "password"} value={form.password} onChange={e => { setForm({ ...form, password: e.target.value }); setErrors({ ...errors, password: "" }); setLoginError(""); }} placeholder="••••••••" className={`auth-input ${errors.password ? "error" : ""}`} autoComplete="current-password" />
                           <button type="button" className="show-pwd-btn" onClick={() => setShowPassword(v => !v)} tabIndex={-1}>{showPassword ? <EyeOff size={15} /> : <Eye size={15} />}</button>
                         </div>
-                        {errors.password && <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 4 }}>{errors.password}</p>}
+                        {errors.password && <FieldError msg={errors.password} />}
                       </div>
                       <button type="submit" className="auth-btn-primary" disabled={isLoading} style={{ marginTop: 4 }}>
                         {isLoading ? <><span style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.7s linear infinite", display: "inline-block" }} />Giriş Yapılıyor...</> : <><span>Giriş Yap</span><ArrowRight size={14} /></>}
@@ -407,7 +406,7 @@ const Login = () => {
                             <Mail size={15} style={{ position: "absolute", left: 15, top: "50%", transform: "translateY(-50%)", color: "#c9a96e", pointerEvents: "none" }} />
                             <input type="email" value={forgotEmail} onChange={e => { setForgotEmail(e.target.value); setErrors({}); setForgotState("idle"); }} placeholder="ornek@email.com" className={`auth-input ${errors.forgotEmail ? "error" : ""}`} />
                           </div>
-                          {errors.forgotEmail && <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 4 }}>{errors.forgotEmail}</p>}
+                          {errors.forgotEmail && <FieldError msg={errors.forgotEmail} />}
                         </div>
                         {forgotState === "not_found" && (
                           <div style={{ background: "#fff8f0", border: "1px solid #f6d68d", borderRadius: 8, padding: "12px 14px" }}>
@@ -454,9 +453,7 @@ const Login = () => {
                 </div>
 
                 {regError && (
-                  <div style={{ background: "#fff5f5", border: "1px solid #fed7d7", borderRadius: 8, padding: "12px 16px", marginBottom: 16 }}>
-                    <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 12, color: "#e53e3e", margin: 0 }}>⚠ {regError}</p>
-                  </div>
+                  <AlertMsg type="error" title="Kayıt Başarısız" message={regError} style={{ marginBottom: 16 }} />
                 )}
 
                 {/* Adım 1 */}
@@ -469,7 +466,7 @@ const Login = () => {
                         <User size={15} style={{ position: "absolute", left: 15, top: "50%", transform: "translateY(-50%)", color: "#c9a96e", pointerEvents: "none" }} />
                         <input type="text" value={regForm.fullName} onChange={e => { setRegForm(p => ({ ...p, fullName: e.target.value })); setRegErrors(p => ({ ...p, fullName: "" })); }} placeholder="Adınız Soyadınız" className={`auth-input ${regErrors.fullName ? "error" : ""}`} autoComplete="name" />
                       </div>
-                      {regErrors.fullName && <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 4 }}>{regErrors.fullName}</p>}
+                      {regErrors.fullName && <FieldError msg={regErrors.fullName} />}
                     </div>
                     <div>
                       <label style={{ display: "block", fontFamily: "'Montserrat', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", color: "#888", textTransform: "uppercase", marginBottom: 7 }}>E-posta</label>
@@ -477,7 +474,7 @@ const Login = () => {
                         <Mail size={15} style={{ position: "absolute", left: 15, top: "50%", transform: "translateY(-50%)", color: "#c9a96e", pointerEvents: "none" }} />
                         <input type="email" value={regForm.email} onChange={e => { setRegForm(p => ({ ...p, email: e.target.value })); setRegErrors(p => ({ ...p, email: "" })); }} placeholder="ornek@email.com" className={`auth-input ${regErrors.email ? "error" : ""}`} autoComplete="email" />
                       </div>
-                      {regErrors.email && <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 4 }}>{regErrors.email}</p>}
+                      {regErrors.email && <FieldError msg={regErrors.email} />}
                     </div>
                     <div>
                       <label style={{ display: "block", fontFamily: "'Montserrat', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", color: "#888", textTransform: "uppercase", marginBottom: 7 }}>
@@ -490,7 +487,7 @@ const Login = () => {
                         onCountryChange={setRegCountry}
                         hasError={!!regErrors.phone}
                       />
-                      {regErrors.phone && <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 4 }}>{regErrors.phone}</p>}
+                      {regErrors.phone && <FieldError msg={regErrors.phone} />}
                     </div>
                     <button type="submit" className="auth-btn-primary" style={{ marginTop: 4 }}><span>Devam Et</span><ArrowRight size={14} /></button>
 
@@ -512,7 +509,7 @@ const Login = () => {
                         <input type={showRegPassword ? "text" : "password"} value={regForm.password} onChange={e => { setRegForm(p => ({ ...p, password: e.target.value })); setRegErrors(p => ({ ...p, password: "" })); }} placeholder="En az 6 karakter" className={`auth-input ${regErrors.password ? "error" : ""}`} autoComplete="new-password" />
                         <button type="button" className="show-pwd-btn" onClick={() => setShowRegPassword(v => !v)} tabIndex={-1}>{showRegPassword ? <EyeOff size={15} /> : <Eye size={15} />}</button>
                       </div>
-                      {regErrors.password && <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 4 }}>{regErrors.password}</p>}
+                      {regErrors.password && <FieldError msg={regErrors.password} />}
                       {regForm.password && (
                         <div style={{ marginTop: 8 }}>
                           <div style={{ display: "flex", gap: 4, marginBottom: 4 }}>
@@ -529,7 +526,7 @@ const Login = () => {
                         <input type={showRegConfirm ? "text" : "password"} value={regForm.confirmPassword} onChange={e => { setRegForm(p => ({ ...p, confirmPassword: e.target.value })); setRegErrors(p => ({ ...p, confirmPassword: "" })); }} placeholder="••••••••" className={`auth-input ${regErrors.confirmPassword ? "error" : ""}`} autoComplete="new-password" />
                         <button type="button" className="show-pwd-btn" onClick={() => setShowRegConfirm(v => !v)} tabIndex={-1}>{showRegConfirm ? <EyeOff size={15} /> : <Eye size={15} />}</button>
                       </div>
-                      {regErrors.confirmPassword && <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 4 }}>{regErrors.confirmPassword}</p>}
+                      {regErrors.confirmPassword && <FieldError msg={regErrors.confirmPassword} />}
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                       {[
@@ -546,7 +543,7 @@ const Login = () => {
                           </span>
                         </label>
                       ))}
-                      {regErrors.terms && <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, color: "#e53e3e", margin: "-4px 0 0 28px" }}>⚠ {regErrors.terms}</p>}
+                      {regErrors.terms && <FieldError msg={regErrors.terms} />}
                     </div>
                     <div style={{ display: "flex", gap: 10, marginTop: 4 }}>
                       <button type="button" className="auth-btn-secondary" onClick={() => setRegStep(1)} style={{ flex: "0 0 auto", width: "auto", padding: "15px 20px" }}>← Geri</button>

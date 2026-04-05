@@ -6,6 +6,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Header from "@/components/Header";
+import { FieldError } from "@/components/AlertMsg";
 import Footer from "@/components/Footer";
 import { saveOrder } from "@/lib/orderStorage";
 import PhoneInput, { CountryCode, COUNTRY_CODES } from "@/components/PhoneInput";
@@ -706,14 +707,14 @@ const Checkout = () => {
                     <input className="checkout-input" value={address.fullName} autoComplete="name" inputMode="text"
                       onChange={e => { setAddress({ ...address, fullName: e.target.value }); setErrors({ ...errors, fullName: "" }); }}
                       style={inp(!!errors.fullName)} placeholder="Adınız Soyadınız" />
-                    {errors.fullName && <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 5 }}>⚠ {errors.fullName}</p>}
+                    {errors.fullName && <FieldError msg={errors.fullName} />}
                   </div>
                   <div>
                     <label style={lbl}>E-posta *</label>
                     <input className="checkout-input" type="email" value={address.email} autoComplete="email" inputMode="email"
                       onChange={e => { setAddress({ ...address, email: e.target.value }); setErrors({ ...errors, email: "" }); }}
                       style={inp(!!errors.email)} placeholder="ornek@email.com" />
-                    {errors.email && <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 5 }}>⚠ {errors.email}</p>}
+                    {errors.email && <FieldError msg={errors.email} />}
                   </div>
                   <div>
                     <label style={lbl}>Telefon *</label>
@@ -725,14 +726,14 @@ const Checkout = () => {
                       hasError={!!errors.phone}
                       inputClassName="checkout-input"
                     />
-                    {errors.phone && <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 5 }}>⚠ {errors.phone}</p>}
+                    {errors.phone && <FieldError msg={errors.phone} />}
                   </div>
                   <div style={{ gridColumn: "1 / -1" }}>
                     <label style={lbl}>Açık Adres *</label>
                     <input className="checkout-input" value={address.addressLine} autoComplete="street-address" inputMode="text"
                       onChange={e => { setAddress({ ...address, addressLine: e.target.value }); setErrors({ ...errors, addressLine: "" }); }}
                       style={inp(!!errors.addressLine)} placeholder="Mahalle, Cadde, Sokak, No, Daire" />
-                    {errors.addressLine && <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 5 }}>⚠ {errors.addressLine}</p>}
+                    {errors.addressLine && <FieldError msg={errors.addressLine} />}
                   </div>
                   <div>
                     <label style={lbl}>İlçe</label>
@@ -745,7 +746,7 @@ const Checkout = () => {
                     <input className="checkout-input" value={address.city} autoComplete="address-level2" inputMode="text"
                       onChange={e => { setAddress({ ...address, city: e.target.value }); setErrors({ ...errors, city: "" }); }}
                       style={inp(!!errors.city)} placeholder="İstanbul" />
-                    {errors.city && <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 5 }}>⚠ {errors.city}</p>}
+                    {errors.city && <FieldError msg={errors.city} />}
                   </div>
                   <div>
                     <label style={lbl}>Posta Kodu</label>
@@ -891,7 +892,7 @@ const Checkout = () => {
                           style={{ ...inp(!!errors.cardNumber), letterSpacing: "0.12em", fontFamily: "'Courier New', monospace", fontSize: 16 }}
                           placeholder="0000 0000 0000 0000" maxLength={19}
                           inputMode="numeric" autoComplete="cc-number" />
-                        {errors.cardNumber && <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 5 }}>⚠ {errors.cardNumber}</p>}
+                        {errors.cardNumber && <FieldError msg={errors.cardNumber} />}
                       </div>
                       <div style={{ gridColumn: "1 / -1" }}>
                         <label style={lbl}>Kart Sahibinin Adı *</label>
@@ -900,7 +901,7 @@ const Checkout = () => {
                           style={{ ...inp(!!errors.cardName), letterSpacing: "0.06em" }}
                           placeholder="AD SOYAD"
                           inputMode="text" autoComplete="cc-name" />
-                        {errors.cardName && <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 5 }}>⚠ {errors.cardName}</p>}
+                        {errors.cardName && <FieldError msg={errors.cardName} />}
                       </div>
                       <div>
                         <label style={lbl}>Son Kullanma Tarihi *</label>
