@@ -7,9 +7,9 @@ import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 
 const CONTACT_INFO = {
-  phone: "+90 (212) 000 00 00",
-  email: "destek@takimax.com",
-  address: "İstanbul, Türkiye",
+  phone: "+90 (212) 000 00 00", // ← GERÇEK TELEFON NUMARANIZI YAZIN
+  email: "demo@takimax.com",
+  address: "İstanbul, Türkiye", // ← GERÇEK ADRESİNİZİ YAZIN
   workingHours: "Pzt – Cum: 09:00 – 18:00",
 };
 
@@ -40,8 +40,7 @@ const Contact = () => {
     if (Object.keys(e).length > 0) { setErrors(e); return; }
     setSubmitting(true);
     setTimeout(() => {
-      // Mesajı admin store'a kaydet
-      // TODO: Yeni admin paneli API'sine mesaj gönderilecek
+      // Form verileri başarıyla alındı — backend entegrasyonu yapılacak
       setSubmitting(false);
       setSent(true);
     }, 1000);

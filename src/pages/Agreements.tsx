@@ -8,7 +8,7 @@ const mesafeli = [
     content: `SATICI:
 Unvan: Takımax Aksesuar ve Mücevherat Ticaret A.Ş.
 Adres: İstanbul, Türkiye
-E-posta: destek@takimax.com
+E-posta: demo@takimax.com
 Web: www.takimax.com
 
 ALICI:
@@ -38,7 +38,7 @@ Sipariş esnasında sisteme kayıtlı isim, adres ve iletişim bilgilerine sahip
     content: `ALICI, teslim tarihinden itibaren 14 (on dört) gün içinde herhangi bir gerekçe göstermeksizin ve cezai şart ödemeksizin cayma hakkını kullanabilir.
 
 Cayma hakkının kullanılması için:
-1. destek@takimax.com adresine cayma bildirimi yapılması
+1. demo@takimax.com adresine cayma bildirimi yapılması
 2. Ürünün 10 gün içinde SATICI'ya gönderilmesi gerekmektedir.
 
 Cayma hakkı; kişiye özel üretilen, ses veya görüntü kayıtlarının açıldığı, dijital içeriklerin teslim edildiği durumlarda kullanılamaz.`,
@@ -72,12 +72,12 @@ const uyelik = [
     title: "Hesap Güvenliği",
     content: `• Şifrenizi düzenli aralıklarla değiştirmenizi öneririz.
 • Şifrenizi kimseyle paylaşmamalısınız.
-• Hesabınızda yetkisiz erişim tespit ederseniz derhal destek@takimax.com adresine bildirin.
+• Hesabınızda yetkisiz erişim tespit ederseniz derhal demo@takimax.com adresine bildirin.
 • Takımax, sizi asla şifrenizi e-posta veya telefon ile paylaşmanız için aramaz.`,
   },
   {
     title: "Üyeliğin Sona Ermesi",
-    content: `Üyeliğinizi istediğiniz zaman "Hesabım" sayfasından veya destek@takimax.com adresine başvurarak sonlandırabilirsiniz.
+    content: `Üyeliğinizi istediğiniz zaman "Hesabım" sayfasından veya demo@takimax.com adresine başvurarak sonlandırabilirsiniz.
 
 Takımax, aşağıdaki durumlarda üyeliği askıya alabilir veya sonlandırabilir:
 • Yanlış veya yanıltıcı bilgi verilmesi

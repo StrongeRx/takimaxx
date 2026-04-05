@@ -34,7 +34,7 @@ const faqs = [
     category: "İade & Değişim",
     items: [
       { q: "İade için kaç günüm var?", a: "Teslimat tarihinden itibaren 14 gün içinde iade talebinde bulunabilirsiniz. Ürünün kullanılmamış, orijinal ambalajında ve etiketleri sökülmemiş olması gerekmektedir." },
-      { q: "İade için ne yapmalıyım?", a: "İade talebinizi destek@takimax.com adresine veya iletişim formu üzerinden iletebilirsiniz. Size iade kargo etiketi ve talimatları gönderilecektir. Onaylanan iadeler 5-7 iş günü içinde orijinal ödeme yönteminize iade edilir." },
+      { q: "İade için ne yapmalıyım?", a: "İade talebinizi demo@takimax.com adresine veya iletişim formu üzerinden iletebilirsiniz. Size iade kargo etiketi ve talimatları gönderilecektir. Onaylanan iadeler 5-7 iş günü içinde orijinal ödeme yönteminize iade edilir." },
       { q: "Hangi ürünler iade edilemez?", a: "Kişiselleştirilmiş (isim/harf yazılı) ürünler, hijyenik açıdan uygunsuz hale gelen ürünler ve kampanya kapsamındaki özel ürünler iade alınmamaktadır." },
     ],
   },

@@ -8,7 +8,7 @@ const Returns = () => {
   const shippingFee     = 49.90;
   const freeLimit       = 400;
   const shippingCompany = "Yurtiçi Kargo";
-  const email           = "destek@takimax.com";
+  const email           = "demo@takimax.com";
   const phone           = "+90 (212) 000 00 00";
 
   const sections = [
