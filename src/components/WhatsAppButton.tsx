@@ -1,5 +1,6 @@
-// WhatsApp numarası — yeni admin panelinden yönetilecek
-const WHATSAPP_NUMBER = "905320000000";
+// WhatsApp numarası .env dosyasından okunur
+// .env'e ekleyin: VITE_WHATSAPP_NUMBER=905xxxxxxxxx
+const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER ?? "";
 
 const WhatsAppButton = () => {
   if (!WHATSAPP_NUMBER) return null;

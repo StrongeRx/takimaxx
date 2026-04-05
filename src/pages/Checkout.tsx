@@ -422,7 +422,9 @@ const Checkout = () => {
           status: "beklemede" as const,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          paymentMethod: payment.method === "card" ? "Kredi Kartı" : payment.method === "transfer" ? "Havale/EFT" : "Kapıda Ödeme",
+          paymentMethod: payment.method === "card"
+            ? `Kredi Kartı (**** ${payment.cardNumber.replace(/\s/g,"").slice(-4)})`
+            : payment.method === "transfer" ? "Havale/EFT" : "Kapıda Ödeme",
         };
         // Siparişi localStorage'a kaydet — Account sayfasında gösterilecek
         saveOrder(newOrder);
@@ -450,6 +452,8 @@ const Checkout = () => {
       }
       setOrderPlaced(true);
       clearCart();
+      // Güvenlik: sipariş sonrası kart bilgilerini bellekten temizle
+      setPayment(prev => ({ ...prev, cardNumber: "", cardName: "", cvv: "", expiry: "" }));
       setStep(4);
     } else {
       setStep((step + 1) as Step);
@@ -850,6 +854,14 @@ const Checkout = () => {
                 <div style={{ marginBottom: 24 }}>
                   <h2 style={{ fontFamily: "Montserrat, sans-serif", fontSize: 20, fontWeight: 700, color: "#111", margin: 0 }}>Ödeme Bilgileri</h2>
                   <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 13, color: "#888", marginTop: 4 }}>Kart bilgileriniz 256-bit SSL ile şifrelenmektedir</p>
+                  {/* ⚠️ GELİŞTİRİCİ NOTU: Bu form demo amaçlıdır. Gerçek ödeme almak için
+                      iyzico (https://iyzico.com) veya Stripe entegrasyonu gereklidir.
+                      Kart bilgileri sunucuya gönderilmez; ödeme sağlayıcı SDK'sı kullanılmalıdır. */}
+                  {import.meta.env.DEV && (
+                    <div style={{ marginTop: 8, padding: "8px 12px", background: "#fff3cd", border: "1px solid #ffc107", borderRadius: 6, fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#856404" }}>
+                      ⚠️ <strong>Demo modu:</strong> Gerçek ödeme işlemi yapılmaz. Prod'a geçmeden önce iyzico/Stripe entegrasyonu ekleyin.
+                    </div>
+                  )}
                 </div>
 
                 {/* Yöntem seçimi */}
