@@ -111,7 +111,7 @@
 }
 
 .animate-marquee {
-  animation: marquee 20s linear infinite;
+  animation: marquee 10s linear infinite;
 }
 
 /* Product card hover */
@@ -167,6 +167,9 @@
   }
 
   /* Announcement bar — daha küçük font */
+  .animate-marquee {
+    animation: marquee 8s linear infinite;
+  }
   .animate-marquee span {
     font-size: 10px !important;
     letter-spacing: 0.12em !important;
