@@ -186,9 +186,36 @@ const ProductAddToCart = ({
       </div>
 
       {stockStatus !== "out" && quantity >= product.stock && (
-        <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 12, fontWeight: 600, color: "#dc2626", marginBottom: 20 }}>
-          ⚠ Bu üründen en fazla {product.stock} adet satın alabilirsiniz
-        </p>
+        <div style={{
+          display: "flex", alignItems: "flex-start", gap: 12,
+          padding: "12px 15px", borderRadius: 7, marginBottom: 20,
+          background: "linear-gradient(135deg, #fffbf2 0%, #fdf6e8 100%)",
+          border: "1px solid #e8d5a8",
+          animation: "tmNotifPop 0.28s cubic-bezier(0.16,1,0.3,1)",
+          position: "relative", overflow: "hidden",
+        }}>
+          {/* Sol gold şerit */}
+          <div style={{ width: 3, borderRadius: 3, flexShrink: 0, alignSelf: "stretch", minHeight: 28, background: "#c9a96e" }} />
+          {/* Takimax logosu gibi sağ köşe watermark */}
+          <div style={{
+            position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
+            fontFamily: "Montserrat, sans-serif", fontSize: 9, fontWeight: 800,
+            letterSpacing: "0.2em", color: "#e8d5a8", textTransform: "uppercase", userSelect: "none",
+          }}>TAKİMAX</div>
+          <div>
+            <p style={{
+              fontFamily: "Montserrat, sans-serif", fontSize: 10, fontWeight: 800,
+              letterSpacing: "0.14em", textTransform: "uppercase",
+              color: "#b8860b", margin: "0 0 3px",
+            }}>Stok Limiti</p>
+            <p style={{
+              fontFamily: "Montserrat, sans-serif", fontSize: 12, fontWeight: 500,
+              color: "#7a5c10", margin: 0, lineHeight: 1.5,
+            }}>
+              Bu üründen en fazla <strong style={{ fontWeight: 700 }}>{product.stock} adet</strong> satın alabilirsiniz.
+            </p>
+          </div>
+        </div>
       )}
       {stockStatus === "out" && (
         <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 12, color: "#9ca3af", marginBottom: 20 }}>
