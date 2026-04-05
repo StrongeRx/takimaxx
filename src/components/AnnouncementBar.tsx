@@ -1,4 +1,4 @@
-const DEFAULT_TEXT = "💸 İLK SİPARİŞİNİZE %10 İNDİRİM 💸      📦 850₺ ÜZERİ KARGO ÜCRETSİZ 📦      ";
+const DEFAULT_TEXT = "🏷️ İLK SİPARİŞE %10 İNDİRİM 🏷️      📦 850₺ ÜZERİ KARGO ÜCRETSİZ 📦      ";
 const DEFAULT_COLOR = "#111111";
 
 const AnnouncementBar = () => {
