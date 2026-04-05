@@ -63,9 +63,8 @@ const OrderTracking = () => {
     setNotFound(false);
     setTimeout(() => {
       try {
-        // TODO: Yeni admin paneli API'sinden sipariş sorgulanacak
-        // Şimdilik localStorage'dan oku (geçiş dönemi)
-        const rawOrders = localStorage.getItem("tm_orders");
+        // Siparişler tkx_orders anahtarında tutulur (orderStorage.ts ile uyumlu)
+        const rawOrders = localStorage.getItem("tkx_orders");
         const orders = rawOrders ? JSON.parse(rawOrders) : [];
         interface StoredOrder { id?: string | number; status: string; items?: { name: string; quantity: number }[]; customer?: string; total?: number; date?: string; address?: string; }
         const order = orders.find(

@@ -1,17 +1,29 @@
 // src/lib/firebase.ts
-// ⚠️ Firebase konsolundan aldığın config bilgilerini buraya yapıştır!
+// Firebase config değerleri .env dosyasından okunur.
+// .env örneği aşağıdaki gibi olmalıdır (projenin kök dizininde):
+//
+//   VITE_FIREBASE_API_KEY=AIzaSy...
+//   VITE_FIREBASE_AUTH_DOMAIN=login-xxxxx.firebaseapp.com
+//   VITE_FIREBASE_PROJECT_ID=login-xxxxx
+//   VITE_FIREBASE_STORAGE_BUCKET=login-xxxxx.firebasestorage.app
+//   VITE_FIREBASE_MESSAGING_SENDER_ID=436496207458
+//   VITE_FIREBASE_APP_ID=1:436496207458:web:xxxxxxxxxxxxx
+//   VITE_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
+//
+// ⚠️ .env dosyasını asla Git'e commit etme!
+//    .gitignore içinde .env satırının olduğundan emin ol.
 
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCG3SI1pIKIptpMYfz7c0-7tWzVMWVPgrk",
-  authDomain: "login-a4925.firebaseapp.com",
-  projectId: "login-a4925",
-  storageBucket: "login-a4925.firebasestorage.app",
-  messagingSenderId: "436496207458",
-  appId: "1:436496207458:web:922add5bf70d83fd2d4b3b",
-  measurementId: "G-368LPX0V3P",
+  apiKey:            import.meta.env.VITE_FIREBASE_API_KEY            as string,
+  authDomain:        import.meta.env.VITE_FIREBASE_AUTH_DOMAIN        as string,
+  projectId:         import.meta.env.VITE_FIREBASE_PROJECT_ID         as string,
+  storageBucket:     import.meta.env.VITE_FIREBASE_STORAGE_BUCKET     as string,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID as string,
+  appId:             import.meta.env.VITE_FIREBASE_APP_ID             as string,
+  measurementId:     import.meta.env.VITE_FIREBASE_MEASUREMENT_ID     as string,
 };
 
 const app = initializeApp(firebaseConfig);

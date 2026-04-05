@@ -7,6 +7,41 @@ import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { FieldError } from "@/components/AlertMsg";
 
+// ─── EmailJS Ayarları ────────────────────────────────────────────────────────
+// 1. https://www.emailjs.com adresine ücretsiz üye ol
+// 2. Email Service ekle (Gmail, Outlook vb.) → Service ID'yi kopyala
+// 3. Email Template oluştur, şu değişkenleri ekle:
+//    {{from_name}}, {{from_email}}, {{phone}}, {{subject}}, {{message}}
+// 4. .env dosyasına yaz:
+//    VITE_EMAILJS_SERVICE_ID=service_xxxxxxx
+//    VITE_EMAILJS_TEMPLATE_ID=template_xxxxxxx
+//    VITE_EMAILJS_PUBLIC_KEY=xxxxxxxxxxxxxxx
+const EMAILJS_CONFIG = {
+  serviceId:  import.meta.env.VITE_EMAILJS_SERVICE_ID  as string,
+  templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string,
+  publicKey:  import.meta.env.VITE_EMAILJS_PUBLIC_KEY  as string,
+};
+
+const sendContactEmail = async (params: {
+  from_name: string;
+  from_email: string;
+  phone: string;
+  subject: string;
+  message: string;
+}): Promise<void> => {
+  const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      service_id:  EMAILJS_CONFIG.serviceId,
+      template_id: EMAILJS_CONFIG.templateId,
+      user_id:     EMAILJS_CONFIG.publicKey,
+      template_params: params,
+    }),
+  });
+  if (!res.ok) throw new Error("EmailJS isteği başarısız: " + res.status);
+};
+
 const CONTACT_INFO = {
   phone: "+90 (212) 000 00 00", // ← GERÇEK TELEFON NUMARANIZI YAZIN
   email: "demo@takimax.com",
@@ -40,11 +75,18 @@ const Contact = () => {
     const e = validate();
     if (Object.keys(e).length > 0) { setErrors(e); return; }
     setSubmitting(true);
-    setTimeout(() => {
-      // Form verileri başarıyla alındı — backend entegrasyonu yapılacak
-      setSubmitting(false);
-      setSent(true);
-    }, 1000);
+    sendContactEmail({
+      from_name:  `${form.firstName} ${form.lastName}`.trim(),
+      from_email: form.email,
+      phone:      form.phone || "-",
+      subject:    form.subject || "Genel",
+      message:    form.message,
+    })
+      .then(() => { setSent(true); })
+      .catch(() => {
+        setErrors({ message: "Mesaj gönderilemedi. Lütfen daha sonra tekrar deneyin veya bizi doğrudan arayın." });
+      })
+      .finally(() => { setSubmitting(false); });
   };
 
   const inputStyle = (hasErr: boolean): React.CSSProperties => ({

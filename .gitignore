@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# Ortam değişkenleri — asla commit etme!
+.env
+.env.local
+.env.production
+.env.staging
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
