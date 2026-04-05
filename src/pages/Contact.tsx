@@ -17,9 +17,9 @@ import { FieldError } from "@/components/AlertMsg";
 //    VITE_EMAILJS_TEMPLATE_ID=template_xxxxxxx
 //    VITE_EMAILJS_PUBLIC_KEY=xxxxxxxxxxxxxxx
 const EMAILJS_CONFIG = {
-  serviceId:  import.meta.env.VITE_EMAILJS_SERVICE_ID  as string,
-  templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string,
-  publicKey:  import.meta.env.VITE_EMAILJS_PUBLIC_KEY  as string,
+  serviceId:  import.meta.env.VITE_EMAILJS_SERVICE_ID  || "service_309u0hk",
+  templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID || "template_drnvi1f",
+  publicKey:  import.meta.env.VITE_EMAILJS_PUBLIC_KEY  || "dvAyYeWzIaBZPtwnM",
 };
 
 const sendContactEmail = async (params: {
@@ -36,7 +36,13 @@ const sendContactEmail = async (params: {
       service_id:  EMAILJS_CONFIG.serviceId,
       template_id: EMAILJS_CONFIG.templateId,
       user_id:     EMAILJS_CONFIG.publicKey,
-      template_params: params,
+      template_params: {
+        name:    params.from_name,
+        email:   params.from_email,
+        phone:   params.phone,
+        title:   params.subject,
+        message: params.message,
+      },
     }),
   });
   if (!res.ok) throw new Error("EmailJS isteği başarısız: " + res.status);
