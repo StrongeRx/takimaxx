@@ -1,8 +1,5 @@
-// Duyuru metni ve rengi .env'den okunur — kod değiştirmeden güncellenebilir
-// VITE_ANNOUNCEMENT_TEXT ve VITE_ANNOUNCEMENT_COLOR değişkenlerini .env'e ekleyin
-const DEFAULT_TEXT = import.meta.env.VITE_ANNOUNCEMENT_TEXT
-  ?? "💸 HAVALE/EFT İLE ÖDEMEDE EK %3 İNDİRİM 💸      📦 400₺ ÜZERİ KARGO ÜCRETSİZ 📦      ";
-const DEFAULT_COLOR = import.meta.env.VITE_ANNOUNCEMENT_COLOR ?? "#111111";
+const DEFAULT_TEXT = "💸 HAVALE/EFT İLE ÖDEMEDE EK %3 İNDİRİM 💸      📦 400₺ ÜZERİ KARGO ÜCRETSİZ 📦      ";
+const DEFAULT_COLOR = "#111111";
 
 const AnnouncementBar = () => {
   const bgColor = DEFAULT_COLOR;

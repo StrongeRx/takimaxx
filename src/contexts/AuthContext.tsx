@@ -79,31 +79,15 @@ const verifyPassword = async (password: string, storedHash: string): Promise<boo
   return password === storedHash;
 };
 
-// ─── Depolama katmanı ─────────────────────────────────────────────────────────
-// Kullanıcı listesi (hash dahil) → localStorage (kalıcı, sadece hash barındırır)
-// Oturum (kişisel bilgiler, hash yok) → sessionStorage (sekme kapanınca silinir)
-// XSS saldırısında sessionStorage daha kısa süre açıkta kalır; hash hiç açıkta kalmaz.
+// ─── localStorage ─────────────────────────────────────────────────────────────
 
 const STORAGE_USERS_KEY   = "takimax_users";
 const STORAGE_SESSION_KEY = "takimax_session";
 
-const loadUsers = (): StoredUser[] => {
-  try { const r = localStorage.getItem(STORAGE_USERS_KEY); return r ? JSON.parse(r) : []; }
-  catch { return []; }
-};
-const saveUsers = (u: StoredUser[]) => localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(u));
-
-// Session: sadece name, email, phone, avatar — passwordHash ASLA yazılmaz
-const loadSession = (): User | null => {
-  try { const r = sessionStorage.getItem(STORAGE_SESSION_KEY); return r ? JSON.parse(r) : null; }
-  catch { return null; }
-};
-const saveSession = (u: User | null) => {
-  if (!u) { sessionStorage.removeItem(STORAGE_SESSION_KEY); return; }
-  // passwordHash veya password alanı varsa çıkar
-  const { name, email, phone, avatar } = u as User & { passwordHash?: string; password?: string };
-  sessionStorage.setItem(STORAGE_SESSION_KEY, JSON.stringify({ name, email, phone, avatar }));
-};
+const loadUsers   = (): StoredUser[] => { try { const r = localStorage.getItem(STORAGE_USERS_KEY);   return r ? JSON.parse(r) : []; } catch { return []; } };
+const saveUsers   = (u: StoredUser[]) => localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(u));
+const loadSession = (): User | null   => { try { const r = localStorage.getItem(STORAGE_SESSION_KEY); return r ? JSON.parse(r) : null; } catch { return null; } };
+const saveSession = (u: User | null)  => u ? localStorage.setItem(STORAGE_SESSION_KEY, JSON.stringify(u)) : localStorage.removeItem(STORAGE_SESSION_KEY);
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
 
