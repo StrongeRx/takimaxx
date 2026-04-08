@@ -153,36 +153,44 @@ const AddToCartRow = ({
   const inc = (e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); setQty(q => Math.min(product.stock, q + 1)); };
 
   return (
-    <div style={{ marginTop: 12 }} onClick={e => { e.preventDefault(); e.stopPropagation(); }}>
-      {/* Miktar satırı */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-        <button onClick={dec} style={{
-          width: 30, height: 30, border: "1.5px solid #ddd", borderRadius: 4,
-          background: "#fff", cursor: "pointer", fontSize: 16, fontWeight: 700,
-          display: "flex", alignItems: "center", justifyContent: "center", color: "#333",
-          transition: "all 0.15s",
-        }}
-        onMouseEnter={e => { e.currentTarget.style.borderColor = "#111"; e.currentTarget.style.background = "#111"; e.currentTarget.style.color = "#fff"; }}
-        onMouseLeave={e => { e.currentTarget.style.borderColor = "#ddd"; e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = "#333"; }}
-        >−</button>
-        <span style={{
-          flex: 1, textAlign: "center",
-          fontFamily: "Montserrat, sans-serif", fontSize: 13, fontWeight: 700, color: "#111",
-          border: "1.5px solid #ddd", borderRadius: 4, padding: "4px 0",
-        }}>{qty}</span>
-        <button onClick={inc} style={{
-          width: 30, height: 30, border: "1.5px solid #ddd", borderRadius: 4,
-          background: "#fff", cursor: "pointer", fontSize: 16, fontWeight: 700,
-          display: "flex", alignItems: "center", justifyContent: "center", color: "#333",
-          transition: "all 0.15s",
-        }}
-        onMouseEnter={e => { e.currentTarget.style.borderColor = "#111"; e.currentTarget.style.background = "#111"; e.currentTarget.style.color = "#fff"; }}
-        onMouseLeave={e => { e.currentTarget.style.borderColor = "#ddd"; e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = "#333"; }}
-        >+</button>
-      </div>
+    <div style={{ marginTop: 14 }} onClick={e => { e.preventDefault(); e.stopPropagation(); }}>
+      {/* Miktar + Sepete Ekle — tek satırda */}
+      <div style={{ display: "flex", alignItems: "stretch", gap: 8, position: "relative" }}>
+
+        {/* Miktar seçici */}
+        <div style={{
+          display: "flex", alignItems: "center",
+          border: "1.5px solid #e0e0e0", borderRadius: 6,
+          overflow: "hidden", flexShrink: 0,
+        }}>
+          <button onClick={dec} style={{
+            width: 28, height: "100%", border: "none", background: "transparent",
+            cursor: "pointer", fontSize: 15, fontWeight: 600, color: "#555",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            transition: "background 0.15s, color 0.15s", padding: "0 2px",
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = "#f5f5f5"; e.currentTarget.style.color = "#111"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#555"; }}
+          >−</button>
+          <span style={{
+            minWidth: 26, textAlign: "center",
+            fontFamily: "Montserrat, sans-serif", fontSize: 12, fontWeight: 700, color: "#111",
+            borderLeft: "1px solid #eee", borderRight: "1px solid #eee",
+            padding: "6px 4px", lineHeight: 1,
+          }}>{qty}</span>
+          <button onClick={inc} style={{
+            width: 28, height: "100%", border: "none", background: "transparent",
+            cursor: "pointer", fontSize: 15, fontWeight: 600, color: "#555",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            transition: "background 0.15s, color 0.15s", padding: "0 2px",
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = "#f5f5f5"; e.currentTarget.style.color = "#111"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#555"; }}
+          >+</button>
+        </div>
 
       {/* Sepete Ekle butonu */}
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", flex: 1 }}>
         {/* Confetti parçaları */}
         {confetti.map(c => (
           <span key={c.id} style={{
@@ -208,29 +216,29 @@ const AddToCartRow = ({
             width: "100%",
             height: 42,
             border: "none",
-            borderRadius: 4,
+            borderRadius: 6,
             cursor: btnState === "idle" ? "pointer" : "default",
             overflow: "hidden",
             position: "relative",
             fontFamily: "Montserrat, sans-serif",
             fontSize: 11, fontWeight: 800,
-            letterSpacing: "0.12em", textTransform: "uppercase",
+            letterSpacing: "0.1em", textTransform: "uppercase",
             color: "#fff",
             background: btnState === "added"
-              ? "linear-gradient(135deg, #15803d, #16a34a)"
+              ? "#16a34a"
               : btnState === "adding"
-              ? "linear-gradient(135deg, #b8860b, #c9a96e)"
-              : "linear-gradient(135deg, #1a1a1a, #333)",
-            transition: "background 0.5s ease, box-shadow 0.3s ease, transform 0.15s ease",
+              ? "#c9a96e"
+              : "#111",
+            transition: "background 0.4s ease, box-shadow 0.25s ease, transform 0.15s ease",
             boxShadow: btnState === "added"
-              ? "0 4px 20px rgba(21,128,61,0.45)"
+              ? "0 3px 14px rgba(21,128,61,0.4)"
               : btnState === "adding"
-              ? "0 4px 20px rgba(201,169,110,0.4)"
-              : "0 2px 8px rgba(0,0,0,0.2)",
+              ? "0 3px 14px rgba(201,169,110,0.4)"
+              : "0 2px 6px rgba(0,0,0,0.18)",
             transform: btnState === "adding" ? "scale(0.97)" : "scale(1)",
           }}
-          onMouseEnter={e => { if (btnState === "idle") { e.currentTarget.style.background = "linear-gradient(135deg, #c9a96e, #e8cc9a)"; e.currentTarget.style.boxShadow = "0 6px 24px rgba(201,169,110,0.45)"; }}}
-          onMouseLeave={e => { if (btnState === "idle") { e.currentTarget.style.background = "linear-gradient(135deg, #1a1a1a, #333)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)"; }}}
+          onMouseEnter={e => { if (btnState === "idle") { e.currentTarget.style.background = "#c9a96e"; e.currentTarget.style.boxShadow = "0 5px 20px rgba(201,169,110,0.5)"; e.currentTarget.style.transform = "translateY(-1px)"; }}}
+          onMouseLeave={e => { if (btnState === "idle") { e.currentTarget.style.background = "#111"; e.currentTarget.style.boxShadow = "0 2px 6px rgba(0,0,0,0.18)"; e.currentTarget.style.transform = "translateY(0)"; }}}
         >
           {/* Ripple arka plan */}
           {btnState === "adding" && (
@@ -317,6 +325,7 @@ const AddToCartRow = ({
           </span>
         </button>
       </div>
+      </div>
     </div>
   );
 };
@@ -334,8 +343,17 @@ const ProductCard = memo(({
   onAddToCart: (e: React.MouseEvent, product: ProductType, qty: number) => void;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [quickAdded, setQuickAdded] = useState(false);
   const stockStatus = getStockStatus(product.stock);
   const isOut = stockStatus === "out";
+
+  const handleQuickAdd = (e: React.MouseEvent) => {
+    e.preventDefault(); e.stopPropagation();
+    if (isOut || quickAdded) return;
+    onAddToCart(e, product, 1);
+    setQuickAdded(true);
+    setTimeout(() => setQuickAdded(false), 2000);
+  };
 
   return (
     <div
@@ -343,14 +361,14 @@ const ProductCard = memo(({
       onMouseLeave={() => setIsHovered(false)}
       style={{
         background: "#fff",
-        borderRadius: 8,
+        borderRadius: 10,
         overflow: "hidden",
-        border: "1px solid #e8e8e8",
+        border: isHovered && !isOut ? "1px solid #c9a96e55" : "1px solid #e8e8e8",
         boxShadow: isHovered && !isOut
-          ? "0 8px 32px rgba(0,0,0,0.13)"
+          ? "0 12px 40px rgba(0,0,0,0.14), 0 0 0 1px rgba(201,169,110,0.1)"
           : "0 1px 4px rgba(0,0,0,0.06)",
-        transform: isHovered && !isOut ? "translateY(-3px)" : "translateY(0)",
-        transition: "all 0.25s ease",
+        transform: isHovered && !isOut ? "translateY(-5px)" : "translateY(0)",
+        transition: "transform 0.28s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.28s ease, border-color 0.28s ease",
       }}
     >
       {/* Görsel */}
@@ -362,13 +380,72 @@ const ProductCard = memo(({
           decoding="async"
           style={{
             width: "100%", height: "100%", objectFit: "cover",
-            transition: "transform 0.5s ease",
-            transform: isHovered && !isOut ? "scale(1.06)" : "scale(1)",
+            transition: "transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94)",
+            transform: isHovered && !isOut ? "scale(1.08)" : "scale(1)",
             filter: isOut ? "grayscale(25%) brightness(0.96)" : "none",
           }}
         />
 
         {isOut && <OutOfStockOverlay />}
+
+        {/* Hızlı Sepete Ekle overlay — hover'da görünür */}
+        {!isOut && (
+          <div style={{
+            position: "absolute", bottom: 0, left: 0, right: 0,
+            padding: "32px 10px 10px",
+            background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            opacity: isHovered ? 1 : 0,
+            transform: isHovered ? "translateY(0)" : "translateY(10px)",
+            transition: "opacity 0.22s ease, transform 0.22s ease",
+            zIndex: 6,
+          }}>
+            <button
+              onClick={handleQuickAdd}
+              style={{
+                display: "flex", alignItems: "center", gap: 7,
+                padding: "9px 20px",
+                background: quickAdded ? "#16a34a" : "rgba(255,255,255,0.95)",
+                border: "none", borderRadius: 4, cursor: quickAdded ? "default" : "pointer",
+                fontFamily: "Montserrat, sans-serif", fontSize: 11, fontWeight: 700,
+                letterSpacing: "0.1em", textTransform: "uppercase",
+                color: quickAdded ? "#fff" : "#111",
+                transition: "background 0.25s ease, color 0.25s ease, transform 0.15s ease",
+                boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
+                whiteSpace: "nowrap",
+                transform: "scale(1)",
+              }}
+              onMouseEnter={e => {
+                if (!quickAdded) {
+                  e.currentTarget.style.background = "#c9a96e";
+                  e.currentTarget.style.color = "#fff";
+                  e.currentTarget.style.transform = "scale(1.03)";
+                }
+              }}
+              onMouseLeave={e => {
+                if (!quickAdded) {
+                  e.currentTarget.style.background = "rgba(255,255,255,0.95)";
+                  e.currentTarget.style.color = "#111";
+                  e.currentTarget.style.transform = "scale(1)";
+                }
+              }}
+            >
+              {quickAdded ? (
+                <>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ animation: "quickCheckIn 0.3s cubic-bezier(0.34,1.56,0.64,1)" }}>
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Eklendi!
+                </>
+              ) : (
+                <>
+                  <ShoppingBag size={13} />
+                  Hızlı Ekle
+                </>
+              )}
+            </button>
+          </div>
+        )}
 
         {/* Badge'lar — sol üst */}
         <div style={{ position: "absolute", top: 10, left: 10, display: "flex", flexDirection: "column", gap: 5, zIndex: 6 }}>
@@ -421,19 +498,18 @@ const ProductCard = memo(({
 
         {/* Favori — sağ üst */}
         <button onClick={(e) => onToggleFavorite(e, product)} style={{
-          position: "absolute", top: 10, right: 10, zIndex: 6,
+          position: "absolute", top: 10, right: 10, zIndex: 7,
           width: 34, height: 34, borderRadius: "50%",
           background: isFav ? "#c9a96e" : "rgba(255,255,255,0.96)",
           border: isFav ? "none" : "1px solid rgba(0,0,0,0.08)",
           cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-          boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-          transition: "all 0.2s",
+          boxShadow: "0 2px 10px rgba(0,0,0,0.12)",
+          transition: "all 0.22s cubic-bezier(0.34,1.56,0.64,1)",
           opacity: isHovered || isFav ? 1 : 0,
-          transform: isFav ? "scale(1.08)" : "scale(1)",
+          transform: isFav ? "scale(1.12)" : isHovered ? "scale(1.05)" : "scale(0.85)",
         }} aria-label="Favorilere ekle">
           <Heart size={15} style={{ color: isFav ? "#fff" : "#666", fill: isFav ? "#fff" : "none", transition: "all 0.2s" }} />
         </button>
-
 
       </Link>
 
@@ -692,6 +768,11 @@ const ProductGrid = ({ mode = "bestsellers" }: ProductGridProps) => {
         }
         @keyframes pgSpin {
           to { transform: rotate(360deg); }
+        }
+        @keyframes quickCheckIn {
+          0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+          60%  { transform: scale(1.2) rotate(5deg); }
+          100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
 
         /* === Sepete Ekle Animasyonları === */
