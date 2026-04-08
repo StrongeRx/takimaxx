@@ -236,6 +236,24 @@ const Header = () => {
     };
   }, [mobileOpen]);
 
+  /* Mobilde arama açıkken sayfa kaydırmasını engelle */
+  useEffect(() => {
+    const isMobile = window.innerWidth <= 1024;
+    if (!searchOpen || !isMobile) return;
+    const scrollY = window.scrollY;
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.top = "";
+      window.scrollTo(0, scrollY);
+    };
+  }, [searchOpen]);
+
   useEffect(() => {
     try { const s = localStorage.getItem("tm_recent_searches"); if (s) setRecentSearches(JSON.parse(s)); } catch (_e) { /* localStorage erişilemez */ }
   }, []);
@@ -500,8 +518,35 @@ const Header = () => {
       )}
 
       {/* ══ GELİŞMİŞ ARAMA PANELİ ══ */}
-      <div style={{ position: "fixed", top: 96, left: 0, right: 0, zIndex: 129, background: "#fff", borderBottom: searchOpen ? "1px solid #ede9e2" : "none", boxShadow: searchOpen ? "0 8px 32px rgba(0,0,0,0.09)" : "none", maxHeight: searchOpen ? 600 : 0, overflow: "hidden", transition: "max-height 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s" }}>
+      {/* Desktop: top:96 sabit panel | Mobil: tam ekran drawer */}
+      <div
+        id="search-panel"
+        className={searchOpen ? "search-open" : "search-closed"}
+        style={{
+          position: "fixed",
+          left: 0, right: 0,
+          zIndex: 129,
+          background: "#fff",
+          overflowY: "auto",
+          WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"],
+          overscrollBehavior: "contain",
+          /* Desktop */
+          top: 96,
+          maxHeight: searchOpen ? 600 : 0,
+          borderBottom: searchOpen ? "1px solid #ede9e2" : "none",
+          boxShadow: searchOpen ? "0 8px 32px rgba(0,0,0,0.09)" : "none",
+          transition: "max-height 0.38s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s",
+        }}
+      >
         <div style={{ maxWidth: 860, margin: "0 auto", padding: "18px 32px 22px" }}>
+
+          {/* ── Mobil üst bar: geri ok + başlık ── */}
+          <div id="search-mobile-bar" style={{ display: "none", alignItems: "center", gap: 12, marginBottom: 16, paddingBottom: 14, borderBottom: "1px solid #f0ede8" }}>
+            <button onClick={closeSearch} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: 6, color: "#555", borderRadius: 8 }}>
+              <X size={20} />
+            </button>
+            <span style={{ fontFamily: "Montserrat, sans-serif", fontSize: 14, fontWeight: 700, color: "#111", flex: 1 }}>Ara</span>
+          </div>
 
           {/* Input satırı */}
           <div style={{ display: "flex", alignItems: "stretch", height: 48, marginBottom: 12 }}>
@@ -527,12 +572,15 @@ const Header = () => {
               placeholder="Kolye, küpe, bileklik, yüzük ara..."
               style={{ flex: 1, padding: "0 16px", border: "1.5px solid #e0dbd2", borderRight: "none", fontFamily: "Montserrat, sans-serif", fontSize: 13, color: "#111", outline: "none", background: "#fff", letterSpacing: "0.02em" }}
             />
+            {/* Desktop: Ara butonu + X */}
             <button onClick={handleSearch}
+              id="search-ara-btn"
               style={{ padding: "0 28px", background: "#111", color: "#fff", border: "1.5px solid #111", borderRadius: "0 5px 5px 0", cursor: "pointer", fontFamily: "Montserrat, sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", whiteSpace: "nowrap", transition: "background 0.2s, border-color 0.2s" }}
               onMouseEnter={e => { e.currentTarget.style.background = "#c9a96e"; e.currentTarget.style.borderColor = "#c9a96e"; }}
               onMouseLeave={e => { e.currentTarget.style.background = "#111"; e.currentTarget.style.borderColor = "#111"; }}
             >Ara</button>
             <button onClick={closeSearch}
+              id="search-close-btn"
               style={{ marginLeft: 10, background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 6px", color: "#bbb", flexShrink: 0, transition: "color 0.2s" }}
               onMouseEnter={e => (e.currentTarget.style.color = "#111")}
               onMouseLeave={e => (e.currentTarget.style.color = "#bbb")}
@@ -589,7 +637,7 @@ const Header = () => {
 
           {/* ── Boş sorgu: Popüler + Son Aramalar + Kategori Kısayolları ── */}
           {showSuggestions && (
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 32 }}>
+            <div id="search-suggestions-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 32 }}>
 
               {/* Popüler aramalar */}
               <div>
@@ -751,9 +799,9 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Arama overlay */}
+      {/* Arama overlay — sadece desktop'ta */}
       {searchOpen && (
-        <div onClick={closeSearch} style={{ position: "fixed", inset: 0, zIndex: 128, background: "rgba(0,0,0,0.18)", backdropFilter: "blur(1px)", animation: "searchBgFade 0.25s ease" }} />
+        <div onClick={closeSearch} id="search-overlay" style={{ position: "fixed", inset: 0, zIndex: 128, background: "rgba(0,0,0,0.18)", backdropFilter: "blur(1px)", animation: "searchBgFade 0.25s ease" }} />
       )}
 
       {/* Responsive */}
@@ -778,6 +826,48 @@ const Header = () => {
           #hdr-right { justify-content: flex-end; gap: 0 !important; }
           #hdr-fav-btn { display: flex !important; }
         }
+
+        /* ── Mobil: Arama tam ekran ── */
+        @media (max-width: 1024px) {
+          #search-panel {
+            top: 0 !important;
+            max-height: 100dvh !important;
+            height: 100dvh !important;
+            overflow-y: auto !important;
+            border-bottom: none !important;
+            box-shadow: none !important;
+            transition: transform 0.35s cubic-bezier(0.32,0.72,0,1), opacity 0.25s ease !important;
+          }
+          #search-panel.search-closed {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+          }
+          #search-panel.search-open {
+            transform: translateY(0);
+            opacity: 1;
+          }
+          #search-mobile-bar  { display: flex !important; }
+          #search-ara-btn     { display: none !important; }
+          #search-close-btn   { display: none !important; }
+          #search-overlay     { display: none !important; }
+          #search-suggestions-grid {
+            grid-template-columns: 1fr !important;
+            gap: 0 !important;
+          }
+          #search-suggestions-grid > div {
+            border-bottom: 1px solid #f0ede8;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+          }
+          #search-suggestions-grid > div:last-child {
+            border-bottom: none;
+          }
+          #search-panel > div {
+            padding: 0 16px 32px !important;
+          }
+        }
+
         @keyframes searchBgFade { from{opacity:0} to{opacity:1} }
       `}</style>
     </>
