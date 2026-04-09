@@ -12,7 +12,7 @@ const SUPPORT_EMAIL   = import.meta.env.VITE_SUPPORT_EMAIL   as string || "deste
 import AlertMsg, { FieldError } from "@/components/AlertMsg";
 import SEO from "@/components/SEO";
 import { useAuth } from "@/contexts/AuthContext";
-import { Eye, EyeOff, Mail, Lock, ArrowRight, Sparkles, User, Check } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, ArrowRight, User, Check } from "lucide-react";
 import PhoneInput, { CountryCode, COUNTRY_CODES } from "@/components/PhoneInput";
 
 /* ─── Şifre Güç Hesaplama ─── */
@@ -244,8 +244,12 @@ const Login = () => {
         .step-dot.inactive { background: #f0ece6; color: #bbb; }
 
         .left-panel-feature {
-          display: flex; align-items: center; gap: 14px; padding: 13px 0;
-          border-bottom: 1px solid rgba(255,255,255,0.08); animation: fadeSlideIn 0.6s ease both;
+          display: flex; align-items: center; gap: 14px; padding: 14px 0;
+          border-bottom: 1px solid rgba(255,255,255,0.07); animation: fadeSlideIn 0.5s ease both;
+        }
+        .left-panel-feature:last-child { border-bottom: none; }
+        .left-panel-divider {
+          width: 32px; height: 1px; background: rgba(201,169,110,0.4); margin: 0 0 28px;
         }
 
         @media (max-width: 900px) {
@@ -273,46 +277,107 @@ const Login = () => {
           <div
             className="auth-left"
             style={{
-              background: "linear-gradient(150deg, #1a1208 0%, #2d1f0a 40%, #1a1208 100%)",
-              padding: "52px 44px", display: "flex", flexDirection: "column",
-              justifyContent: "space-between", position: "relative", overflow: "hidden",
+              background: "#12100e",
+              padding: "52px 48px",
+              display: "flex", flexDirection: "column",
+              justifyContent: "space-between",
+              position: "relative", overflow: "hidden",
+              borderRight: "1px solid rgba(201,169,110,0.12)",
             }}
           >
-            <div style={{ position: "absolute", top: -80, right: -80, width: 280, height: 280, borderRadius: "50%", border: "1px solid rgba(201,169,110,0.12)", pointerEvents: "none" }} />
-            <div style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", border: "1px solid rgba(201,169,110,0.08)", pointerEvents: "none" }} />
-            <div style={{ position: "absolute", bottom: -60, left: -60, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(201,169,110,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
+            {/* İnce altın dikey şerit — sol kenar vurgusu */}
+            <div style={{ position: "absolute", top: 0, left: 0, width: 3, height: "100%", background: "linear-gradient(to bottom, transparent, #c9a96e 30%, #c9a96e 70%, transparent)", opacity: 0.5, pointerEvents: "none" }} />
+
+            {/* Sağ üst köşe ince çizgi detayı */}
+            <div style={{ position: "absolute", top: 0, right: 0, width: 120, height: 120, borderLeft: "1px solid rgba(201,169,110,0.08)", borderBottom: "1px solid rgba(201,169,110,0.08)", pointerEvents: "none" }} />
+
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 44 }}>
-                <div style={{ width: 32, height: 32, borderRadius: "50%", border: "1.5px solid rgba(201,169,110,0.5)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Sparkles size={14} style={{ color: "#c9a96e" }} />
-                </div>
-                <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "#c9a96e" }}>Takimax</span>
+              {/* Marka adı */}
+              <div style={{ marginBottom: 48 }}>
+                <span style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: 10, fontWeight: 800,
+                  letterSpacing: "0.35em", textTransform: "uppercase",
+                  color: "#c9a96e",
+                }}>
+                  Takimax
+                </span>
               </div>
-              <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 38, fontWeight: 600, color: "#fff", lineHeight: 1.15, marginBottom: 12, letterSpacing: "-0.01em" }}>
-                {mainTab === "kayit" ? <>Ailemize<br /><em style={{ fontStyle: "italic", color: "#c9a96e" }}>Katılın</em></> : <>Hesabınıza<br /><em style={{ fontStyle: "italic", color: "#c9a96e" }}>Hoş Geldiniz</em></>}
+
+              {/* Başlık */}
+              <div className="left-panel-divider" />
+              <h2 style={{
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontSize: 36, fontWeight: 600,
+                color: "#fff", lineHeight: 1.2,
+                marginBottom: 16, letterSpacing: "0.01em",
+              }}>
+                {mainTab === "kayit"
+                  ? <>Ailemize<br /><span style={{ color: "#c9a96e", fontStyle: "italic" }}>Katılın</span></>
+                  : <>Hesabınıza<br /><span style={{ color: "#c9a96e", fontStyle: "italic" }}>Hoş Geldiniz</span></>
+                }
               </h2>
-              <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.45)", lineHeight: 1.7, marginBottom: 40, fontWeight: 400 }}>
-                {mainTab === "kayit" ? "Üye olun, özel ayrıcalıkların keyfini çıkarın." : "Takimax ailesinin bir parçası olarak özel ayrıcalıklardan yararlanın."}
+              <p style={{
+                fontFamily: "'Montserrat', sans-serif",
+                fontSize: 12, fontWeight: 400,
+                color: "rgba(255,255,255,0.38)",
+                lineHeight: 1.8, marginBottom: 44,
+                letterSpacing: "0.02em",
+              }}>
+                {mainTab === "kayit"
+                  ? "Üye olun, özel ayrıcalıkların keyfini çıkarın."
+                  : "Takimax ailesinin bir parçası olarak özel ayrıcalıklardan yararlanın."}
               </p>
+
+              {/* Özellik listesi */}
               <div style={{ display: "flex", flexDirection: "column" }}>
                 {(mainTab === "kayit"
                   ? ["İlk alışverişte %10 indirim", "Ücretsiz kargo fırsatları", "Yeni koleksiyon önizlemesi", "Özel kampanya bildirimleri"]
                   : ["Siparişlerinizi kolayca takip edin", "Favorilerinizi kaydedin", "Özel indirim ve kampanyalardan haberdar olun", "Hızlı ve güvenli ödeme"]
                 ).map((text, i) => (
-                  <div key={i} className="left-panel-feature" style={{ animationDelay: `${i * 0.1}s` }}>
-                    <span style={{ color: "#c9a96e", fontSize: 10, flexShrink: 0 }}>✦</span>
-                    <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.65)", fontWeight: 400 }}>{text}</span>
+                  <div key={i} className="left-panel-feature" style={{ animationDelay: `${i * 0.08}s` }}>
+                    <div style={{
+                      width: 20, height: 20, flexShrink: 0,
+                      border: "1px solid rgba(201,169,110,0.35)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                    }}>
+                      <div style={{ width: 5, height: 5, background: "#c9a96e", opacity: 0.9 }} />
+                    </div>
+                    <span style={{
+                      fontFamily: "'Montserrat', sans-serif",
+                      fontSize: 12, fontWeight: 400,
+                      color: "rgba(255,255,255,0.58)",
+                      letterSpacing: "0.02em",
+                    }}>{text}</span>
                   </div>
                 ))}
               </div>
             </div>
-            <div style={{ marginTop: 40 }}>
-              <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.3)", letterSpacing: "0.06em" }}>
+
+            {/* Alt: geçiş linki */}
+            <div style={{ marginTop: 48, paddingTop: 28, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+              <p style={{
+                fontFamily: "'Montserrat', sans-serif",
+                fontSize: 11, color: "rgba(255,255,255,0.25)",
+                letterSpacing: "0.04em", marginBottom: 10,
+              }}>
                 {mainTab === "kayit" ? "Zaten üye misiniz?" : "Henüz üye değil misiniz?"}
               </p>
-              <button onClick={() => switchTab(mainTab === "kayit" ? "giris" : "kayit")}
-                style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 8, background: "none", border: "none", cursor: "pointer", fontFamily: "'Montserrat', sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#c9a96e", padding: 0, borderBottom: "1px solid rgba(201,169,110,0.35)", paddingBottom: 2 }}>
-                {mainTab === "kayit" ? "Giriş Yap" : "Kayıt Ol"} <ArrowRight size={12} />
+              <button
+                onClick={() => switchTab(mainTab === "kayit" ? "giris" : "kayit")}
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 8,
+                  background: "none", border: "none", cursor: "pointer",
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: 10, fontWeight: 700,
+                  letterSpacing: "0.2em", textTransform: "uppercase",
+                  color: "#c9a96e", padding: 0,
+                }}
+                onMouseEnter={e => (e.currentTarget.style.opacity = "0.75")}
+                onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+              >
+                {mainTab === "kayit" ? "Giriş Yap" : "Kayıt Ol"}
+                <ArrowRight size={11} />
               </button>
             </div>
           </div>
