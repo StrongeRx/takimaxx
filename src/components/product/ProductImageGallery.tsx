@@ -147,11 +147,7 @@ const ProductImageGallery = ({
               </button>
             )}
 
-            {!isMobile && !zoomActive && (
-              <div style={{ position: "absolute", bottom: 12, left: 12, background: "rgba(0,0,0,0.4)", borderRadius: 4, padding: "4px 10px", fontFamily: "Montserrat, sans-serif", fontSize: 10, color: "rgba(255,255,255,0.9)", pointerEvents: "none", zIndex: 2 }}>
-                Yakınlaştırmak için üzerine gel
-              </div>
-            )}
+
 
             {isMobile && images.length > 1 && (
               <>

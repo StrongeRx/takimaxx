@@ -153,36 +153,37 @@ const AddToCartRow = ({
   const inc = (e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); setQty(q => Math.min(product.stock, q + 1)); };
 
   return (
-    <div style={{ marginTop: 14 }} onClick={e => { e.preventDefault(); e.stopPropagation(); }}>
-      {/* Miktar + Sepete Ekle — tek satırda */}
-      <div style={{ display: "flex", alignItems: "stretch", gap: 8, position: "relative" }}>
+    <div className="atc-row" style={{ marginTop: 10 }} onClick={e => { e.preventDefault(); e.stopPropagation(); }}>
+      {/* Miktar + Sepete Ekle */}
+      <div className="atc-inner" style={{ display: "flex", alignItems: "stretch", gap: 6, position: "relative" }}>
 
         {/* Miktar seçici */}
-        <div style={{
+        <div className="atc-qty" style={{
           display: "flex", alignItems: "center",
           border: "1.5px solid #e0e0e0", borderRadius: 6,
           overflow: "hidden", flexShrink: 0,
+          height: 38,
         }}>
           <button onClick={dec} style={{
-            width: 28, height: "100%", border: "none", background: "transparent",
-            cursor: "pointer", fontSize: 15, fontWeight: 600, color: "#555",
+            width: 24, height: "100%", border: "none", background: "transparent",
+            cursor: "pointer", fontSize: 16, fontWeight: 600, color: "#555",
             display: "flex", alignItems: "center", justifyContent: "center",
-            transition: "background 0.15s, color 0.15s", padding: "0 2px",
+            transition: "background 0.15s, color 0.15s", padding: 0,
           }}
           onMouseEnter={e => { e.currentTarget.style.background = "#f5f5f5"; e.currentTarget.style.color = "#111"; }}
           onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#555"; }}
           >−</button>
           <span style={{
-            minWidth: 26, textAlign: "center",
+            minWidth: 20, textAlign: "center",
             fontFamily: "Montserrat, sans-serif", fontSize: 12, fontWeight: 700, color: "#111",
             borderLeft: "1px solid #eee", borderRight: "1px solid #eee",
-            padding: "6px 4px", lineHeight: 1,
+            padding: "0 3px", lineHeight: "38px",
           }}>{qty}</span>
           <button onClick={inc} style={{
-            width: 28, height: "100%", border: "none", background: "transparent",
-            cursor: "pointer", fontSize: 15, fontWeight: 600, color: "#555",
+            width: 24, height: "100%", border: "none", background: "transparent",
+            cursor: "pointer", fontSize: 16, fontWeight: 600, color: "#555",
             display: "flex", alignItems: "center", justifyContent: "center",
-            transition: "background 0.15s, color 0.15s", padding: "0 2px",
+            transition: "background 0.15s, color 0.15s", padding: 0,
           }}
           onMouseEnter={e => { e.currentTarget.style.background = "#f5f5f5"; e.currentTarget.style.color = "#111"; }}
           onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#555"; }}
@@ -190,7 +191,7 @@ const AddToCartRow = ({
         </div>
 
       {/* Sepete Ekle butonu */}
-      <div style={{ position: "relative", flex: 1 }}>
+      <div className="atc-btn-wrap" style={{ position: "relative", flex: 1 }}>
         {/* Confetti parçaları */}
         {confetti.map(c => (
           <span key={c.id} style={{
@@ -214,7 +215,7 @@ const AddToCartRow = ({
           data-state={btnState}
           style={{
             width: "100%",
-            height: 42,
+            height: 38,
             border: "none",
             borderRadius: 6,
             cursor: btnState === "idle" ? "pointer" : "default",
@@ -265,9 +266,9 @@ const AddToCartRow = ({
 
             {/* IDLE */}
             {btnState === "idle" && (
-              <span className="atc-idle" style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                <ShoppingBag size={13} style={{ transition: "transform 0.2s" }} />
-                Sepete Ekle
+              <span className="atc-idle" style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <ShoppingBag size={12} style={{ transition: "transform 0.2s", flexShrink: 0 }} />
+                <span className="atc-idle-text">Sepete Ekle</span>
               </span>
             )}
 
@@ -343,17 +344,8 @@ const ProductCard = memo(({
   onAddToCart: (e: React.MouseEvent, product: ProductType, qty: number) => void;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [quickAdded, setQuickAdded] = useState(false);
   const stockStatus = getStockStatus(product.stock);
   const isOut = stockStatus === "out";
-
-  const handleQuickAdd = (e: React.MouseEvent) => {
-    e.preventDefault(); e.stopPropagation();
-    if (isOut || quickAdded) return;
-    onAddToCart(e, product, 1);
-    setQuickAdded(true);
-    setTimeout(() => setQuickAdded(false), 2000);
-  };
 
   return (
     <div
@@ -387,65 +379,6 @@ const ProductCard = memo(({
         />
 
         {isOut && <OutOfStockOverlay />}
-
-        {/* Hızlı Sepete Ekle overlay — hover'da görünür */}
-        {!isOut && (
-          <div style={{
-            position: "absolute", bottom: 0, left: 0, right: 0,
-            padding: "32px 10px 10px",
-            background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            opacity: isHovered ? 1 : 0,
-            transform: isHovered ? "translateY(0)" : "translateY(10px)",
-            transition: "opacity 0.22s ease, transform 0.22s ease",
-            zIndex: 6,
-          }}>
-            <button
-              onClick={handleQuickAdd}
-              style={{
-                display: "flex", alignItems: "center", gap: 7,
-                padding: "9px 20px",
-                background: quickAdded ? "#16a34a" : "rgba(255,255,255,0.95)",
-                border: "none", borderRadius: 4, cursor: quickAdded ? "default" : "pointer",
-                fontFamily: "Montserrat, sans-serif", fontSize: 11, fontWeight: 700,
-                letterSpacing: "0.1em", textTransform: "uppercase",
-                color: quickAdded ? "#fff" : "#111",
-                transition: "background 0.25s ease, color 0.25s ease, transform 0.15s ease",
-                boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
-                whiteSpace: "nowrap",
-                transform: "scale(1)",
-              }}
-              onMouseEnter={e => {
-                if (!quickAdded) {
-                  e.currentTarget.style.background = "#c9a96e";
-                  e.currentTarget.style.color = "#fff";
-                  e.currentTarget.style.transform = "scale(1.03)";
-                }
-              }}
-              onMouseLeave={e => {
-                if (!quickAdded) {
-                  e.currentTarget.style.background = "rgba(255,255,255,0.95)";
-                  e.currentTarget.style.color = "#111";
-                  e.currentTarget.style.transform = "scale(1)";
-                }
-              }}
-            >
-              {quickAdded ? (
-                <>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ animation: "quickCheckIn 0.3s cubic-bezier(0.34,1.56,0.64,1)" }}>
-                    <polyline points="20 6 9 17 4 12"/>
-                  </svg>
-                  Eklendi!
-                </>
-              ) : (
-                <>
-                  <ShoppingBag size={13} />
-                  Hızlı Ekle
-                </>
-              )}
-            </button>
-          </div>
-        )}
 
         {/* Badge'lar — sol üst */}
         <div style={{ position: "absolute", top: 10, left: 10, display: "flex", flexDirection: "column", gap: 5, zIndex: 6 }}>
@@ -541,7 +474,7 @@ const ProductCard = memo(({
 
         {/* Fiyat alanı */}
         <div style={{ display: "flex", alignItems: "baseline", gap: 7, flexWrap: "wrap" }}>
-          <span style={{
+          <span className="product-price" style={{
             fontFamily: "Montserrat, sans-serif", fontSize: 21, fontWeight: 700, lineHeight: 1,
             color: isOut ? "#ccc" : stockStatus === "critical" ? "#dc2626" : "#111",
           }}>
@@ -872,21 +805,67 @@ const ProductGrid = ({ mode = "bestsellers" }: ProductGridProps) => {
         @media (max-width: 640px) {
           .product-grid-inner {
             grid-template-columns: repeat(2, 1fr) !important;
-            gap: 10px !important;
+            gap: 8px !important;
           }
           .product-card-body {
-            padding: 10px 10px 12px !important;
+            padding: 8px 8px 10px !important;
           }
 
           /* Favori butonu mobilde her zaman görünür */
           .product-grid-inner [aria-label="Favorilere ekle"] {
             opacity: 1 !important;
-            width: 30px !important;
-            height: 30px !important;
-            top: 7px !important;
-            right: 7px !important;
+            width: 28px !important;
+            height: 28px !important;
+            top: 6px !important;
+            right: 6px !important;
           }
 
+          /* Mobil: miktar + buton dikey dizilim */
+          .atc-row {
+            margin-top: 8px !important;
+          }
+          .atc-inner {
+            flex-direction: column !important;
+            gap: 5px !important;
+          }
+
+          /* Mobil: miktar seçici tam genişlik, ortada */
+          .atc-qty {
+            width: 100% !important;
+            justify-content: center !important;
+            height: 32px !important;
+          }
+          .atc-qty button {
+            flex: 1 !important;
+            width: auto !important;
+          }
+          .atc-qty span {
+            flex: 1 !important;
+            min-width: 0 !important;
+          }
+
+          /* Mobil: buton tam genişlik */
+          .atc-btn-wrap {
+            width: 100% !important;
+          }
+          .atc-btn {
+            font-size: 10px !important;
+            letter-spacing: 0.08em !important;
+            height: 34px !important;
+          }
+
+          /* Mobil: fiyat küçülsün */
+          .product-price {
+            font-size: 14px !important;
+          }
+        }
+
+        /* Çok küçük ekranlar (380px altı) */
+        @media (max-width: 380px) {
+          .product-grid-inner { gap: 6px !important; }
+          .product-card-body { padding: 6px 6px 8px !important; }
+          .product-price { font-size: 13px !important; }
+          .atc-btn { font-size: 9px !important; height: 32px !important; }
         }
       `}</style>
     </section>
