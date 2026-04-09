@@ -187,7 +187,7 @@ const Search = () => {
   const { addToCart } = useCart();
   const { flyToCart } = useCartFly();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { showToast, spawnHearts } = useToast();
+  const { showToast, showCartModal, spawnHearts } = useToast();
 
   const results = useMemo(() => {
     if (!query.trim()) return [];
@@ -212,6 +212,7 @@ const Search = () => {
     if (product.stock === 0) { showToast("Bu ürün stokta yok", "error", undefined, product.name); return; }
     for (let i = 0; i < qty; i++) addToCart(product);
     flyToCart(product.image, e.clientX, e.clientY);
+    showCartModal(product.name, product.image);
   };
 
   const showEmptyState = !query.trim() || results.length === 0;

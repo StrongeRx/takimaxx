@@ -518,7 +518,7 @@ const ProductGrid = ({ mode = "bestsellers" }: ProductGridProps) => {
   const { addToCart } = useCart();
   const { flyToCart } = useCartFly();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { showToast, spawnHearts } = useToast();
+  const { showToast, showCartModal, spawnHearts } = useToast();
   const allProducts = useProducts();
 
   const [sort, setSort] = useState<SortKey>("default");
@@ -541,7 +541,8 @@ const ProductGrid = ({ mode = "bestsellers" }: ProductGridProps) => {
     }
     addToCart(product, qty);
     flyToCart(product.image, e.clientX, e.clientY);
-  }, [addToCart, flyToCart, showToast]);
+    showCartModal(product.name, product.image);
+  }, [addToCart, flyToCart, showToast, showCartModal]);
 
   const filtered = useMemo(() => {
     let list = [...allProducts];

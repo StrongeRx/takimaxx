@@ -18,7 +18,7 @@ const RecommendCard = ({ product }: { product: Product }) => {
   const { addToCart } = useCart();
   const { flyToCart } = useCartFly();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { showToast, spawnHearts } = useToast();
+  const { showToast, showCartModal, spawnHearts } = useToast();
   const [isHovered, setIsHovered] = useState(false);
 
   const handleFavorite = (e: React.MouseEvent) => {
@@ -37,6 +37,7 @@ const RecommendCard = ({ product }: { product: Product }) => {
     e.preventDefault(); e.stopPropagation();
     for (let i = 0; i < qty; i++) addToCart(p);
     flyToCart(p.image, e.clientX, e.clientY);
+    showCartModal(p.name, p.image);
   };
 
   const isFav = isFavorite(product.id);

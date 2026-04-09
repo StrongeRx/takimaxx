@@ -98,7 +98,7 @@ const Category = () => {
   const { addToCart } = useCart();
   const { flyToCart } = useCartFly();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { showToast, spawnHearts } = useToast();
+  const { showToast, showCartModal, spawnHearts } = useToast();
 
   // Slug — önce hesaplanmalı, useEffect'in dependency'sinde kullanılıyor
   const fullSlug = sub ? `${parent}/${sub}` : (slug || "hepsi");
@@ -246,6 +246,7 @@ const Category = () => {
     e.preventDefault(); e.stopPropagation();
     for (let i = 0; i < qty; i++) addToCart(product);
     flyToCart(product.image, e.clientX, e.clientY);
+    showCartModal(product.name, product.image);
   };
 
   // Filtre paneli içeriği (masaüstü + mobil aynı)
