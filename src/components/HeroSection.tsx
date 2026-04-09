@@ -21,27 +21,25 @@ interface Slide {
   schemaDesc: string;
 }
 
-// ✅ Tüm slide'lar burada tanımlanır — ayrı bir yerde overwrite gerekmez.
-// Kendi görselinizi ekleyince SLIDE_2_IMAGE yerine sliderImg2 kullanın.
 const SLIDES: Slide[] = [
   {
     image: sliderImg,
     imageAlt: "Takimax 2026 Koleksiyonu – El İşçiliğiyle Üretilen Gümüş Takılar",
-    label: "2026 Koleksiyonu",
-    title: "Takının Gücünü Keşfet",
-    subtitle: "El işçiliğiyle üretilen özgün takı koleksiyonları",
-    buttonText: "Koleksiyonu Gör",
-    buttonHref: "/kategori/hepsi",
+    label: "",
+    title: "",
+    subtitle: "",
+    buttonText: "",
+    buttonHref: "/kategori/yeni-urunler",
     schemaName: "Takimax Ana Koleksiyon",
     schemaDesc: "925 ayar gümüş ve paslanmaz çelik takı koleksiyonları",
   },
   {
     image: SLIDE_2_IMAGE,
     imageAlt: "Takimax Kadın Aksesuar – Altın ve Gümüş Kolye, Küpe, Bileklik",
-    label: "Yeni Gelenler",
-    title: "Kadın Aksesuar",
-    subtitle: "Altın kaplama ve gümüş takılarda yeni sezon modelleri",
-    buttonText: "Hepsini Keşfet",
+    label: "",
+    title: "",
+    subtitle: "",
+    buttonText: "",
     buttonHref: "/kategori/kadin-aksesuar",
     schemaName: "Takimax Kadın Aksesuar Koleksiyonu",
     schemaDesc: "Kadınlara özel kolye, küpe, bileklik ve yüzük modelleri",
@@ -146,21 +144,25 @@ const HeroSection = () => {
           if (!isActive && !isPrev) return null;
 
           return (
-            <div
-              key={i}
-              role="group"
-              aria-roledescription="slide"
-              aria-label={`${i + 1} / ${slides.length}: ${slide.title}`}
-              aria-hidden={!isActive}
-              style={{
-                position: "absolute",
-                inset: 0,
-                zIndex: isActive ? 2 : 1,
-                opacity: isActive ? 1 : 0,
-                transition: "opacity 0.7s ease",
-                pointerEvents: isActive ? "auto" : "none",
-              }}
-            >
+          <Link
+            key={i}
+            to={slide.buttonHref}
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`${i + 1} / ${slides.length}`}
+            aria-hidden={!isActive}
+            style={{
+              position: "absolute",
+              inset: 0,
+              zIndex: isActive ? 2 : 1,
+              opacity: isActive ? 1 : 0,
+              transition: "opacity 0.7s ease",
+              pointerEvents: isActive ? "auto" : "none",
+              textDecoration: "none",
+              display: "block",
+              cursor: "pointer",
+            }}
+          >
               {/* Görsel */}
               <img
                 src={slide.image}
@@ -181,128 +183,7 @@ const HeroSection = () => {
                   transition: "transform 6s ease",
                 }}
               />
-
-              {/* Koyu katman */}
-              <div style={{
-                position: "absolute", inset: 0, pointerEvents: "none",
-                background: "linear-gradient(to right, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.18) 55%, transparent 100%)",
-              }} />
-
-              {/* Metin içeriği */}
-              <div style={{
-                position: "absolute",
-                top: 0, bottom: 0, left: 0,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                padding: "0 clamp(20px, 5vw, 72px)",
-                maxWidth: 560,
-              }}>
-                {/* Üst etiket */}
-                <div style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  marginBottom: 10,
-                  opacity: isActive ? 1 : 0,
-                  transform: isActive ? "translateY(0)" : "translateY(8px)",
-                  transition: "opacity 0.55s ease 0.15s, transform 0.55s ease 0.15s",
-                }}>
-                  <span style={{ width: 22, height: 1, background: "#c9a96e", display: "block", flexShrink: 0 }} />
-                  <span style={{
-                    fontFamily: "Montserrat, sans-serif",
-                    fontSize: 10, fontWeight: 700,
-                    letterSpacing: "0.28em",
-                    textTransform: "uppercase",
-                    color: "#c9a96e",
-                  }}>
-                    {slide.label}
-                  </span>
-                </div>
-
-                {/* Başlık: ilk slide h1, diğerleri h2 (SEO) */}
-                {i === 0 ? (
-                  <h1 className="hero-heading" style={{
-                    fontFamily: "Montserrat, sans-serif", fontWeight: 800,
-                    color: "#fff", margin: "0 0 10px",
-                    letterSpacing: "-0.02em", lineHeight: 1.1,
-                    textShadow: "0 2px 16px rgba(0,0,0,0.25)",
-                    opacity: isActive ? 1 : 0,
-                    transform: isActive ? "translateY(0)" : "translateY(10px)",
-                    transition: "opacity 0.55s ease 0.25s, transform 0.55s ease 0.25s",
-                  }}>
-                    {slide.title}
-                  </h1>
-                ) : (
-                  <h2 className="hero-heading" style={{
-                    fontFamily: "Montserrat, sans-serif", fontWeight: 800,
-                    color: "#fff", margin: "0 0 10px",
-                    letterSpacing: "-0.02em", lineHeight: 1.1,
-                    textShadow: "0 2px 16px rgba(0,0,0,0.25)",
-                    opacity: isActive ? 1 : 0,
-                    transform: isActive ? "translateY(0)" : "translateY(10px)",
-                    transition: "opacity 0.55s ease 0.25s, transform 0.55s ease 0.25s",
-                  }}>
-                    {slide.title}
-                  </h2>
-                )}
-
-                {/* Alt yazı */}
-                <p className="hero-sub" style={{
-                  fontFamily: "Montserrat, sans-serif",
-                  color: "rgba(255,255,255,0.78)",
-                  lineHeight: 1.65,
-                  margin: "0 0 22px",
-                  maxWidth: 330,
-                  opacity: isActive ? 1 : 0,
-                  transform: isActive ? "translateY(0)" : "translateY(10px)",
-                  transition: "opacity 0.55s ease 0.35s, transform 0.55s ease 0.35s",
-                }}>
-                  {slide.subtitle}
-                </p>
-
-                {/* CTA */}
-                <div style={{
-                  opacity: isActive ? 1 : 0,
-                  transform: isActive ? "translateY(0)" : "translateY(10px)",
-                  transition: "opacity 0.55s ease 0.45s, transform 0.55s ease 0.45s",
-                }}>
-                  <Link
-                    to={slide.buttonHref}
-                    aria-label={`${slide.buttonText} – ${slide.title}`}
-                    className="hero-btn"
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 8,
-                      padding: "11px 24px",
-                      background: "#fff",
-                      color: "#111",
-                      textDecoration: "none",
-                      fontFamily: "Montserrat, sans-serif",
-                      fontWeight: 700,
-                      letterSpacing: "0.13em",
-                      textTransform: "uppercase",
-                      borderRadius: 2,
-                      transition: "background 0.22s, color 0.22s",
-                    }}
-                    onMouseEnter={e => {
-                      (e.currentTarget as HTMLAnchorElement).style.background = "#c9a96e";
-                      (e.currentTarget as HTMLAnchorElement).style.color = "#fff";
-                    }}
-                    onMouseLeave={e => {
-                      (e.currentTarget as HTMLAnchorElement).style.background = "#fff";
-                      (e.currentTarget as HTMLAnchorElement).style.color = "#111";
-                    }}
-                  >
-                    {slide.buttonText}
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
-                      <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                  </Link>
-                </div>
-              </div>
-            </div>
+          </Link>
           );
         })}
 
@@ -310,6 +191,7 @@ const HeroSection = () => {
         <div
           role="tablist"
           aria-label="Slide göstergeleri"
+          className="hero-dots"
           style={{
             position: "absolute",
             bottom: 14,
@@ -328,14 +210,8 @@ const HeroSection = () => {
       </section>
 
       <style>{`
-        .hero-heading { font-size: clamp(22px, 3.8vw, 50px); }
-        .hero-sub     { font-size: clamp(12px, 1.2vw, 14px); }
-        .hero-btn     { font-size: clamp(9px, 0.9vw, 11px); }
-
         @media (max-width: 600px) {
-          .hero-heading { font-size: 22px !important; }
-          .hero-sub     { font-size: 12px !important; max-width: 240px !important; }
-          .hero-btn     { padding: 10px 18px !important; font-size: 9px !important; }
+          .hero-dots { bottom: 10px !important; }
         }
       `}</style>
     </>

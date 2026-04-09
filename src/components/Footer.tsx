@@ -55,27 +55,74 @@ const sections: Section[] = [
   },
 ];
 
+const SOCIAL_LINKS = [
+  {
+    href: "https://instagram.com/takimax",
+    label: "Instagram",
+    hoverBg: "radial-gradient(circle at 30% 110%, #f9c449 0%, #f47839 25%, #e1306c 50%, #833ab4 75%, #405de6 100%)",
+    hoverBorder: "#e1306c",
+    icon: (hovered: boolean) => (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+        stroke={hovered ? "#fff" : "rgba(255,255,255,0.75)"}
+        strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5"/>
+        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+      </svg>
+    ),
+  },
+  {
+    href: "https://facebook.com/takimax",
+    label: "Facebook",
+    hoverBg: "#1877f2",
+    hoverBorder: "#1877f2",
+    icon: (hovered: boolean) => (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill={hovered ? "#fff" : "rgba(255,255,255,0.75)"}>
+        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+      </svg>
+    ),
+  },
+  {
+    href: "https://tiktok.com/@takimax",
+    label: "TikTok",
+    hoverBg: "#010101",
+    hoverBorder: "#69c9d0",
+    icon: (hovered: boolean) => (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill={hovered ? "#fff" : "rgba(255,255,255,0.75)"}>
+        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/>
+      </svg>
+    ),
+  },
+];
+
+const SocialButton = ({ href, label, hoverBg, hoverBorder, icon }: typeof SOCIAL_LINKS[number]) => {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        width: 34, height: 34, borderRadius: 8,
+        background: hovered ? hoverBg : "rgba(255,255,255,0.07)",
+        border: `1px solid ${hovered ? hoverBorder : "rgba(255,255,255,0.12)"}`,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        textDecoration: "none", flexShrink: 0,
+        transform: hovered ? "rotate(360deg)" : "rotate(0deg)",
+        transition: "transform 0.5s cubic-bezier(0.34,1.56,0.64,1), background 0.3s ease, border-color 0.3s ease",
+      }}
+    >
+      {icon(hovered)}
+    </a>
+  );
+};
+
 const SocialIcons = () => (
   <div style={{ display: "flex", gap: 8 }}>
-    {[
-      {
-        href: "https://instagram.com/takimax", label: "Instagram",
-        icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.75)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-      },
-      {
-        href: "https://facebook.com/takimax", label: "Facebook",
-        icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="rgba(255,255,255,0.75)"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-      },
-      {
-        href: "https://tiktok.com/@takimax", label: "TikTok",
-        icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(255,255,255,0.75)"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
-      },
-    ].map(s => (
-      <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}
-        style={{ width: 34, height: 34, borderRadius: 8, background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none", flexShrink: 0 }}>
-        {s.icon}
-      </a>
-    ))}
+    {SOCIAL_LINKS.map(s => <SocialButton key={s.label} {...s} />)}
   </div>
 );
 
@@ -130,10 +177,6 @@ const Footer = () => {
           .footer-mobile  { display: none; }
         }
         .footer-link-btn:hover { color: #fff !important; }
-        .footer-social-btn:hover {
-          background: rgba(201,169,110,0.18) !important;
-          border-color: rgba(201,169,110,0.5) !important;
-        }
       `}</style>
 
       {/* ══ MOBİL ══ */}

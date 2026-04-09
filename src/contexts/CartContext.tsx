@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useEffect, useMemo, useRef, type ReactNode, type Dispatch, type SetStateAction } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, useMemo, useRef, type ReactNode } from "react";
 import type { Product } from "@/data/products";
 
 const SHIPPING_FEE = 49.90;
@@ -20,7 +20,6 @@ export interface AppliedCoupon {
 interface PersistedCart {
   items: CartItem[];
   appliedCoupon: AppliedCoupon | null;
-  giftWrap: boolean;
 }
 
 interface CartContextType {
@@ -38,29 +37,24 @@ interface CartContextType {
   setIsCartOpen: (open: boolean) => void;
   onAddToCart?: (product: Product) => void;
   setOnAddToCart: (fn: (product: Product) => void) => void;
-  giftWrap: boolean;
-  setGiftWrap: Dispatch<SetStateAction<boolean>>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-// localStorage'dan tüm sepet verisini yükle
 const loadCart = (): PersistedCart => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { items: [], appliedCoupon: null, giftWrap: false };
+    if (!raw) return { items: [], appliedCoupon: null };
     const parsed = JSON.parse(raw) as Partial<PersistedCart>;
     return {
       items: Array.isArray(parsed.items) ? parsed.items : [],
       appliedCoupon: parsed.appliedCoupon ?? null,
-      giftWrap: parsed.giftWrap ?? false,
     };
   } catch {
-    return { items: [], appliedCoupon: null, giftWrap: false };
+    return { items: [], appliedCoupon: null };
   }
 };
 
-// localStorage'a tüm sepet verisini kaydet
 const saveCart = (data: PersistedCart) => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -73,19 +67,15 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>(initial.items);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [appliedCoupon, setAppliedCouponState] = useState<AppliedCoupon | null>(initial.appliedCoupon);
-  const [giftWrap, setGiftWrap] = useState(initial.giftWrap);
-  // BUG FIX #4: onAddToCart ref ile tutulur — stale closure sorununu önler
-  // useState kullansaydık addToCart her callback değişiminde yeniden oluşurdu
   const onAddToCartRef = useRef<((product: Product) => void) | undefined>(undefined);
 
   const setOnAddToCart = useCallback((fn: (product: Product) => void) => {
     onAddToCartRef.current = fn;
   }, []);
 
-  // items, appliedCoupon veya giftWrap değişince localStorage'a kaydet
   useEffect(() => {
-    saveCart({ items, appliedCoupon, giftWrap });
-  }, [items, appliedCoupon, giftWrap]);
+    saveCart({ items, appliedCoupon });
+  }, [items, appliedCoupon]);
 
   const setAppliedCoupon = useCallback((coupon: AppliedCoupon | null) => {
     setAppliedCouponState(coupon);
@@ -135,7 +125,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const clearCart = useCallback(() => {
     setItems([]);
     setAppliedCouponState(null);
-    setGiftWrap(false);
   }, []);
 
   const totalItems = useMemo(
@@ -164,7 +153,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       appliedCoupon, setAppliedCoupon, discountAmount,
       isCartOpen, setIsCartOpen,
       onAddToCart: onAddToCartRef.current, setOnAddToCart,
-      giftWrap, setGiftWrap,
     }}>
       {children}
     </CartContext.Provider>

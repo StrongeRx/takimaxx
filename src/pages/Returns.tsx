@@ -97,7 +97,6 @@ const Returns = () => {
 
       <PageLayout title="İade ve Değişim Koşulları">
         <div style={{ maxWidth: 780, margin: "0 auto" }}>
-          <h1 style={{ fontFamily: "Montserrat, sans-serif", fontSize: "clamp(24px,3vw,36px)", fontWeight: 700, color: "#111", marginBottom: 32 }}>İade ve Değişim Koşulları</h1>
 
           {/* Üst bilgi kartları */}
           <div style={{
@@ -228,60 +227,7 @@ const Returns = () => {
             </div>
           ))}
 
-          {/* Alt CTA */}
-          <div style={{
-            background: "linear-gradient(135deg, #fdf8f0 0%, #f5ead8 100%)",
-            border: "1px solid #ead9b8",
-            borderRadius: 8,
-            padding: "28px 32px",
-            textAlign: "center",
-            marginTop: 16,
-          }}>
-            <p style={{
-              fontFamily: "Montserrat, sans-serif",
-              fontSize: 18,
-              fontWeight: 600,
-              color: "#111",
-              margin: "0 0 8px",
-            }}>
-              Hâlâ sorunuz mu var?
-            </p>
-            <p style={{
-              fontFamily: "Montserrat, sans-serif",
-              fontSize: 12,
-              color: "#888",
-              margin: "0 0 20px",
-              lineHeight: 1.7,
-            }}>
-              Müşteri hizmetlerimiz hafta içi 09:00–18:00 arasında hizmetinizdedir.
-            </p>
-            <a
-              href="/iletisim"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "11px 28px",
-                background: "#111",
-                color: "#fff",
-                textDecoration: "none",
-                fontFamily: "Montserrat, sans-serif",
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                borderRadius: 2,
-                transition: "background 0.2s",
-              }}
-              onMouseEnter={e => (e.currentTarget.style.background = "#c9a96e")}
-              onMouseLeave={e => (e.currentTarget.style.background = "#111")}
-            >
-              Bize Ulaşın
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </a>
-          </div>
+
 
         </div>
       </PageLayout>

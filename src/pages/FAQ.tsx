@@ -62,14 +62,11 @@ const FAQ = () => {
     <PageLayout title="Sıkça Sorulan Sorular">
       <div style={{ maxWidth: 780, margin: "0 auto" }}>
 
-        {/* Üst bilgi */}
-        <div style={{ textAlign: "center", marginBottom: 56 }}>
-          <h1 style={{ fontFamily: "Montserrat, sans-serif", fontSize: "clamp(24px,3vw,36px)", fontWeight: 700, color: "#111", marginBottom: 16 }}>Sıkça Sorulan Sorular</h1>
-          <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 13, color: "#777", lineHeight: 1.8 }}>
-            En çok merak edilen konuları derledik. Cevabını bulamadığınız sorular için{" "}
-            <a href="/iletisim" style={{ color: "#c9a96e", textDecoration: "underline" }}>bize ulaşabilirsiniz.</a>
-          </p>
-        </div>
+        {/* Kısa açıklama — başlık tekrar etmeden */}
+        <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 13, color: "#777", lineHeight: 1.8, marginBottom: 48 }}>
+          En çok merak edilen konuları derledik. Cevabını bulamadığınız sorular için{" "}
+          <a href="/iletisim" style={{ color: "#c9a96e", textDecoration: "underline" }}>bize ulaşabilirsiniz.</a>
+        </p>
 
         {faqs.map((section) => (
           <div key={section.category} style={{ marginBottom: 48 }}>
@@ -101,19 +98,7 @@ const FAQ = () => {
           </div>
         ))}
 
-        {/* Alt CTA */}
-        <div style={{ marginTop: 48, padding: "32px 28px", background: "#f5f2ee", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 20 }}>
-          <div>
-            <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 22, fontWeight: 600, color: "#111", marginBottom: 6 }}>Hâlâ sorunuz mu var?</p>
-            <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 12, color: "#777" }}>Müşteri hizmetlerimiz size yardımcı olmaktan memnuniyet duyar.</p>
-          </div>
-          <a href="/iletisim"
-            style={{ display: "inline-block", padding: "12px 28px", background: "#111", color: "#fff", fontFamily: "Montserrat, sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", textDecoration: "none", flexShrink: 0 }}
-            onMouseEnter={e => (e.currentTarget.style.background = "#c9a96e")}
-            onMouseLeave={e => (e.currentTarget.style.background = "#111")}>
-            Bize Yazın
-          </a>
-        </div>
+
 
       </div>
     </PageLayout>

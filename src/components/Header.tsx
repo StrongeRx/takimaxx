@@ -26,7 +26,7 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
 const CATEGORY_BADGES: Record<string, { label: string; color: string }> = {
   "yeni-urunler":    { label: "YENİ",  color: "#16a34a" },
   "populer-urunler": { label: "TREND", color: "#dc2626" },
-  "hediyelik-setler":{ label: "🎁",    color: "#9333ea" },
+
 };
 
 const POPULAR_SEARCHES = ["Gümüş Kolye", "Altın Küpe", "Bileklik Set", "Yüzük", "Hediye Seti", "925 Gümüş", "Paslanmaz Çelik"];

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { X, Minus, Plus, ShoppingBag, Trash2, Tag, Truck, ChevronRight, Gift } from "lucide-react";
+import { X, Minus, Plus, ShoppingBag, Trash2, Tag, Truck, ChevronRight } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { Link } from "react-router-dom";
 import { FieldError } from "@/components/AlertMsg";
@@ -10,10 +10,8 @@ const STATIC_COUPONS: Record<string, { type: "percent" | "fixed" | "shipping"; v
   "KARGO0":    { type: "shipping", value: 0,  label: "Ücretsiz Kargo" },
 };
 
-const GIFT_WRAP_PRICE = 29.90;
-
 const CartDrawer = () => {
-  const { items, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, totalPrice, totalItems, appliedCoupon, setAppliedCoupon, discountAmount, giftWrap, setGiftWrap } = useCart();
+  const { items, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, totalPrice, totalItems, appliedCoupon, setAppliedCoupon, discountAmount } = useCart();
 
   const [couponInput, setCouponInput] = useState("");
   const [couponError, setCouponError] = useState("");
@@ -49,7 +47,7 @@ const CartDrawer = () => {
 
   const grandTotal = Math.max(
     0,
-    totalPrice - (appliedCoupon?.type === "shipping" ? 0 : discount) + effectiveShipping + (giftWrap ? GIFT_WRAP_PRICE : 0)
+    totalPrice - (appliedCoupon?.type === "shipping" ? 0 : discount) + effectiveShipping
   );
 
   const applyCoupon = () => {
@@ -200,19 +198,6 @@ const CartDrawer = () => {
         {items.length > 0 && (
           <div style={{ borderTop: "1px solid #f0ede8", flexShrink: 0 }}>
 
-            {/* Hediye paketi toggle */}
-            <div style={{ padding: "13px 24px", borderBottom: "1px solid #f0ede8", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Gift size={15} style={{ color: "#c9a96e" }} />
-                <span style={{ fontFamily: "Montserrat, sans-serif", fontSize: 12, color: "#444" }}>
-                  Hediye paketi (+₺{GIFT_WRAP_PRICE.toFixed(2)})
-                </span>
-              </div>
-              <button onClick={() => setGiftWrap(v => !v)}
-                style={{ width: 40, height: 22, borderRadius: 11, border: "none", cursor: "pointer", background: giftWrap ? "#c9a96e" : "#ddd", position: "relative", transition: "background 0.25s" }}>
-                <span style={{ position: "absolute", top: 2, left: giftWrap ? 20 : 2, width: 18, height: 18, borderRadius: "50%", background: "#fff", transition: "left 0.25s", boxShadow: "0 1px 3px rgba(0,0,0,0.2)" }} />
-              </button>
-            </div>
 
             {/* Kupon */}
             <div style={{ padding: "13px 24px", borderBottom: "1px solid #f0ede8" }}>
@@ -268,7 +253,6 @@ const CartDrawer = () => {
                 { label: "Ara Toplam", value: `₺${totalPrice.toLocaleString("tr-TR", { minimumFractionDigits: 2 })}`, color: "#555" },
                 ...(discount > 0 ? [{ label: "İndirim", value: `-₺${discount.toFixed(2)}`, color: "#16a34a" }] : []),
                 { label: "Kargo", value: appliedCoupon?.code === "KARGO0" ? "ÜCRETSİZ (Özel)" : effectiveShipping === 0 ? "ÜCRETSİZ" : `₺${effectiveShipping.toFixed(2)}`, color: effectiveShipping === 0 ? "#16a34a" : "#555" },
-                ...(giftWrap ? [{ label: "Hediye Paketi", value: `₺${GIFT_WRAP_PRICE.toFixed(2)}`, color: "#555" }] : []),
               ].map(row => (
                 <div key={row.label} style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
                   <span style={{ fontFamily: "Montserrat, sans-serif", fontSize: 12, color: "#888" }}>{row.label}</span>

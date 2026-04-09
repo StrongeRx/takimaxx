@@ -61,16 +61,17 @@ const PageLayout = ({ title, breadcrumb, children, showBanner = false }: Props) 
         </div>
       ) : (
         /* Normal başlık */
-        <div style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "32px 24px" }}>
+        <div style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "18px 24px" }}>
           <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-            <nav style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#999", marginBottom: 8, display: "flex", gap: 6, alignItems: "center" }}>
-              <Link to="/" style={{ color: "#999", textDecoration: "none" }} onMouseEnter={e => e.currentTarget.style.color = "#c9a96e"} onMouseLeave={e => e.currentTarget.style.color = "#999"}>Anasayfa</Link>
-              <span>/</span>
+            <nav style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#aaa" }}>
+              <Link to="/" style={{ color: "#aaa", textDecoration: "none" }}
+                onMouseEnter={e => e.currentTarget.style.color = "#111"}
+                onMouseLeave={e => e.currentTarget.style.color = "#aaa"}>
+                Anasayfa
+              </Link>
+              <span style={{ color: "#ddd", fontSize: 10 }}>›</span>
               <span style={{ color: "#111" }}>{breadcrumb || title}</span>
             </nav>
-            <h1 style={{ fontFamily: "Montserrat, sans-serif", fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 600, color: "#111", margin: 0 }}>
-              {title}
-            </h1>
           </div>
         </div>
       )}
@@ -79,6 +80,17 @@ const PageLayout = ({ title, breadcrumb, children, showBanner = false }: Props) 
       <div style={{ flex: 1, maxWidth: 1280, margin: "0 auto", width: "100%", padding: "48px 24px", boxSizing: "border-box" }}>
         <style>{`@media(max-width:640px){.pl-content{padding:24px 16px!important}}`}</style>
         <div className="pl-content" style={{ flex: 1, maxWidth: 1280, margin: "0 auto", width: "100%", padding: "48px 24px", boxSizing: "border-box" }}>
+          {!showBanner && (
+            <div style={{ textAlign: "center", marginBottom: 48 }}>
+              <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.35em", textTransform: "uppercase", color: "#999", margin: "0 0 14px" }}>
+                Takimax
+              </p>
+              <h1 style={{ fontFamily: "Montserrat, sans-serif", fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 400, color: "#111", margin: "0 0 20px", letterSpacing: "-0.01em" }}>
+                {title}
+              </h1>
+              <div style={{ width: 40, height: 1, background: "#c9a96e", margin: "0 auto" }} />
+            </div>
+          )}
           {children}
         </div>
       </div>

@@ -264,7 +264,7 @@ const CreditCardVisual = ({
 
 /* ─── Ana Checkout ─── */
 const Checkout = () => {
-  const { items, totalPrice, clearCart, appliedCoupon, discountAmount, giftWrap } = useCart();
+  const { items, totalPrice, clearCart, appliedCoupon, discountAmount } = useCart();
   const { isLoggedIn, user } = useAuth();
   const navigate = useNavigate();
 
@@ -314,8 +314,6 @@ const Checkout = () => {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const GIFT_WRAP_PRICE = 29.90;
-
   // Kargo sabitleri — yeni admin panelinden yönetilecek
   const shippingConfig = {
     fee: 49.90,
@@ -330,8 +328,7 @@ const Checkout = () => {
     express: appliedCoupon?.type === "shipping" ? 0 : shippingConfig.expressFee,
   };
   const shippingCost = SHIPPING_COSTS[shippingMethod];
-  // grandTotal tek noktada hesaplanır — sipariş kaydında da bu değer kullanılır
-  const grandTotal = Math.max(0, totalPrice - discountAmount + shippingCost + (giftWrap ? GIFT_WRAP_PRICE : 0));
+  const grandTotal = Math.max(0, totalPrice - discountAmount + shippingCost);
 
   const formatCard = (v: string) => {
     const digits = v.replace(/\D/g, "");
@@ -1081,7 +1078,6 @@ const Checkout = () => {
                   { label: "Ara Toplam", value: `₺${totalPrice.toLocaleString("tr-TR", { minimumFractionDigits: 2 })}`, special: false },
                   ...(discountAmount > 0 ? [{ label: `İndirim (${appliedCoupon?.label})`, value: `-₺${discountAmount.toFixed(2)}`, special: true }] : []),
                   { label: "Kargo", value: shippingCost === 0 ? "Ücretsiz" : `₺${shippingCost.toFixed(2)}`, special: shippingCost === 0 },
-                  ...(giftWrap ? [{ label: "Hediye Paketi", value: `+₺${GIFT_WRAP_PRICE.toFixed(2)}`, special: false }] : []),
                 ].map(r => (
                   <div key={r.label} style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
                     <span style={{ fontFamily: "Montserrat, sans-serif", fontSize: 13, color: "#999" }}>{r.label}</span>
