@@ -38,7 +38,7 @@ const ProductDetail = () => {
   const { addToCart } = useCart();
   const { flyToCart } = useCartFly();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { showToast, spawnHearts } = useToast();
+  const { showToast, showCartModal, spawnHearts } = useToast();
   const { isLoggedIn, user } = useAuth();
   const { addToRecentlyViewed } = useRecentlyViewed();
   const { trackFavorite, trackCart } = useRecommendation();
@@ -95,7 +95,11 @@ const ProductDetail = () => {
       flyToCart(product.image, r.left + r.width / 2, r.top + r.height / 2);
     }
     setTimeout(() => setBtnState("added"), 400);
-    setTimeout(() => { setBtnState("idle"); setQuantity(1); }, 1800);
+    setTimeout(() => {
+      setBtnState("idle");
+      setQuantity(1);
+      showCartModal(product.name, product.image);
+    }, 1800);
   };
 
   const handleBuyNow = () => { addToCart(product, quantity); navigate("/odeme"); };
