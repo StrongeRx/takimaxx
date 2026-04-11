@@ -174,6 +174,40 @@ const NavItem = ({ category, headerBottom }: { category: typeof mainCategories[n
   );
 };
 
+/* ── MobileSocialBtn ── */
+const MobileSocialBtn = ({ href, label, hoverBg, hoverBorder, normalBg, normalBorder, icon }: {
+  href: string; label: string;
+  hoverBg: string; hoverBorder: string;
+  normalBg: string; normalBorder: string;
+  icon: (hovered: boolean) => React.ReactNode;
+}) => {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onTouchStart={() => setHovered(true)}
+      onTouchEnd={() => setTimeout(() => setHovered(false), 400)}
+      style={{
+        width: 40, height: 40, borderRadius: 10,
+        background: hovered ? hoverBg : normalBg,
+        border: `1px solid ${hovered ? hoverBorder : normalBorder}`,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        textDecoration: "none", flexShrink: 0,
+        transform: hovered ? "rotate(360deg) scale(1.08)" : "rotate(0deg) scale(1)",
+        transition: "transform 0.5s cubic-bezier(0.34,1.56,0.64,1), background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
+        boxShadow: hovered ? "0 4px 12px rgba(0,0,0,0.12)" : "0 1px 3px rgba(0,0,0,0.05)",
+      }}
+    >
+      {icon(hovered)}
+    </a>
+  );
+};
+
 /* ── Header ── */
 const Header = () => {
   const allProducts = useProducts();
@@ -482,6 +516,68 @@ const Header = () => {
                   </div>
                 );
               })}
+            </div>
+
+            {/* Sosyal Medya */}
+            <div style={{ borderTop: "1px solid #f0ede8", padding: "14px 20px", background: "#faf9f7", flexShrink: 0 }}>
+              <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 9, fontWeight: 800, letterSpacing: "0.22em", textTransform: "uppercase", color: "#bbb", margin: "0 0 10px 0" }}>Bizi Takip Et</p>
+              <div style={{ display: "flex", gap: 10 }}>
+                {[
+                  {
+                    href: "https://instagram.com/takimax",
+                    label: "Instagram",
+                    hoverBg: "radial-gradient(circle at 30% 110%, #f9c449 0%, #f47839 25%, #e1306c 50%, #833ab4 75%, #405de6 100%)",
+                    hoverBorder: "#e1306c",
+                    normalBg: "#fff",
+                    normalBorder: "#ece9e3",
+                    icon: (h: boolean) => (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke={h ? "#fff" : "#888"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5"/>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                      </svg>
+                    ),
+                  },
+                  {
+                    href: "https://facebook.com/takimax",
+                    label: "Facebook",
+                    hoverBg: "#1877f2",
+                    hoverBorder: "#1877f2",
+                    normalBg: "#fff",
+                    normalBorder: "#ece9e3",
+                    icon: (h: boolean) => (
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill={h ? "#fff" : "#888"}>
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                      </svg>
+                    ),
+                  },
+                  {
+                    href: "https://tiktok.com/@takimax",
+                    label: "TikTok",
+                    hoverBg: "#010101",
+                    hoverBorder: "#69c9d0",
+                    normalBg: "#fff",
+                    normalBorder: "#ece9e3",
+                    icon: (h: boolean) => (
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill={h ? "#fff" : "#888"}>
+                        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/>
+                      </svg>
+                    ),
+                  },
+                ].map(({ href, label, hoverBg, hoverBorder, normalBg, normalBorder, icon }) => (
+                  <MobileSocialBtn
+                    key={label}
+                    href={href}
+                    label={label}
+                    hoverBg={hoverBg}
+                    hoverBorder={hoverBorder}
+                    normalBg={normalBg}
+                    normalBorder={normalBorder}
+                    icon={icon}
+                  />
+                ))}
+              </div>
             </div>
 
             {/* Alt linkler */}
