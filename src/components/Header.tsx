@@ -1,7 +1,7 @@
 import { useProducts } from "@/hooks/useProducts";
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { ShoppingBag, Search, Menu, X, User, ChevronDown, Heart, TrendingUp, Clock, ArrowRight, Sparkles, Tag, ChevronRight as CRight, Star } from "lucide-react";
+import { ShoppingBag, Search, X, User, ChevronDown, Heart, TrendingUp, Clock, ArrowRight, Sparkles, Tag, ChevronRight as CRight, Star } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
@@ -357,8 +357,53 @@ const Header = () => {
 
           {/* SOL */}
           <div id="hdr-left" style={{ display: "flex", alignItems: "center" }}>
-            <button id="hdr-hamburger" onClick={() => { closeSearch(); setMobileOpen(v => !v); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "8px", color: "#111", display: "none", alignItems: "center" }} aria-label="Menü">
-              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+            <button
+              id="hdr-hamburger"
+              onClick={() => { closeSearch(); setMobileOpen(v => !v); }}
+              aria-label="Menü"
+              style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "none", alignItems: "center", justifyContent: "center" }}
+            >
+              <div style={{
+                width: 42, height: 42,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                border: `1.5px solid ${mobileOpen ? "#c9a96e" : "#e5e5e5"}`,
+                borderRadius: 11,
+                background: mobileOpen ? "#fdf8f0" : "#fff",
+                transform: mobileOpen ? "rotate(-90deg) scale(1.06)" : "rotate(0deg) scale(1)",
+                transition: "border-color 0.3s ease, background 0.3s ease, transform 0.4s cubic-bezier(0.34,1.3,0.64,1)",
+              }}>
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <line x1="3" y1="5" x2="19" y2="5" stroke={mobileOpen ? "#c9a96e" : "#111"} strokeWidth="1.2" strokeLinecap="round"
+                    style={{ opacity: mobileOpen ? 0 : 0.25, transition: "opacity 0.25s ease" }} />
+                  <line x1="3" y1="11" x2="19" y2="11" stroke={mobileOpen ? "#c9a96e" : "#111"} strokeWidth="1.2" strokeLinecap="round"
+                    style={{ opacity: mobileOpen ? 0 : 0.25, transition: "opacity 0.25s ease 0.03s" }} />
+                  <line x1="3" y1="17" x2="19" y2="17" stroke={mobileOpen ? "#c9a96e" : "#111"} strokeWidth="1.2" strokeLinecap="round"
+                    style={{ opacity: mobileOpen ? 0 : 0.25, transition: "opacity 0.25s ease 0.06s" }} />
+                  {[
+                    { cx: 3,  cy: 5,  i: 0, hide: mobileOpen, rotate: 0   },
+                    { cx: 11, cy: 5,  i: 1, hide: mobileOpen, rotate: 0   },
+                    { cx: 19, cy: 5,  i: 2, hide: false,       rotate: mobileOpen ? 45  : 0 },
+                    { cx: 3,  cy: 11, i: 3, hide: mobileOpen, rotate: 0   },
+                    { cx: 11, cy: 11, i: 4, hide: false,       rotate: mobileOpen ? 45  : 0 },
+                    { cx: 19, cy: 11, i: 5, hide: mobileOpen, rotate: 0   },
+                    { cx: 3,  cy: 17, i: 6, hide: false,       rotate: mobileOpen ? -45 : 0 },
+                    { cx: 11, cy: 17, i: 7, hide: mobileOpen, rotate: 0   },
+                    { cx: 19, cy: 17, i: 8, hide: mobileOpen, rotate: 0   },
+                  ].map(({ cx, cy, i, hide, rotate }) => (
+                    <rect
+                      key={i}
+                      x={cx - 2} y={cy - 2} width="4" height="4" rx="1"
+                      fill={i === 4 ? "#c9a96e" : (mobileOpen ? "#c9a96e" : "#111")}
+                      style={{
+                        transformOrigin: `${cx}px ${cy}px`,
+                        transform: `scale(${hide ? 0 : 1}) rotate(${rotate}deg)`,
+                        opacity: hide ? 0 : 1,
+                        transition: `transform 0.35s cubic-bezier(0.34,1.2,0.64,1) ${["0ms","30ms","0ms","60ms","30ms","60ms","0ms","30ms","0ms"][i]}, opacity 0.25s ease ${["0ms","30ms","0ms","60ms","30ms","60ms","0ms","30ms","0ms"][i]}, fill 0.25s ease`,
+                      }}
+                    />
+                  ))}
+                </svg>
+              </div>
             </button>
           </div>
 
