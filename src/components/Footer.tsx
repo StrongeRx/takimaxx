@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useCart } from "@/contexts/CartContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useAuth } from "@/contexts/AuthContext";
 import logoSvg from "@/assets/logo.svg";
@@ -130,7 +129,6 @@ const Footer = () => {
   const [email, setEmail] = useState("");
   const [emailStatus, setEmailStatus] = useState<"idle" | "error" | "success">("idle");
   const [openSection, setOpenSection] = useState<string | null>(null);
-  const { setIsCartOpen } = useCart();
   const { setIsFavDrawerOpen } = useFavorites();
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
@@ -159,7 +157,7 @@ const Footer = () => {
       display: "block", textAlign: "left",
     };
     if (link.label === "Sepetim")
-      return <button onClick={() => setIsCartOpen(true)} style={style}>{link.label}</button>;
+      return <Link to="/sepet" style={style}>{link.label}</Link>;
     if (link.label === "Favorilerim")
       return <button onClick={() => setIsFavDrawerOpen(true)} style={style}>{link.label}</button>;
     if (link.label === "İade Taleplerim")

@@ -177,7 +177,7 @@ const NavItem = ({ category, headerBottom }: { category: typeof mainCategories[n
 /* ── Header ── */
 const Header = () => {
   const allProducts = useProducts();
-  const { totalItems, setIsCartOpen } = useCart();
+  const { totalItems } = useCart();
   const { isLoggedIn, user } = useAuth();
   const { totalFavorites, setIsFavDrawerOpen } = useFavorites();
   const navigate = useNavigate();
@@ -372,10 +372,14 @@ const Header = () => {
             </IconBtn>
 
             {/* Sepet */}
-            <IconBtn onClick={() => setIsCartOpen(true)} label="Sepetim" dataAttr="cart-icon">
-              <ShoppingBag size={20} />
+            <IconBtn onClick={() => navigate("/sepet")} label="Sepetim" dataAttr="cart-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <path d="M16 10a4 4 0 0 1-8 0"/>
+              </svg>
               {totalItems > 0 && (
-                <span style={{ position: "absolute", top: 3, right: 3, minWidth: 16, height: 16, background: "#111", color: "#fff", fontSize: 9, fontFamily: "Montserrat, sans-serif", fontWeight: 700, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 3px" }}>
+                <span style={{ position: "absolute", top: 2, right: 2, minWidth: 15, height: 15, background: "#111", color: "#fff", fontSize: 8, fontFamily: "Montserrat, sans-serif", fontWeight: 800, borderRadius: 3, display: "flex", alignItems: "center", justifyContent: "center", padding: "0 3px", border: "1.5px solid #fff" }}>
                   {totalItems}
                 </span>
               )}
@@ -427,7 +431,7 @@ const Header = () => {
               </button>
               <button onClick={() => {
                 setMobileOpen(false);
-                setTimeout(() => setIsCartOpen(true), 300);
+                navigate("/sepet");
               }} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 7, padding: "11px 16px", background: "none", border: "none", cursor: "pointer", fontFamily: "Montserrat, sans-serif", fontSize: 12, fontWeight: 600, color: "#555" }}>
                 <ShoppingBag size={14} style={{ color: "#c9a96e" }} /> Sepetim
                 {totalItems > 0 && <span style={{ background: "#111", color: "#fff", fontSize: 9, fontWeight: 800, padding: "1px 5px", borderRadius: 10 }}>{totalItems}</span>}

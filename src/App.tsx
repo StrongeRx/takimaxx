@@ -11,7 +11,6 @@ import { ToastProvider } from "@/contexts/ToastContext";
 import { RecentlyViewedProvider } from "@/contexts/RecentlyViewedContext";
 import { RecommendationProvider } from "@/contexts/RecommendationContext";
 import { AuthProvider } from "@/contexts/AuthContext";
-import CartDrawer from "@/components/CartDrawer";
 import FavoritesDrawer from "@/components/FavoritesDrawer";
 import ScrollToTop from "@/components/ScrollToTop";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
@@ -23,6 +22,7 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import Index from "./pages/Index";
 
 // Diğer sayfalar lazy — ihtiyaç duyulduğunda yüklensin
+const Cart            = lazy(() => import("./pages/Cart"));
 const ProductDetail  = lazy(() => import("./pages/ProductDetail"));
 const Login          = lazy(() => import("./pages/Login"));
 const Register       = lazy(() => import("./pages/Register"));
@@ -68,11 +68,11 @@ const App = () => (
                   <ScrollToTopButton />
                   <CookieBanner />
                   <WhatsAppButton />
-                  <CartDrawer />
                   <FavoritesDrawer />
                   <Suspense fallback={<div style={{ minHeight: "100vh" }} />}>
                     <Routes>
                       <Route path="/" element={<Index />} />
+                      <Route path="/sepet" element={<Cart />} />
                       <Route path="/urun/:id" element={<ProductDetail />} />
                       <Route path="/giris" element={<Login />} />
                       <Route path="/kayit" element={<Register />} />
