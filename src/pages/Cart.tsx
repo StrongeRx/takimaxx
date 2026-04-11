@@ -217,7 +217,7 @@ const Cart = () => {
                       </div>
 
                       {/* Satır toplam */}
-                      <span style={{ fontFamily: "Montserrat, sans-serif", fontSize: 16, fontWeight: 700, color: "#c9a96e", marginLeft: "auto" }}>
+                      <span style={{ fontFamily: "Montserrat, sans-serif", fontSize: 16, fontWeight: 700, color: "#111", marginLeft: "auto" }}>
                         ₺{(item.product.price * item.quantity).toLocaleString("tr-TR", { minimumFractionDigits: 2 })}
                       </span>
 
