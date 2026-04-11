@@ -11,7 +11,6 @@ import { ToastProvider } from "@/contexts/ToastContext";
 import { RecentlyViewedProvider } from "@/contexts/RecentlyViewedContext";
 import { RecommendationProvider } from "@/contexts/RecommendationContext";
 import { AuthProvider } from "@/contexts/AuthContext";
-import FavoritesDrawer from "@/components/FavoritesDrawer";
 import ScrollToTop from "@/components/ScrollToTop";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import ToastBridge from "@/components/ToastBridge";
@@ -68,7 +67,6 @@ const App = () => (
                   <ScrollToTopButton />
                   <CookieBanner />
                   <WhatsAppButton />
-                  <FavoritesDrawer />
                   <Suspense fallback={<div style={{ minHeight: "100vh" }} />}>
                     <Routes>
                       <Route path="/" element={<Index />} />

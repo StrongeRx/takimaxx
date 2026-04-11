@@ -179,7 +179,7 @@ const Header = () => {
   const allProducts = useProducts();
   const { totalItems } = useCart();
   const { isLoggedIn, user } = useAuth();
-  const { totalFavorites, setIsFavDrawerOpen } = useFavorites();
+  const { totalFavorites } = useFavorites();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -346,9 +346,9 @@ const Header = () => {
               <Search size={20} />
             </IconBtn>
 
-            {/* Favoriler — sadece mobilde göster */}
+            {/* Favoriler — hesabım sayfasına yönlendir */}
             <span id="hdr-fav-btn" style={{ display: "none" }}>
-              <IconBtn onClick={() => setIsFavDrawerOpen(true)} label="Favorilerim">
+              <IconBtn onClick={() => navigate(isLoggedIn ? "/hesabim" : "/giris")} label="Favorilerim">
                 <Heart
                   size={20}
                   style={{
@@ -424,7 +424,7 @@ const Header = () => {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", borderBottom: "1px solid #f0ede8", flexShrink: 0 }}>
               <button onClick={() => {
                 setMobileOpen(false);
-                setTimeout(() => setIsFavDrawerOpen(true), 300);
+                navigate(isLoggedIn ? "/hesabim" : "/giris");
               }} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 7, padding: "11px 16px", background: "none", border: "none", borderRight: "1px solid #f0ede8", cursor: "pointer", fontFamily: "Montserrat, sans-serif", fontSize: 12, fontWeight: 600, color: "#555" }}>
                 <Heart size={14} style={{ color: "#c9a96e", fill: totalFavorites > 0 ? "#c9a96e" : "none" }} /> Favoriler
                 {totalFavorites > 0 && <span style={{ background: "#c9a96e", color: "#fff", fontSize: 9, fontWeight: 800, padding: "1px 5px", borderRadius: 10 }}>{totalFavorites}</span>}

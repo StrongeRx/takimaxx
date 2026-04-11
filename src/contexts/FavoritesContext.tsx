@@ -17,8 +17,6 @@ interface FavoritesContextType {
   isFavorite: (id: string) => boolean;
   toggleFavorite: (product: Product) => void;
   totalFavorites: number;
-  isFavDrawerOpen: boolean;
-  setIsFavDrawerOpen: (open: boolean) => void;
 }
 
 const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
@@ -26,7 +24,6 @@ const FavoritesContext = createContext<FavoritesContextType | undefined>(undefin
 export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
   // ✅ Sayfa açılışında localStorage'dan yükle
   const [favorites, setFavorites] = useState<Product[]>(loadFromStorage);
-  const [isFavDrawerOpen, setIsFavDrawerOpen] = useState(false);
 
   // ✅ Her değişiklikte localStorage'a kaydet
   useEffect(() => {
@@ -53,8 +50,6 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
       isFavorite,
       toggleFavorite,
       totalFavorites: favorites.length,
-      isFavDrawerOpen,
-      setIsFavDrawerOpen,
     }}>
       {children}
     </FavoritesContext.Provider>

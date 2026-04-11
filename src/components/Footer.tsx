@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useFavorites } from "@/contexts/FavoritesContext";
 import { useAuth } from "@/contexts/AuthContext";
 import logoSvg from "@/assets/logo.svg";
 import AlertMsg from "@/components/AlertMsg";
@@ -129,9 +128,12 @@ const Footer = () => {
   const [email, setEmail] = useState("");
   const [emailStatus, setEmailStatus] = useState<"idle" | "error" | "success">("idle");
   const [openSection, setOpenSection] = useState<string | null>(null);
-  const { setIsFavDrawerOpen } = useFavorites();
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
+
+  const handleFavoriler = () => {
+    navigate(isLoggedIn ? "/hesabim" : "/giris");
+  };
 
   const handleIadeTaleplerim = () => {
     if (isLoggedIn) navigate("/hesabim", { state: { tab: "returns" } });
@@ -159,7 +161,7 @@ const Footer = () => {
     if (link.label === "Sepetim")
       return <Link to="/sepet" style={style}>{link.label}</Link>;
     if (link.label === "Favorilerim")
-      return <button onClick={() => setIsFavDrawerOpen(true)} style={style}>{link.label}</button>;
+      return <button onClick={handleFavoriler} style={style}>{link.label}</button>;
     if (link.label === "İade Taleplerim")
       return <button onClick={handleIadeTaleplerim} style={style}>{link.label}</button>;
     return <Link to={link.href} style={style}>{link.label}</Link>;
