@@ -352,9 +352,9 @@ const Header = () => {
                 <Heart
                   size={20}
                   style={{
-                    color: totalFavorites > 0 ? "#c9a96e" : "currentColor",
-                    fill:  totalFavorites > 0 ? "#c9a96e" : "none",
-                    transition: "color 0.2s, fill 0.2s",
+                    color: "currentColor",
+                    fill: "none",
+                    transition: "color 0.2s",
                   }}
                 />
                 {totalFavorites > 0 && (
@@ -426,7 +426,7 @@ const Header = () => {
                 setMobileOpen(false);
                 navigate(isLoggedIn ? "/hesabim" : "/giris");
               }} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 7, padding: "11px 16px", background: "none", border: "none", borderRight: "1px solid #f0ede8", cursor: "pointer", fontFamily: "Montserrat, sans-serif", fontSize: 12, fontWeight: 600, color: "#555" }}>
-                <Heart size={14} style={{ color: "#c9a96e", fill: totalFavorites > 0 ? "#c9a96e" : "none" }} /> Favoriler
+                <Heart size={14} style={{ color: "#c9a96e", fill: "none" }} /> Favoriler
                 {totalFavorites > 0 && <span style={{ background: "#c9a96e", color: "#fff", fontSize: 9, fontWeight: 800, padding: "1px 5px", borderRadius: 10 }}>{totalFavorites}</span>}
               </button>
               <button onClick={() => {
