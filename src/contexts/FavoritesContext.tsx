@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from "react";
 import { Product } from "@/data/products";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const STORAGE_KEY = "takimax_favorites";
 
@@ -22,6 +24,8 @@ interface FavoritesContextType {
 const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
 
 export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
   // ✅ Sayfa açılışında localStorage'dan yükle
   const [favorites, setFavorites] = useState<Product[]>(loadFromStorage);
 
@@ -37,12 +41,16 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
   const isFavorite = useCallback((id: string) => favorites.some((p) => p.id === id), [favorites]);
 
   const toggleFavorite = useCallback((product: Product) => {
+    if (!isLoggedIn) {
+      navigate("/giris", { state: { from: window.location.pathname } });
+      return;
+    }
     setFavorites((prev) =>
       prev.some((p) => p.id === product.id)
         ? prev.filter((p) => p.id !== product.id)
         : [...prev, product]
     );
-  }, []);
+  }, [isLoggedIn, navigate]);
 
   return (
     <FavoritesContext.Provider value={{

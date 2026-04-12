@@ -35,7 +35,6 @@ const sections: Section[] = [
   {
     title: "Müşteri Hizmetleri",
     links: [
-      { label: "Canlı Destek", href: "/iletisim" },
       { label: "Mesafeli Satış Sözleşmesi", href: "/sozlesmeler" },
       { label: "Üyelik Sözleşmesi", href: "/sozlesmeler" },
       { label: "Kişisel Verilerin Korunma Kanunu", href: "/gizlilik-politikasi" },

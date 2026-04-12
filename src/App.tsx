@@ -63,13 +63,13 @@ const App = () => (
     <TooltipProvider>
       <AuthProvider>
         <CartProvider>
-          <FavoritesProvider>
             <ToastProvider>
               <RecentlyViewedProvider>
                 <RecommendationProvider>
                 <Toaster />
                 <Sonner />
                 <BrowserRouter>
+                  <FavoritesProvider>
                   <ScrollToTop />
                   <ToastBridge />
                   <ScrollToTopButton />
@@ -97,11 +97,11 @@ const App = () => (
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </Suspense>
+                  </FavoritesProvider>
                 </BrowserRouter>
                 </RecommendationProvider>
               </RecentlyViewedProvider>
             </ToastProvider>
-          </FavoritesProvider>
         </CartProvider>
       </AuthProvider>
     </TooltipProvider>
