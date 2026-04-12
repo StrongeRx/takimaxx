@@ -164,6 +164,8 @@ const Footer = () => {
       return <button onClick={handleFavoriler} style={style}>{link.label}</button>;
     if (link.label === "İade Taleplerim")
       return <button onClick={handleIadeTaleplerim} style={style}>{link.label}</button>;
+    if (link.label === "Sipariş Takibi")
+      return <Link to={isLoggedIn ? "/siparis-takibi" : "/giris"} style={style}>{link.label}</Link>;
     return <Link to={link.href} style={style}>{link.label}</Link>;
   };
 

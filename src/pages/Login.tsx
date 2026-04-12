@@ -243,20 +243,6 @@ const Login = () => {
         .step-dot.done { background: #c9a96e; color: #fff; }
         .step-dot.inactive { background: #f0ece6; color: #bbb; }
 
-        .left-panel-feature {
-          display: flex; align-items: center; gap: 14px; padding: 14px 0;
-          border-bottom: 1px solid rgba(255,255,255,0.07); animation: fadeSlideIn 0.5s ease both;
-        }
-        .left-panel-feature:last-child { border-bottom: none; }
-        .left-panel-divider {
-          width: 32px; height: 1px; background: rgba(201,169,110,0.4); margin: 0 0 28px;
-        }
-
-        @media (max-width: 900px) {
-          .auth-left { display: none !important; }
-          .auth-wrapper { grid-template-columns: 1fr !important; min-height: auto !important; margin: 0 !important; border-radius: 16px !important; }
-          .auth-right { padding: 28px 22px 36px !important; }
-        }
         @media (max-width: 480px) {
           .auth-wrapper { border-radius: 12px !important; }
           .auth-right { padding: 24px 18px 32px !important; }
@@ -267,122 +253,12 @@ const Login = () => {
         <div
           className="auth-wrapper"
           style={{
-            display: "grid", gridTemplateColumns: "1fr 1fr",
-            width: "100%", maxWidth: 900,
+            width: "100%", maxWidth: 480,
             borderRadius: 20, overflow: "hidden",
             boxShadow: "0 32px 80px rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.06)",
           }}
         >
-          {/* ─── SOL PANEL (sadece desktop) ─── */}
-          <div
-            className="auth-left"
-            style={{
-              background: "#12100e",
-              padding: "52px 48px",
-              display: "flex", flexDirection: "column",
-              justifyContent: "space-between",
-              position: "relative", overflow: "hidden",
-              borderRight: "1px solid rgba(201,169,110,0.12)",
-            }}
-          >
-            {/* İnce altın dikey şerit — sol kenar vurgusu */}
-            <div style={{ position: "absolute", top: 0, left: 0, width: 3, height: "100%", background: "linear-gradient(to bottom, transparent, #c9a96e 30%, #c9a96e 70%, transparent)", opacity: 0.5, pointerEvents: "none" }} />
-
-            {/* Sağ üst köşe ince çizgi detayı */}
-            <div style={{ position: "absolute", top: 0, right: 0, width: 120, height: 120, borderLeft: "1px solid rgba(201,169,110,0.08)", borderBottom: "1px solid rgba(201,169,110,0.08)", pointerEvents: "none" }} />
-
-            <div>
-              {/* Marka adı */}
-              <div style={{ marginBottom: 48 }}>
-                <span style={{
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: 10, fontWeight: 800,
-                  letterSpacing: "0.35em", textTransform: "uppercase",
-                  color: "#c9a96e",
-                }}>
-                  Takimax
-                </span>
-              </div>
-
-              {/* Başlık */}
-              <div className="left-panel-divider" />
-              <h2 style={{
-                fontFamily: "'Cormorant Garamond', Georgia, serif",
-                fontSize: 36, fontWeight: 600,
-                color: "#fff", lineHeight: 1.2,
-                marginBottom: 16, letterSpacing: "0.01em",
-              }}>
-                {mainTab === "kayit"
-                  ? <>Ailemize<br /><span style={{ color: "#c9a96e", fontStyle: "italic" }}>Katılın</span></>
-                  : <>Hesabınıza<br /><span style={{ color: "#c9a96e", fontStyle: "italic" }}>Hoş Geldiniz</span></>
-                }
-              </h2>
-              <p style={{
-                fontFamily: "'Montserrat', sans-serif",
-                fontSize: 12, fontWeight: 400,
-                color: "rgba(255,255,255,0.38)",
-                lineHeight: 1.8, marginBottom: 44,
-                letterSpacing: "0.02em",
-              }}>
-                {mainTab === "kayit"
-                  ? "Üye olun, özel ayrıcalıkların keyfini çıkarın."
-                  : "Takimax ailesinin bir parçası olarak özel ayrıcalıklardan yararlanın."}
-              </p>
-
-              {/* Özellik listesi */}
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                {(mainTab === "kayit"
-                  ? ["İlk alışverişte %10 indirim", "Ücretsiz kargo fırsatları", "Yeni koleksiyon önizlemesi", "Özel kampanya bildirimleri"]
-                  : ["Siparişlerinizi kolayca takip edin", "Favorilerinizi kaydedin", "Özel indirim ve kampanyalardan haberdar olun", "Hızlı ve güvenli ödeme"]
-                ).map((text, i) => (
-                  <div key={i} className="left-panel-feature" style={{ animationDelay: `${i * 0.08}s` }}>
-                    <div style={{
-                      width: 20, height: 20, flexShrink: 0,
-                      border: "1px solid rgba(201,169,110,0.35)",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                    }}>
-                      <div style={{ width: 5, height: 5, background: "#c9a96e", opacity: 0.9 }} />
-                    </div>
-                    <span style={{
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontSize: 12, fontWeight: 400,
-                      color: "rgba(255,255,255,0.58)",
-                      letterSpacing: "0.02em",
-                    }}>{text}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Alt: geçiş linki */}
-            <div style={{ marginTop: 48, paddingTop: 28, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-              <p style={{
-                fontFamily: "'Montserrat', sans-serif",
-                fontSize: 11, color: "rgba(255,255,255,0.25)",
-                letterSpacing: "0.04em", marginBottom: 10,
-              }}>
-                {mainTab === "kayit" ? "Zaten üye misiniz?" : "Henüz üye değil misiniz?"}
-              </p>
-              <button
-                onClick={() => switchTab(mainTab === "kayit" ? "giris" : "kayit")}
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: 8,
-                  background: "none", border: "none", cursor: "pointer",
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: 10, fontWeight: 700,
-                  letterSpacing: "0.2em", textTransform: "uppercase",
-                  color: "#c9a96e", padding: 0,
-                }}
-                onMouseEnter={e => (e.currentTarget.style.opacity = "0.75")}
-                onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
-              >
-                {mainTab === "kayit" ? "Giriş Yap" : "Kayıt Ol"}
-                <ArrowRight size={11} />
-              </button>
-            </div>
-          </div>
-
-          {/* ─── SAĞ PANEL ─── */}
+          {/* ─── PANEL ─── */}
           <div className="auth-right" style={{ background: "#fff", padding: "44px 40px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
 
             {/* Ana Tab: Giriş Yap / Kayıt Ol */}

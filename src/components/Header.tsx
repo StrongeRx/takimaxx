@@ -364,44 +364,50 @@ const Header = () => {
               style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "none", alignItems: "center", justifyContent: "center" }}
             >
               <div style={{
-                width: 42, height: 42,
+                width: 40, height: 40,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                border: `1.5px solid ${mobileOpen ? "#c9a96e" : "#e5e5e5"}`,
-                borderRadius: 11,
-                background: mobileOpen ? "#fdf8f0" : "#fff",
-                transform: mobileOpen ? "rotate(-90deg) scale(1.06)" : "rotate(0deg) scale(1)",
-                transition: "border-color 0.3s ease, background 0.3s ease, transform 0.4s cubic-bezier(0.34,1.3,0.64,1)",
+                border: `1.5px solid ${mobileOpen ? "#c9a96e55" : "#e8e4df"}`,
+                borderRadius: 10,
+                background: mobileOpen ? "#fdf8f0" : "#fafafa",
+                transition: "border-color 0.3s ease, background 0.3s ease",
+                overflow: "hidden",
               }}>
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <line x1="3" y1="5" x2="19" y2="5" stroke={mobileOpen ? "#c9a96e" : "#111"} strokeWidth="1.2" strokeLinecap="round"
-                    style={{ opacity: mobileOpen ? 0 : 0.25, transition: "opacity 0.25s ease" }} />
-                  <line x1="3" y1="11" x2="19" y2="11" stroke={mobileOpen ? "#c9a96e" : "#111"} strokeWidth="1.2" strokeLinecap="round"
-                    style={{ opacity: mobileOpen ? 0 : 0.25, transition: "opacity 0.25s ease 0.03s" }} />
-                  <line x1="3" y1="17" x2="19" y2="17" stroke={mobileOpen ? "#c9a96e" : "#111"} strokeWidth="1.2" strokeLinecap="round"
-                    style={{ opacity: mobileOpen ? 0 : 0.25, transition: "opacity 0.25s ease 0.06s" }} />
-                  {[
-                    { cx: 3,  cy: 5,  i: 0, hide: mobileOpen, rotate: 0   },
-                    { cx: 11, cy: 5,  i: 1, hide: mobileOpen, rotate: 0   },
-                    { cx: 19, cy: 5,  i: 2, hide: false,       rotate: mobileOpen ? 45  : 0 },
-                    { cx: 3,  cy: 11, i: 3, hide: mobileOpen, rotate: 0   },
-                    { cx: 11, cy: 11, i: 4, hide: false,       rotate: mobileOpen ? 45  : 0 },
-                    { cx: 19, cy: 11, i: 5, hide: mobileOpen, rotate: 0   },
-                    { cx: 3,  cy: 17, i: 6, hide: false,       rotate: mobileOpen ? -45 : 0 },
-                    { cx: 11, cy: 17, i: 7, hide: mobileOpen, rotate: 0   },
-                    { cx: 19, cy: 17, i: 8, hide: mobileOpen, rotate: 0   },
-                  ].map(({ cx, cy, i, hide, rotate }) => (
-                    <rect
-                      key={i}
-                      x={cx - 2} y={cy - 2} width="4" height="4" rx="1"
-                      fill={i === 4 ? "#c9a96e" : (mobileOpen ? "#c9a96e" : "#111")}
-                      style={{
-                        transformOrigin: `${cx}px ${cy}px`,
-                        transform: `scale(${hide ? 0 : 1}) rotate(${rotate}deg)`,
-                        opacity: hide ? 0 : 1,
-                        transition: `transform 0.35s cubic-bezier(0.34,1.2,0.64,1) ${["0ms","30ms","0ms","60ms","30ms","60ms","0ms","30ms","0ms"][i]}, opacity 0.25s ease ${["0ms","30ms","0ms","60ms","30ms","60ms","0ms","30ms","0ms"][i]}, fill 0.25s ease`,
-                      }}
-                    />
-                  ))}
+                {/* Hamburger → X animasyonlu SVG */}
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {/* Üst çizgi: açıkken 45° döner */}
+                  <line
+                    x1="3" y1="6" x2="17" y2="6"
+                    stroke={mobileOpen ? "#c9a96e" : "#111"}
+                    strokeWidth="2.2" strokeLinecap="round"
+                    style={{
+                      transformOrigin: "10px 6px",
+                      transform: mobileOpen ? "translateY(4px) rotate(45deg)" : "none",
+                      transition: "transform 0.35s cubic-bezier(0.23,1,0.32,1), stroke 0.25s ease",
+                    }}
+                  />
+                  {/* Orta çizgi: açıkken kaybolur */}
+                  <line
+                    x1="3" y1="10" x2="17" y2="10"
+                    stroke={mobileOpen ? "#c9a96e" : "#111"}
+                    strokeWidth="2.2" strokeLinecap="round"
+                    style={{
+                      opacity: mobileOpen ? 0 : 1,
+                      transform: mobileOpen ? "scaleX(0)" : "scaleX(1)",
+                      transformOrigin: "10px 10px",
+                      transition: "opacity 0.2s ease, transform 0.25s ease, stroke 0.25s ease",
+                    }}
+                  />
+                  {/* Alt çizgi: açıkken -45° döner */}
+                  <line
+                    x1="3" y1="14" x2="17" y2="14"
+                    stroke={mobileOpen ? "#c9a96e" : "#111"}
+                    strokeWidth="2.2" strokeLinecap="round"
+                    style={{
+                      transformOrigin: "10px 14px",
+                      transform: mobileOpen ? "translateY(-4px) rotate(-45deg)" : "none",
+                      transition: "transform 0.35s cubic-bezier(0.23,1,0.32,1), stroke 0.25s ease",
+                    }}
+                  />
                 </svg>
               </div>
             </button>
@@ -627,8 +633,8 @@ const Header = () => {
 
             {/* Alt linkler */}
             <div style={{ borderTop: "1px solid #f0ede8", padding: "10px 20px 16px", background: "#faf9f7", flexShrink: 0 }}>
-              {[{ label: "Sipariş Takibi", to: "/siparis-takibi" }, { label: "İade & Değişim", to: "/iade-ve-degisim" }, { label: "İletişim", to: "/iletisim" }].map(link => (
-                <Link key={link.to} to={link.to} onClick={() => setMobileOpen(false)} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 4px", fontFamily: "Montserrat, sans-serif", fontSize: 12, color: "#666", textDecoration: "none", borderBottom: "1px solid #f0ede8" }}>
+              {[{ label: "Sipariş Takibi", to: "/siparis-takibi", protected: true }, { label: "İade & Değişim", to: "/iade-ve-degisim" }, { label: "İletişim", to: "/iletisim" }].map(link => (
+                <Link key={link.to} to={link.protected && !isLoggedIn ? "/giris" : link.to} onClick={() => setMobileOpen(false)} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 4px", fontFamily: "Montserrat, sans-serif", fontSize: 12, color: "#666", textDecoration: "none", borderBottom: "1px solid #f0ede8" }}>
                   {link.label}
                   <ChevronDown size={11} style={{ color: "#ccc", transform: "rotate(-90deg)" }} />
                 </Link>

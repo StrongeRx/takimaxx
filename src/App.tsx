@@ -16,6 +16,14 @@ import ScrollToTopButton from "@/components/ScrollToTopButton";
 import ToastBridge from "@/components/ToastBridge";
 import CookieBanner from "@/components/CookieBanner";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isLoggedIn } = useAuth();
+  if (!isLoggedIn) return <Navigate to="/giris" replace state={{ from: "/siparis-takibi" }} />;
+  return <>{children}</>;
+};
 
 // Ana sayfa kritik — direkt import
 import Index from "./pages/Index";
@@ -80,7 +88,7 @@ const App = () => (
                       <Route path="/iade-ve-degisim" element={<Returns />} />
                       <Route path="/gizlilik-politikasi" element={<Privacy />} />
                       <Route path="/sozlesmeler" element={<Agreements />} />
-                      <Route path="/siparis-takibi" element={<OrderTracking />} />
+                      <Route path="/siparis-takibi" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
                       <Route path="/hesabim" element={<Account />} />
                       <Route path="/odeme" element={<Checkout />} />
                       <Route path="/kategori/:slug" element={<Category />} />
