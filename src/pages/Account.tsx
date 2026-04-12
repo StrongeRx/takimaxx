@@ -7,8 +7,9 @@ import { getOrders, STATUS_LABELS, type StoredOrder } from "@/lib/orderStorage";
 import {
   User, Package, MapPin, Heart, RotateCcw, Settings, LogOut,
   ChevronRight, ChevronLeft, Plus, Trash2, Pencil, Check,
-  AlertCircle, Eye, EyeOff, ArrowUpRight
+  AlertCircle, Eye, EyeOff, ArrowUpRight, Search, Truck, CheckCircle2, Home, Phone, Clock
 } from "lucide-react";
+import kargoImg from "@/assets/kargo.webp";
 
 interface Address {
   id: string; title: string; fullName: string; phone: string;
@@ -51,14 +52,21 @@ const Account = () => {
   const location = useLocation();
   const locationState = location.state as { tab?: string } | null;
 
-  const [section, setSection] = useState<"menu"|"orders"|"addresses"|"favorites"|"returns"|"settings">(
-    (locationState?.tab as "menu"|"orders"|"addresses"|"favorites"|"returns"|"settings") || "menu"
+  const [section, setSection] = useState<"menu"|"orders"|"addresses"|"favorites"|"returns"|"settings"|"tracking">(
+    (locationState?.tab as "menu"|"orders"|"addresses"|"favorites"|"returns"|"settings"|"tracking") || "menu"
   );
   const [addresses, setAddresses] = useState<Address[]>(() => { try { return JSON.parse(localStorage.getItem("tkx_addresses")||"[]"); } catch { return []; } });
   const [addressForm, setAddressForm] = useState<Partial<Address>|null>(null);
   const [returns, setReturns] = useState<ReturnRequest[]>(() => { try { return JSON.parse(localStorage.getItem("tkx_returns")||"[]"); } catch { return []; } });
   const [returnForm, setReturnForm] = useState<{ orderId:string; productName:string; reason:string; detail:string }|null>(null);
   const [returnSuccess, setReturnSuccess] = useState(false);
+
+  // Sipariş takibi state
+  const [trackOrderNo, setTrackOrderNo] = useState("");
+  const [trackResult, setTrackResult] = useState<{ step: number; status: string; name: string; product: string; address: string; cargo: string; cargoNo: string } | null>(null);
+  const [trackNotFound, setTrackNotFound] = useState(false);
+  const [trackSearching, setTrackSearching] = useState(false);
+  const [truckPos, setTruckPos] = useState(0);
   const [editField, setEditField] = useState<"name"|"phone"|"password"|null>(null);
   const [editValue, setEditValue] = useState("");
   const [editValue2, setEditValue2] = useState("");
@@ -71,6 +79,73 @@ const Account = () => {
   useEffect(() => { localStorage.setItem("tkx_returns", JSON.stringify(returns)); }, [returns]);
 
   if (!user) return null;
+
+  // Kamyon animasyonu (sipariş takibi bölümü açıkken)
+  useEffect(() => {
+    if (section !== "tracking") return;
+    const interval = setInterval(() => {
+      setTruckPos(p => (p >= 110 ? -10 : p + 0.4));
+    }, 16);
+    return () => clearInterval(interval);
+  }, [section]);
+
+  const TRACK_STEPS = [
+    { id: 0, label: "Sipariş Alındı",  desc: "Siparişiniz başarıyla oluşturuldu.",  icon: "order" as const },
+    { id: 1, label: "Hazırlanıyor",    desc: "Ürününüz kargoya hazırlanıyor.",      icon: "prepare" as const },
+    { id: 2, label: "Kargoya Verildi", desc: "Ürününüz kargoya teslim edildi.",     icon: "cargo" as const },
+    { id: 3, label: "Dağıtımda",       desc: "Ürününüz dağıtım şubesinde.",         icon: "delivery" as const },
+    { id: 4, label: "Teslim Edildi",   desc: "Ürününüz teslim edildi.",             icon: "delivered" as const },
+  ];
+
+  const TRACK_STATUS_STEP: Record<string, number> = {
+    beklemede: 0, onaylandı: 1, kargoya_verildi: 2, teslim_edildi: 4,
+    iptal_edildi: -1, iade_edildi: -1,
+  };
+
+  const handleTrackSearch = () => {
+    if (!trackOrderNo.trim()) return;
+    setTrackSearching(true);
+    setTrackResult(null);
+    setTrackNotFound(false);
+    setTimeout(() => {
+      try {
+        const rawOrders = localStorage.getItem("tkx_orders");
+        const allOrders = rawOrders ? JSON.parse(rawOrders) : [];
+        const order = allOrders.find(
+          (o: { id?: string | number; status: string; items?: { name: string; quantity: number }[]; customer?: string; address?: string; cargoCompany?: string; trackingNo?: string }) =>
+            o.id?.toString().toUpperCase() === trackOrderNo.trim().toUpperCase()
+        );
+        if (order) {
+          const productNames = Array.isArray(order.items)
+            ? order.items.map((i: { name: string; quantity: number }) => `${i.name}${i.quantity > 1 ? ` x${i.quantity}` : ""}`).join(", ")
+            : "-";
+          setTrackResult({
+            step: TRACK_STATUS_STEP[order.status] ?? 0,
+            status: order.status,
+            name: order.customer || "-",
+            product: productNames,
+            address: order.address || "-",
+            cargo: order.cargoCompany || "Kargo",
+            cargoNo: order.trackingNo || "-",
+          });
+        } else {
+          setTrackNotFound(true);
+        }
+      } catch {
+        setTrackNotFound(true);
+      }
+      setTrackSearching(false);
+    }, 1200);
+  };
+
+  const TrackStepIcon = ({ type, active, done }: { type: string; active: boolean; done: boolean }) => {
+    const color = done || active ? "#fff" : "#9ca3af";
+    if (type === "order")    return <CheckCircle2 size={16} color={color} />;
+    if (type === "prepare")  return <Package size={16} color={color} />;
+    if (type === "cargo")    return <Truck size={16} color={color} />;
+    if (type === "delivery") return <MapPin size={16} color={color} />;
+    return <Home size={16} color={color} />;
+  };
 
   const saveAddress = () => {
     if (!addressForm) return;
@@ -143,6 +218,7 @@ const Account = () => {
             <div style={card}>
               {[
                 { id:"orders",    icon:<Package size={18}/>,   label:"Siparişlerim",    badge:orders.length },
+                { id:"tracking",  icon:<Truck size={18}/>,     label:"Sipariş Takibi",  badge:null },
                 { id:"addresses", icon:<MapPin size={18}/>,    label:"Adreslerim",      badge:addresses.length },
                 { id:"favorites", icon:<Heart size={18}/>,     label:"Favorilerim",     badge:favorites.length },
                 { id:"returns",   icon:<RotateCcw size={18}/>, label:"İade Taleplerim", badge:returns.length },
@@ -402,6 +478,148 @@ const Account = () => {
                 })}
               </div>
             )}
+          </div>
+        )}
+
+        {/* ── SİPARİŞ TAKİBİ ── */}
+        {section === "tracking" && (
+          <div style={card}>
+            <BackHeader title="Sipariş Takibi" onBack={() => { setSection("menu"); setTrackResult(null); setTrackNotFound(false); setTrackOrderNo(""); }}/>
+            <div style={{ padding:"20px 16px" }}>
+
+              {/* Kamyon animasyonu */}
+              <div style={{ position:"relative", height:44, marginBottom:14, overflow:"hidden" }}>
+                <div style={{ position:"absolute", bottom:0, left:0, right:0, height:1, background:"#e5e7eb" }}/>
+                <div style={{ position:"absolute", bottom:0, left:`${truckPos}%`, transform:"translateX(-50%)" }}>
+                  <img src={kargoImg} alt="Kargo" loading="lazy" style={{ height:40, width:"auto", objectFit:"contain", filter:"drop-shadow(1px 2px 4px rgba(0,0,0,0.2))" }}/>
+                </div>
+              </div>
+
+              {/* Arama kutusu — mobilde dikey düzen */}
+              <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:8 }}>
+                <input
+                  type="text"
+                  value={trackOrderNo}
+                  onChange={e => setTrackOrderNo(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && handleTrackSearch()}
+                  placeholder="Sipariş numaranızı girin (TKM1234567)"
+                  style={{ width:"100%", padding:"13px 14px", border:"1px solid #e5e7eb", borderRadius:8, outline:"none", fontFamily:"Montserrat, sans-serif", fontSize:13, color:"#111", boxSizing:"border-box" }}
+                />
+                <button
+                  onClick={handleTrackSearch}
+                  disabled={trackSearching}
+                  style={{ ...btnPrimary, width:"100%", padding:"13px 0", display:"flex", alignItems:"center", justifyContent:"center", gap:8, opacity:trackSearching?0.7:1, borderRadius:8 }}
+                >
+                  {trackSearching
+                    ? <span style={{ width:14, height:14, border:"2px solid rgba(255,255,255,0.3)", borderTopColor:"#fff", borderRadius:"50%", display:"inline-block", animation:"tkx-spin 0.7s linear infinite" }}/>
+                    : <Search size={14}/>}
+                  Sorgula
+                </button>
+              </div>
+              <p style={{ fontFamily:"Montserrat, sans-serif", fontSize:10, color:"#9ca3af", textAlign:"center", marginBottom:16 }}>
+                Sipariş numaranız onay e-postanızda yer almaktadır.
+              </p>
+
+              {/* Bulunamadı */}
+              {trackNotFound && (
+                <div style={{ textAlign:"center", padding:"28px 16px", border:"1px solid #e5e7eb", borderRadius:8, background:"#f9fafb" }}>
+                  <Package size={32} color="#d1d5db" style={{ marginBottom:10 }}/>
+                  <p style={{ fontFamily:"Montserrat, sans-serif", fontSize:14, fontWeight:600, color:"#111", marginBottom:4 }}>Sipariş Bulunamadı</p>
+                  <p style={{ fontFamily:"Montserrat, sans-serif", fontSize:12, color:"#6b7280" }}>Sipariş numarasını kontrol edip tekrar deneyin.</p>
+                </div>
+              )}
+
+              {/* Sonuç */}
+              {trackResult && (() => {
+                const currentStep = trackResult.step >= 0 ? trackResult.step : 0;
+                const isCancelled = trackResult.status === "iptal_edildi";
+                const isReturned  = trackResult.status === "iade_edildi";
+                return (
+                  <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
+
+                    {/* Sipariş bilgileri */}
+                    <div style={{ border:"1px solid #e5e7eb", borderRadius:8, overflow:"hidden" }}>
+                      {/* Başlık + badge */}
+                      <div style={{ padding:"12px 14px", borderBottom:"1px solid #e5e7eb", display:"flex", justifyContent:"space-between", alignItems:"center", gap:8, flexWrap:"wrap" }}>
+                        <div>
+                          <p style={{ fontFamily:"Montserrat, sans-serif", fontSize:10, color:"#9ca3af", fontWeight:600, textTransform:"uppercase", letterSpacing:"0.08em", margin:"0 0 3px" }}>Sipariş No</p>
+                          <p style={{ fontFamily:"Montserrat, sans-serif", fontSize:13, fontWeight:700, color:"#111", margin:0, wordBreak:"break-all" }}>{trackOrderNo.toUpperCase()}</p>
+                        </div>
+                        <span style={{
+                          background: isCancelled?"#fee2e2":isReturned?"#ffedd5":currentStep===4?"#dcfce7":currentStep>=2?"#fdf8f0":"#f3f4f6",
+                          color: isCancelled?"#dc2626":isReturned?"#ea580c":currentStep===4?"#16a34a":currentStep>=2?"#c9a96e":"#6b7280",
+                          fontSize:10, fontWeight:700, padding:"3px 10px", borderRadius:20, whiteSpace:"nowrap", flexShrink:0
+                        }}>
+                          {isCancelled?"İptal Edildi":isReturned?"İade Edildi":TRACK_STEPS[currentStep]?.label}
+                        </span>
+                      </div>
+                      {/* Bilgi grid — mobilde tek sütun */}
+                      <div>
+                        {[
+                          { label:"Alıcı", value:trackResult.name },
+                          { label:"Ürün", value:trackResult.product },
+                          { label:"Teslimat Adresi", value:trackResult.address },
+                          { label:"Kargo", value:`${trackResult.cargo}${trackResult.cargoNo!=="-"?" · "+trackResult.cargoNo:""}` },
+                        ].map((item, i) => (
+                          <div key={i} style={{ padding:"10px 14px", borderTop:"1px solid #e5e7eb" }}>
+                            <p style={{ fontFamily:"Montserrat, sans-serif", fontSize:10, color:"#9ca3af", fontWeight:600, textTransform:"uppercase", letterSpacing:"0.06em", margin:"0 0 2px" }}>{item.label}</p>
+                            <p style={{ fontFamily:"Montserrat, sans-serif", fontSize:12, color:"#374151", margin:0, wordBreak:"break-word" }}>{item.value}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Kargo adımları */}
+                    <div style={{ border:"1px solid #e5e7eb", borderRadius:8, padding:"14px" }}>
+                      <p style={{ fontFamily:"Montserrat, sans-serif", fontSize:13, fontWeight:700, color:"#111", margin:"0 0 14px" }}>Kargo Durumu</p>
+                      {(isCancelled || isReturned) ? (
+                        <div style={{ display:"flex", alignItems:"center", gap:10, padding:"12px 14px", background:isCancelled?"#fef2f2":"#fff7ed", borderRadius:8, border:`1px solid ${isCancelled?"#fecaca":"#fed7aa"}` }}>
+                          <span style={{ fontSize:20, flexShrink:0 }}>{isCancelled?"❌":"↩️"}</span>
+                          <p style={{ fontFamily:"Montserrat, sans-serif", fontSize:12, color:isCancelled?"#dc2626":"#ea580c", fontWeight:600, margin:0 }}>
+                            {isCancelled?"Bu sipariş iptal edilmiştir.":"Bu sipariş iade sürecindedir."}
+                          </p>
+                        </div>
+                      ) : (
+                        <div style={{ position:"relative" }}>
+                          <div style={{ position:"absolute", left:17, top:18, bottom:18, width:1, background:"#e5e7eb" }}/>
+                          <div style={{ position:"absolute", left:17, top:18, width:1, background:"#c9a96e", transition:"height 0.8s", height:`${Math.min(currentStep/(TRACK_STEPS.length-1),1)*100}%` }}/>
+                          <div style={{ display:"flex", flexDirection:"column" }}>
+                            {TRACK_STEPS.map((step, i) => {
+                              const done   = i < currentStep;
+                              const active = i === currentStep;
+                              const future = i > currentStep;
+                              return (
+                                <div key={step.id} style={{ display:"flex", alignItems:"flex-start", gap:12, paddingBottom: i < TRACK_STEPS.length-1 ? 18 : 0 }}>
+                                  <div style={{
+                                    position:"relative", zIndex:1, width:34, height:34, borderRadius:"50%", flexShrink:0,
+                                    display:"flex", alignItems:"center", justifyContent:"center",
+                                    background: done?"#c9a96e":active?"#111":"#f3f4f6",
+                                    border: active?"2.5px solid #c9a96e":"none",
+                                    boxShadow: active?"0 0 0 3px rgba(201,169,110,0.15)":"none",
+                                    transition:"all 0.4s",
+                                  }}>
+                                    {active && <span style={{ position:"absolute", inset:0, borderRadius:"50%", background:"rgba(201,169,110,0.3)", animation:"tkx-ping 1.5s cubic-bezier(0,0,0.2,1) infinite" }}/>}
+                                    <TrackStepIcon type={step.icon} active={active} done={done}/>
+                                  </div>
+                                  <div style={{ paddingTop:6, flex:1, minWidth:0 }}>
+                                    <p style={{ fontFamily:"Montserrat, sans-serif", fontSize:12, fontWeight:active||done?600:400, color:future?"#9ca3af":"#111", margin:"0 0 1px" }}>{step.label}</p>
+                                    <p style={{ fontFamily:"Montserrat, sans-serif", fontSize:11, color:future?"#d1d5db":"#6b7280", margin:0 }}>{step.desc}</p>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+            <style>{`
+              @keyframes tkx-spin { to { transform: rotate(360deg); } }
+              @keyframes tkx-ping { 75%,100% { transform: scale(1.8); opacity: 0; } }
+            `}</style>
           </div>
         )}
 
