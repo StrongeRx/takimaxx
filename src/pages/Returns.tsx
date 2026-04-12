@@ -1,238 +1,116 @@
 import SEO from "@/components/SEO";
 import PageLayout from "@/components/PageLayout";
 
-const Returns = () => {
-  // Sabit değerler — yeni admin panelinden yönetilecek
-  const returnDays      = 14;
-  const deliveryDays    = "2-4 iş günü";
-  const shippingFee     = 49.90;
-  const freeLimit       = 400;
-  const shippingCompany = "Yurtiçi Kargo";
-  const email           = "demo@takimax.com";
-  const phone           = "+90 (212) 000 00 00";
+const sections = [
+  {
+    title: "İade Koşulları",
+    content: [
+      "Ürünleri teslim tarihinden itibaren 14 gün içinde iade edebilirsiniz.",
+      "Ürün kullanılmamış, yıpratılmamış ve temiz olmalıdır.",
+      "Orijinal ambalajı, etiketi ve varsa sertifikası eksiksiz olmalıdır.",
+      "Fatura veya sipariş belgesi iade paketiyle birlikte gönderilmelidir.",
+    ],
+  },
+  {
+    title: "Değişim Koşulları",
+    content: [
+      "Yanlış beden, renk veya kusurlu ürün teslim aldıysanız ücretsiz değişim hakkınız vardır.",
+      "Değişim talebinizi 14 gün içinde iletmeniz yeterlidir.",
+      "Stok durumuna göre aynı ürünün farklı çeşidiyle değişim yapılabilir.",
+      "Stokta bulunmayan durumlarda iade ve yeni sipariş seçeneği sunulur.",
+    ],
+  },
+  {
+    title: "İade Süreci",
+    content: [
+      "1. demo@takimax.com adresine sipariş numaranız ve iade nedeninizle başvurun.",
+      "2. Müşteri hizmetlerimiz 1 iş günü içinde iade kargo etiketi gönderir.",
+      "3. Ürünü orijinal ambalajında kargo görevlisine teslim edin.",
+      "4. Ürün ulaştıktan sonra 1–2 iş günü içinde kalite kontrolü yapılır.",
+      "5. Onaylanan iadeler 5–7 iş günü içinde orijinal ödeme yönteminize iade edilir.",
+    ],
+  },
+  {
+    title: "Kargo Bilgileri",
+    content: [
+      "Siparişleriniz Yurtiçi Kargo ile gönderilmektedir. Tahmini teslimat 2–4 iş günüdür.",
+      "400 TL ve üzeri siparişlerde kargo ücretsizdir.",
+      "400 TL altı siparişlerde kargo ücreti 49,90 TL'dir.",
+      "Kargo takip numarası, kargoya verildikten sonra e-posta ile iletilir.",
+    ],
+  },
+  {
+    title: "İade Edilemeyen Ürünler",
+    content: [
+      "Kişiye özel üretilmiş, üzerine isim veya tarih yazılmış ürünler",
+      "Kullanılmış, kirlenmiş veya hasar görmüş ürünler",
+      "Orijinal ambalajı açılmış ve etiketi sökülmüş ürünler",
+      "Teslimattan 14 gün sonra iletilen talepler",
+    ],
+  },
+  {
+    title: "Para İadesi",
+    content: [
+      "Kredi kartı ile ödemelerde iade 5–7 iş günü içinde kartınıza yansır.",
+      "Havale/EFT ile ödemelerde iade 3–5 iş günü içinde belirtilen IBAN'a aktarılır.",
+      "Ürün kusurundan kaynaklanan iadelerde kargo ücreti de iade edilir.",
+    ],
+  },
+];
 
-  const sections = [
-    {
-      title: "İade Koşulları",
-      content: [
-        `Takimax'tan satın aldığınız ürünleri, teslimat tarihinden itibaren ${returnDays} gün içinde iade edebilirsiniz.`,
-        "• Ürün kullanılmamış, yıpratılmamış ve temiz olmalıdır.",
-        "• Orijinal ambalajı, etiketi ve varsa sertifikası eksiksiz olmalıdır.",
-        "• Ürünle birlikte gelen tüm aksesuar ve hediyeler de iade paketine dahil edilmelidir.",
-        "• Fatura veya sipariş belgesi iade paketiyle birlikte gönderilmelidir.",
-      ],
-    },
-    {
-      title: "Değişim Koşulları",
-      content: [
-        `Yanlış beden, renk veya kusurlu ürün teslim aldıysanız ücretsiz değişim hakkınız bulunmaktadır. Değişim talebinizi ${returnDays} gün içinde iletmeniz yeterlidir.`,
-        "• Stok durumuna göre aynı ürünün farklı çeşidiyle değişim yapılabilir.",
-        "• Stokta bulunmayan durumlarda iade ve yeni sipariş seçeneği sunulur.",
-        "• Değişim kargo ücreti Takimax tarafından karşılanır.",
-      ],
-    },
-    {
-      title: "Kargo Bilgileri",
-      content: [
-        `Siparişleriniz ${shippingCompany} ile gönderilmektedir. Tahmini teslimat süresi ${deliveryDays}.`,
-        `• ${freeLimit}₺ ve üzeri siparişlerde kargo ücretsizdir.`,
-        `• ${freeLimit}₺ altı siparişlerde kargo ücreti ${shippingFee.toFixed(2)}₺'dir.`,
-        "• Kargo takip numarası, siparişiniz kargoya verildikten sonra e-posta ile iletilir.",
-      ],
-    },
-    {
-      title: "İade Süreci",
-      content: [
-        "İade talebinizi başlatmak için şu adımları izleyin:",
-        `1. ${email} adresine veya iletişim sayfamızdaki form üzerinden iade talebinizi iletin.`,
-        "2. Sipariş numaranızı ve iade nedeninizi belirtin.",
-        "3. Müşteri hizmetlerimiz size 1 iş günü içinde iade kargo etiketi gönderecektir.",
-        "4. Ürünü orijinal ambalajında, etiketi sökmeden kargo görevlisine teslim edin.",
-        "5. Ürün bize ulaştıktan sonra kalite kontrolü yapılır (1–2 iş günü).",
-        "6. Onaylanan iadeler için para iadesi 5–7 iş günü içinde orijinal ödeme yönteminize aktarılır.",
-      ],
-    },
-    {
-      title: "İade Edilemeyen Ürünler",
-      content: [
-        "Aşağıdaki durumlarda iade talebi kabul edilmemektedir:",
-        "• Kişiye özel üretilmiş, üzerine isim, harf veya tarih yazılmış ürünler",
-        "• Kullanılmış, kirlenmiş veya hasar görmüş ürünler",
-        "• Orijinal ambalajı açılmış ve etiketi sökülmüş ürünler",
-        `• Teslimat tarihinden ${returnDays} gün sonra iletilen talepler`,
-        "• Kampanya ve indirim dönemlerinde \"İade Edilemez\" olarak işaretlenmiş ürünler",
-      ],
-    },
-    {
-      title: "Para İadesi",
-      content: [
-        "İade onaylandıktan sonra ödeme iadeniz şu şekilde gerçekleşir:",
-        "• Kredi kartı ile ödemelerde: İade tutarı 5–7 iş günü içinde kartınıza yansır.",
-        "• Havale/EFT ile ödemelerde: İade, belirttiğiniz IBAN'a 3–5 iş günü içinde aktarılır.",
-        "• Kargo ücreti iade tutarından düşülmez; ürün kusurundan kaynaklanan iadelerde kargo ücreti de iade edilir.",
-      ],
-    },
-  ];
+const Returns = () => (
+  <>
+    <SEO
+      title="İade ve Değişim Koşulları – Takimax"
+      description="14 gün içinde kolay iade, ücretsiz değişim ve hızlı para iadesi."
+      canonical="/iade-ve-degisim"
+    />
+    <PageLayout title="İade ve Değişim Koşulları">
+      <div style={{ maxWidth: 700, margin: "0 auto", padding: "0 4px" }}>
 
-  const infoCards = [
-    { icon: "↩", title: `${returnDays} Gün`, desc: "İade süresi" },
-    { icon: "✦",  title: "Ücretsiz",         desc: "Kusurlu ürün değişimi" },
-    { icon: "◎",  title: deliveryDays,        desc: "Teslimat süresi" },
-  ];
+        {/* Meta */}
+        <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#bbb", marginBottom: 32 }}>
+          Son güncelleme: Ocak 2025 — Sorularınız için: demo@takimax.com
+        </p>
 
-  return (
-    <>
-      <SEO
-        title="İade ve Değişim Koşulları – Takimax"
-        description={`Takimax iade ve değişim politikası. ${returnDays} gün içinde kolay iade, ücretsiz değişim ve hızlı para iadesi.`}
-        canonical="/iade-ve-degisim"
-        schema={{
-          "@context": "https://schema.org",
-          "@type": "WebPage",
-          "name": "İade ve Değişim Koşulları – Takimax",
-          "description": `Takimax ${returnDays} günlük iade politikası, değişim koşulları ve kargo bilgileri.`,
-          "url": "https://takimax.com/iade-ve-degisim",
-        }}
-      />
-
-      <PageLayout title="İade ve Değişim Koşulları">
-        <div style={{ maxWidth: 780, margin: "0 auto" }}>
-
-          {/* Üst bilgi kartları */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-            gap: 1,
-            marginBottom: 48,
-            border: "1px solid #eee",
-            borderRadius: 4,
-            overflow: "hidden",
-          }}>
-            {infoCards.map((item, i) => (
-              <div key={item.title} style={{
-                padding: "28px 24px",
-                background: i === 1 ? "#111" : "#fff",
-                textAlign: "center",
-                borderRight: i < infoCards.length - 1 ? "1px solid #eee" : "none",
+        {/* Sections */}
+        {sections.map((section, i) => (
+          <div
+            key={section.title}
+            style={{
+              marginBottom: 32,
+              paddingBottom: 32,
+              borderBottom: i < sections.length - 1 ? "1px solid #f0f0f0" : "none",
+            }}
+          >
+            <h2 style={{
+              fontFamily: "Montserrat, sans-serif",
+              fontSize: 14,
+              fontWeight: 700,
+              color: "#111",
+              marginBottom: 12,
+              marginTop: 0,
+              letterSpacing: "0.02em",
+            }}>
+              {section.title}
+            </h2>
+            {section.content.map((line, j) => (
+              <p key={j} style={{
+                fontFamily: "Montserrat, sans-serif",
+                fontSize: 13,
+                color: "#555",
+                lineHeight: 1.8,
+                margin: "0 0 8px 0",
               }}>
-                <p style={{
-                  fontFamily: "Montserrat, sans-serif",
-                  fontSize: 28,
-                  color: "#c9a96e",
-                  margin: "0 0 8px",
-                }}>
-                  {item.icon}
-                </p>
-                <p style={{
-                  fontFamily: "Montserrat, sans-serif",
-                  fontSize: 20,
-                  fontWeight: 600,
-                  color: i === 1 ? "#fff" : "#111",
-                  margin: "0 0 4px",
-                }}>
-                  {item.title}
-                </p>
-                <p style={{
-                  fontFamily: "Montserrat, sans-serif",
-                  fontSize: 11,
-                  color: i === 1 ? "rgba(255,255,255,0.6)" : "#888",
-                  margin: 0,
-                  letterSpacing: "0.04em",
-                }}>
-                  {item.desc}
-                </p>
-              </div>
+                {line}
+              </p>
             ))}
           </div>
+        ))}
 
-          {/* İletişim notu */}
-          <div style={{
-            background: "#fff",
-            border: "1px solid #eee",
-            borderLeft: "3px solid #c9a96e",
-            padding: "12px 20px",
-            marginBottom: 40,
-            borderRadius: "0 4px 4px 0",
-          }}>
-            <p style={{
-              fontFamily: "Montserrat, sans-serif",
-              fontSize: 12,
-              color: "#666",
-              lineHeight: 1.8,
-              margin: 0,
-            }}>
-              Sorularınız için{" "}
-              <a href={`mailto:${email}`} style={{ color: "#c9a96e", textDecoration: "none" }}>
-                {email}
-              </a>{" "}
-              adresine yazabilir ya da{" "}
-              <strong style={{ color: "#333" }}>{phone}</strong>{" "}
-              numaralı hattı arayabilirsiniz.
-            </p>
-          </div>
-
-          {/* Bölümler */}
-          {sections.map((section, i) => (
-            <div
-              key={section.title}
-              style={{
-                marginBottom: 44,
-                paddingBottom: 44,
-                borderBottom: i < sections.length - 1 ? "1px solid #f0ede8" : "none",
-              }}
-            >
-              <h2 style={{
-                fontFamily: "Montserrat, sans-serif",
-                fontSize: 22,
-                fontWeight: 600,
-                color: "#111",
-                marginBottom: 16,
-                marginTop: 0,
-                display: "flex",
-                alignItems: "center",
-                gap: 14,
-              }}>
-                <span style={{
-                  fontFamily: "Montserrat, sans-serif",
-                  fontSize: 11,
-                  color: "#c9a96e",
-                  fontWeight: 700,
-                  letterSpacing: "0.08em",
-                  flexShrink: 0,
-                }}>
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                {section.title}
-              </h2>
-
-              {section.content.map((line, j) => {
-                const isBullet  = line.startsWith("•");
-                const isNumeric = /^\d+\./.test(line);
-                return (
-                  <p
-                    key={j}
-                    style={{
-                      fontFamily: "Montserrat, sans-serif",
-                      fontSize: 13,
-                      color: isBullet || isNumeric ? "#555" : "#666",
-                      lineHeight: 1.9,
-                      margin: `0 0 ${isBullet ? 4 : 8}px`,
-                      paddingLeft: isBullet || isNumeric ? 8 : 0,
-                    }}
-                  >
-                    {line}
-                  </p>
-                );
-              })}
-            </div>
-          ))}
-
-
-
-        </div>
-      </PageLayout>
-    </>
-  );
-};
+      </div>
+    </PageLayout>
+  </>
+);
 
 export default Returns;

@@ -1,152 +1,186 @@
 import SEO from "@/components/SEO";
-import { useState } from "react";
 import PageLayout from "@/components/PageLayout";
+import { useState } from "react";
 
 const mesafeli = [
   {
     title: "Taraflar",
-    content: `SATICI:
-Unvan: Takımax Aksesuar ve Mücevherat Ticaret A.Ş.
-Adres: İstanbul, Türkiye
-E-posta: demo@takimax.com
-Web: www.takimax.com
-
-ALICI:
-Sipariş esnasında sisteme kayıtlı isim, adres ve iletişim bilgilerine sahip kişi.`,
+    content: [
+      "SATICI: Takımax Aksesuar ve Mücevherat Ticaret A.Ş. — İstanbul, Türkiye — demo@takimax.com",
+      "ALICI: Sipariş sırasında sisteme kayıtlı ad, adres ve iletişim bilgilerine sahip kişi.",
+    ],
   },
   {
     title: "Sözleşmenin Konusu",
-    content: `İşbu sözleşme, ALICI'nın SATICI'ya ait www.takimax.com web sitesi üzerinden elektronik ortamda sipariş verdiği aşağıda nitelikleri ve satış fiyatı belirtilen ürünün satışı ve teslimi ile ilgili olarak 6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmeler Yönetmeliği hükümleri gereğince tarafların hak ve yükümlülüklerini kapsamaktadır.`,
+    content: [
+      "Bu sözleşme; ALICI'nın www.takimax.com üzerinden verdiği siparişe konu ürünün satışı ve teslimatına ilişkin tarafların hak ve yükümlülüklerini, 6502 sayılı Kanun ve Mesafeli Sözleşmeler Yönetmeliği çerçevesinde düzenler.",
+    ],
   },
   {
     title: "Teslimat & Kargo",
-    content: `• Ürün, sipariş onayından sonra 1-3 iş günü içinde kargoya verilir.
-• Teslimat, ALICI'nın belirttiği adrese yapılır.
-• Kargo süresi, kargoya verildikten itibaren 1-2 iş günüdür.
-• 250 TL ve üzeri alışverişlerde kargo ücretsizdir.
-• Hasarlı veya eksik teslimat durumunda ALICI, kargo firması ile birlikte Takımax müşteri hizmetlerine başvurmalıdır.`,
+    content: [
+      "Sipariş onayından itibaren 1–3 iş günü içinde kargoya verilir.",
+      "Kargoya verildikten sonra tahmini teslimat süresi 1–2 iş günüdür.",
+      "250 TL ve üzeri siparişlerde kargo ücretsizdir.",
+      "Hasarlı veya eksik teslimat durumunda müşteri hizmetlerimizle iletişime geçiniz.",
+    ],
   },
   {
     title: "Ödeme Koşulları",
-    content: `• Ödeme, sipariş anında kredi/banka kartı veya havale/EFT ile yapılır.
-• Kart bilgileri Takımax sunucularında saklanmaz; PCI-DSS uyumlu altyapı kullanılır.
-• Taksitli ödemelerde ilgili banka taksit koşulları geçerlidir.
-• Fatura, sipariş tamamlandıktan sonra kayıtlı e-posta adresine gönderilir.`,
+    content: [
+      "Ödeme, sipariş anında kredi/banka kartı veya havale/EFT ile alınır.",
+      "Kart bilgileri sistemimizde saklanmaz; PCI-DSS uyumlu altyapı kullanılır.",
+      "Fatura, sipariş tamamlandıktan sonra kayıtlı e-postanıza iletilir.",
+    ],
   },
   {
     title: "Cayma Hakkı",
-    content: `ALICI, teslim tarihinden itibaren 14 (on dört) gün içinde herhangi bir gerekçe göstermeksizin ve cezai şart ödemeksizin cayma hakkını kullanabilir.
-
-Cayma hakkının kullanılması için:
-1. demo@takimax.com adresine cayma bildirimi yapılması
-2. Ürünün 10 gün içinde SATICI'ya gönderilmesi gerekmektedir.
-
-Cayma hakkı; kişiye özel üretilen, ses veya görüntü kayıtlarının açıldığı, dijital içeriklerin teslim edildiği durumlarda kullanılamaz.`,
+    content: [
+      "Teslim tarihinden itibaren 14 gün içinde gerekçesiz cayma hakkınızı kullanabilirsiniz.",
+      "Cayma için demo@takimax.com adresine bildirim yapılması ve ürünün 10 gün içinde iade edilmesi gerekir.",
+      "Kişiye özel üretilen ürünlerde cayma hakkı kullanılamaz.",
+    ],
   },
   {
     title: "Uyuşmazlık Çözümü",
-    content: `İşbu sözleşmeden doğan uyuşmazlıklarda Türk hukuku uygulanır. Tüketici olarak başvurabileceğiniz resmi kanallar:
-
-• Tüketici Hakem Heyetleri (belirlenen parasal sınırlar dahilinde)
-• Tüketici Mahkemeleri (belirlenen parasal sınırların üzerinde)
-• Ticaret Bakanlığı Tüketici Bilgi Sistemi (TÜBİS): tuketici.gov.tr`,
+    content: [
+      "Anlaşmazlıklarda Türk hukuku uygulanır.",
+      "Tüketici Hakem Heyetleri ve Tüketici Mahkemeleri başvurabileceğiniz resmi kanallardır.",
+      "Ticaret Bakanlığı Tüketici Bilgi Sistemi: tuketici.gov.tr",
+    ],
   },
 ];
 
 const uyelik = [
   {
     title: "Üyelik Koşulları",
-    content: `• Üye olabilmek için 18 yaşını doldurmuş olmak gerekmektedir.
-• Üyelik kaydı sırasında verilen bilgilerin doğru ve güncel olması zorunludur.
-• Her kullanıcı yalnızca bir hesap oluşturabilir.
-• Üyelik ücretsizdir.`,
+    content: [
+      "Üye olabilmek için 18 yaşını doldurmuş olmak gerekir.",
+      "Kayıt sırasında verilen bilgilerin doğru ve güncel olması zorunludur.",
+      "Her kullanıcı yalnızca bir hesap oluşturabilir. Üyelik ücretsizdir.",
+    ],
   },
   {
     title: "Üyenin Yükümlülükleri",
-    content: `• Hesap bilgilerinizin (kullanıcı adı, şifre) güvenliğinden siz sorumlusunuz.
-• Hesabınız üzerinden gerçekleşen tüm işlemlerden siz sorumlu tutulursunuz.
-• Başkalarına ait kişisel bilgileri kullanmak, yanıltıcı veya sahte hesap oluşturmak yasaktır.
-• Platform üzerinde spam, kötü amaçlı yazılım yaymak veya sisteme zarar verici faaliyetlerde bulunmak kesinlikle yasaktır.`,
+    content: [
+      "Hesap bilgilerinizin güvenliğinden siz sorumlusunuz.",
+      "Başkalarına ait bilgileri kullanmak veya sahte hesap oluşturmak yasaktır.",
+      "Platform üzerinde zararlı, yanıltıcı veya spam içerik paylaşmak yasaktır.",
+    ],
   },
   {
     title: "Hesap Güvenliği",
-    content: `• Şifrenizi düzenli aralıklarla değiştirmenizi öneririz.
-• Şifrenizi kimseyle paylaşmamalısınız.
-• Hesabınızda yetkisiz erişim tespit ederseniz derhal demo@takimax.com adresine bildirin.
-• Takımax, sizi asla şifrenizi e-posta veya telefon ile paylaşmanız için aramaz.`,
+    content: [
+      "Şifrenizi düzenli olarak değiştirmenizi ve kimseyle paylaşmamanızı öneririz.",
+      "Yetkisiz erişim tespit ederseniz derhal demo@takimax.com adresine bildirin.",
+      "Takımax, sizi şifrenizi paylaşmanız için hiçbir zaman aramaz veya e-posta göndermez.",
+    ],
   },
   {
     title: "Üyeliğin Sona Ermesi",
-    content: `Üyeliğinizi istediğiniz zaman "Hesabım" sayfasından veya demo@takimax.com adresine başvurarak sonlandırabilirsiniz.
-
-Takımax, aşağıdaki durumlarda üyeliği askıya alabilir veya sonlandırabilir:
-• Yanlış veya yanıltıcı bilgi verilmesi
-• Platform kurallarının ihlal edilmesi
-• Uzun süreli inaktif hesaplar (önceden bildirim yapılarak)`,
+    content: [
+      "Üyeliğinizi \"Hesabım\" sayfasından veya demo@takimax.com adresine başvurarak istediğiniz zaman sonlandırabilirsiniz.",
+      "Yanlış bilgi verilmesi veya platform kurallarının ihlali durumunda Takımax üyeliği askıya alabilir.",
+    ],
   },
   {
     title: "Kişisel Veri Güvencesi",
-    content: `Üyelik sürecinde toplanan kişisel verileriniz, Gizlilik Politikamız ve KVKK kapsamında işlenmektedir. Verilerinizi pazarlama amaçlı üçüncü taraflara satmıyor ya da kiralamıyoruz. Detaylı bilgi için Gizlilik Politikamızı inceleyebilirsiniz.`,
+    content: [
+      "Üyelik sürecinde toplanan verileriniz KVKK ve Gizlilik Politikamız kapsamında işlenir.",
+      "Verileriniz pazarlama amacıyla üçüncü taraflara satılmaz veya kiralanmaz.",
+    ],
   },
 ];
 
+type Tab = "mesafeli" | "uyelik";
+
+const tabs: { id: Tab; label: string }[] = [
+  { id: "mesafeli", label: "Mesafeli Satış Sözleşmesi" },
+  { id: "uyelik", label: "Üyelik Sözleşmesi" },
+];
+
 const Agreements = () => {
-  const [active, setActive] = useState<"mesafeli" | "uyelik">("mesafeli");
+  const [active, setActive] = useState<Tab>("mesafeli");
   const data = active === "mesafeli" ? mesafeli : uyelik;
 
   return (
     <>
-    <SEO
-      title="Mesafeli Satış Sözleşmesi – Takimax"
-      description="Takimax kullanım koşulları, mesafeli satış sözleşmesi ve üyelik şartları. Alışveriş yapmadan önce sözleşme detaylarını inceleyin."
-      canonical="/sozlesmeler"
-    />
-    <PageLayout title="Sözleşmeler">
-      <div style={{ maxWidth: 780, margin: "0 auto" }}>
-        <h1 style={{ fontFamily: "Montserrat, sans-serif", fontSize: "clamp(24px,3vw,36px)", fontWeight: 700, color: "#111", marginBottom: 32 }}>Sözleşmeler</h1>
+      <SEO
+        title="Sözleşmeler – Takimax"
+        description="Mesafeli satış sözleşmesi ve üyelik koşulları."
+        canonical="/sozlesmeler"
+      />
+      <PageLayout title="Sözleşmeler">
+        <div style={{ maxWidth: 700, margin: "0 auto", padding: "0 4px" }}>
 
-        {/* Tab */}
-        <div style={{ display: "flex", borderBottom: "2px solid #eee", marginBottom: 40 }}>
-          {[
-            { id: "mesafeli", label: "Mesafeli Satış Sözleşmesi" },
-            { id: "uyelik", label: "Üyelik Sözleşmesi" },
-          ].map((tab) => (
-            <button key={tab.id} onClick={() => setActive(tab.id as "mesafeli" | "uyelik")}
-              style={{
-                padding: "14px 28px", background: "none", border: "none", cursor: "pointer",
-                fontFamily: "Montserrat, sans-serif", fontSize: 12, fontWeight: 700,
-                letterSpacing: "0.1em", textTransform: "uppercase",
-                color: active === tab.id ? "#111" : "#aaa",
-                borderBottom: active === tab.id ? "2px solid #c9a96e" : "2px solid transparent",
-                marginBottom: -2, transition: "color 0.2s",
-              }}>
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        <div style={{ background: "#fff", border: "1px solid #eee", padding: "10px 20px", marginBottom: 40, borderLeft: "3px solid #c9a96e" }}>
-          <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 12, color: "#666", lineHeight: 1.8 }}>
-            Son güncelleme: <strong>Ocak 2025</strong> — Takımax Aksesuar ve Mücevherat Ticaret A.Ş.
-          </p>
-        </div>
-
-        {data.map((s, i) => (
-          <div key={s.title} style={{ marginBottom: 44, paddingBottom: 44, borderBottom: i < data.length - 1 ? "1px solid #f0ede8" : "none" }}>
-            <h2 style={{ fontFamily: "Montserrat, sans-serif", fontSize: 22, fontWeight: 600, color: "#111", marginBottom: 16, display: "flex", alignItems: "center", gap: 14 }}>
-              <span style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#c9a96e", fontWeight: 700 }}>{String(i + 1).padStart(2, "0")}</span>
-              {s.title}
-            </h2>
-            {s.content.split("\n").map((line, j) => (
-              <p key={j} style={{ fontFamily: "Montserrat, sans-serif", fontSize: 13, color: line.startsWith("•") ? "#555" : "#666", lineHeight: 1.9, marginBottom: line.startsWith("•") ? 4 : 8, paddingLeft: line.startsWith("•") ? 8 : 0 }}>
-                {line}
-              </p>
+          {/* Tabs */}
+          <div style={{ display: "flex", borderBottom: "1px solid #e8e8e8", marginBottom: 32, overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActive(tab.id)}
+                style={{
+                  padding: "12px 20px",
+                  background: "none",
+                  border: "none",
+                  borderBottom: active === tab.id ? "2px solid #111" : "2px solid transparent",
+                  cursor: "pointer",
+                  fontFamily: "Montserrat, sans-serif",
+                  fontSize: 12,
+                  fontWeight: active === tab.id ? 700 : 400,
+                  color: active === tab.id ? "#111" : "#999",
+                  whiteSpace: "nowrap",
+                  transition: "all 0.15s",
+                  marginBottom: -1,
+                }}
+              >
+                {tab.label}
+              </button>
             ))}
           </div>
-        ))}
 
-      </div>
-    </PageLayout>
+          {/* Meta */}
+          <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#bbb", marginBottom: 32 }}>
+            Son güncelleme: Ocak 2025
+          </p>
+
+          {/* Sections */}
+          {data.map((section, i) => (
+            <div
+              key={section.title}
+              style={{
+                marginBottom: 32,
+                paddingBottom: 32,
+                borderBottom: i < data.length - 1 ? "1px solid #f0f0f0" : "none",
+              }}
+            >
+              <h2 style={{
+                fontFamily: "Montserrat, sans-serif",
+                fontSize: 14,
+                fontWeight: 700,
+                color: "#111",
+                marginBottom: 12,
+                marginTop: 0,
+                letterSpacing: "0.02em",
+              }}>
+                {section.title}
+              </h2>
+              {section.content.map((line, j) => (
+                <p key={j} style={{
+                  fontFamily: "Montserrat, sans-serif",
+                  fontSize: 13,
+                  color: "#555",
+                  lineHeight: 1.8,
+                  margin: "0 0 8px 0",
+                }}>
+                  {line}
+                </p>
+              ))}
+            </div>
+          ))}
+
+        </div>
+      </PageLayout>
     </>
   );
 };
