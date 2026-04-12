@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import PageLayout from "@/components/PageLayout";
-import { getOrders, STATUS_LABELS, type StoredOrder } from "@/lib/orderStorage";
+import { getOrdersByEmail, STATUS_LABELS, type StoredOrder } from "@/lib/orderStorage";
 import {
   User, Package, MapPin, Heart, RotateCcw, Settings, LogOut,
   ChevronRight, ChevronLeft, Plus, Trash2, Pencil, Check,
@@ -45,7 +45,6 @@ const BackHeader = ({ title, onBack }: { title: string; onBack: () => void }) =>
 
 const Account = () => {
   const [orders, setOrders] = React.useState<import("@/lib/orderStorage").StoredOrder[]>([]);
-  useEffect(() => { setOrders(getOrders()); }, []);
   const { user, isLoggedIn, logout, updateUser, changePassword } = useAuth();
   const { favorites } = useFavorites();
   const navigate = useNavigate();
@@ -79,6 +78,24 @@ const Account = () => {
   useEffect(() => { localStorage.setItem("tkx_returns", JSON.stringify(returns)); }, [returns]);
 
   if (!user) return null;
+
+  // Siparişleri yükle ve canlı güncelle
+  useEffect(() => {
+    const load = () => {
+      if (user?.email) {
+        setOrders(getOrdersByEmail(user.email));
+      }
+    };
+    load();
+    const handleStorage = (e: StorageEvent) => { if (e.key === "tkx_orders") load(); };
+    window.addEventListener("storage", handleStorage);
+    window.addEventListener("focus", load);
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("focus", load);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.email]);
 
   // Kamyon animasyonu (sipariş takibi bölümü açıkken)
   useEffect(() => {
@@ -198,6 +215,7 @@ const Account = () => {
           .acc-menu-row{padding:14px 16px!important}
           .acc-fav-row{padding:12px 16px!important}
           .acc-back-header{padding:16px!important}
+          .order-progress-label{font-size:8px!important}
         }
       `}</style>
       <div className="acc-container" style={{ maxWidth:640, margin:"0 auto", fontFamily:"Montserrat, sans-serif" }}>
@@ -258,37 +276,166 @@ const Account = () => {
 
         {/* ── SİPARİŞLER ── */}
         {section === "orders" && (
-          <div style={card}>
-            <BackHeader title="Siparişlerim" onBack={() => setSection("menu")}/>
+          <div>
+            <div style={card}>
+              <BackHeader title="Siparişlerim" onBack={() => setSection("menu")}/>
+            </div>
+
             {orders.length === 0 ? (
-              <div style={{ padding:"40px 24px", textAlign:"center" }}>
-                <Package size={32} color="#d1d5db" style={{ marginBottom:10 }}/>
-                <p style={{ margin:0, fontFamily:"Montserrat, sans-serif", fontSize:13, color:"#9ca3af" }}>Henüz siparişiniz bulunmuyor.</p>
+              <div style={{ ...card, marginTop:12, padding:"56px 24px", textAlign:"center" }}>
+                <div style={{ width:64, height:64, borderRadius:"50%", background:"#f3f4f6", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 16px" }}>
+                  <Package size={28} color="#d1d5db"/>
+                </div>
+                <p style={{ margin:"0 0 6px", fontFamily:"Montserrat, sans-serif", fontSize:14, fontWeight:600, color:"#374151" }}>Henüz siparişiniz bulunmuyor</p>
+                <p style={{ margin:"0 0 24px", fontFamily:"Montserrat, sans-serif", fontSize:12, color:"#9ca3af" }}>İlk siparişinizi vermek için alışverişe başlayın.</p>
+                <button onClick={() => navigate("/")} style={btnPrimary}>Alışverişe Başla</button>
               </div>
-            ) : orders.map((order, i) => {
+            ) : orders.map((order) => {
               const st = STATUS_MAP[order.status];
+              const orderDate = new Date(order.createdAt).toLocaleDateString("tr-TR", { day:"numeric", month:"long", year:"numeric" });
+              const itemCount = order.items.reduce((s, i) => s + i.quantity, 0);
+
+              // İlerleme adımları
+              const progressSteps = ["beklemede","hazırlanıyor","kargoda","teslim edildi"];
+              const currentStep = progressSteps.indexOf(order.status);
+
               return (
-                <div key={order.id}>
-                  <div style={{ padding:"20px 24px" }}>
-                    <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", marginBottom:12, flexWrap:"wrap", gap:8 }}>
-                      <div>
-                        <p style={{ margin:0, fontFamily:"Montserrat, sans-serif", fontSize:13, fontWeight:700, color:"#111" }}>{order.id}</p>
-                        <p style={{ margin:"3px 0 0", fontFamily:"Montserrat, sans-serif", fontSize:11, color:"#9ca3af" }}>{new Date(order.createdAt).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}</p>
+                <div key={order.id} style={{ ...card, marginTop:12, overflow:"visible" }}>
+
+                  {/* Üst başlık */}
+                  <div style={{ padding:"18px 20px", borderBottom:"1px solid #f3f4f6", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:10 }}>
+                    <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+                      <div style={{ width:38, height:38, borderRadius:10, background:"#f8f8f8", border:"1px solid #e5e7eb", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+                        <Package size={17} color="#555"/>
                       </div>
-                      <span style={{ background:st.bg, color:st.color, fontSize:10, fontWeight:700, padding:"4px 10px", borderRadius:20, whiteSpace:"nowrap" }}>{st.label}</span>
+                      <div>
+                        <p style={{ margin:0, fontFamily:"Montserrat, sans-serif", fontSize:13, fontWeight:700, color:"#111", letterSpacing:"0.02em" }}>#{order.id}</p>
+                        <p style={{ margin:"2px 0 0", fontFamily:"Montserrat, sans-serif", fontSize:11, color:"#9ca3af" }}>{orderDate} · {itemCount} ürün</p>
+                      </div>
                     </div>
+                    <span style={{ background:st.bg, color:st.color, fontSize:10, fontWeight:700, padding:"5px 12px", borderRadius:20, whiteSpace:"nowrap", letterSpacing:"0.04em" }}>
+                      {st.label}
+                    </span>
+                  </div>
+
+                  {/* Ürünler */}
+                  <div style={{ padding:"16px 20px", borderBottom:"1px solid #f3f4f6", display:"flex", flexDirection:"column", gap:12 }}>
                     {order.items.map((item, j) => (
-                      <div key={j} style={{ display:"flex", justifyContent:"space-between", padding:"6px 0", borderTop:j===0?"1px solid #f3f4f6":"none" }}>
-                        <span style={{ fontFamily:"Montserrat, sans-serif", fontSize:12, color:"#374151" }}>{item.name} <span style={{ color:"#9ca3af" }}>x{item.quantity}</span></span>
-                        <span style={{ fontFamily:"Montserrat, sans-serif", fontSize:12, fontWeight:600, color:"#111" }}>{(item.price*item.quantity).toLocaleString("tr-TR",{minimumFractionDigits:2})} ₺</span>
+                      <div key={j} style={{ display:"flex", alignItems:"center", gap:14 }}>
+                        {/* Ürün fotoğrafı */}
+                        <div style={{ width:60, height:60, borderRadius:10, overflow:"hidden", flexShrink:0, background:"#f5f0eb", border:"1px solid #ede9e2" }}>
+                          {item.image ? (
+                            <img src={item.image} alt={item.name} style={{ width:"100%", height:"100%", objectFit:"cover" }} loading="lazy"/>
+                          ) : (
+                            <div style={{ width:"100%", height:"100%", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                              <Package size={20} color="#ccc"/>
+                            </div>
+                          )}
+                        </div>
+                        {/* Ürün bilgisi */}
+                        <div style={{ flex:1, minWidth:0 }}>
+                          <p style={{ margin:0, fontFamily:"Montserrat, sans-serif", fontSize:13, fontWeight:600, color:"#111", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{item.name}</p>
+                          <p style={{ margin:"3px 0 0", fontFamily:"Montserrat, sans-serif", fontSize:11, color:"#9ca3af" }}>Adet: {item.quantity}</p>
+                        </div>
+                        {/* Fiyat */}
+                        <div style={{ textAlign:"right", flexShrink:0 }}>
+                          <p style={{ margin:0, fontFamily:"Montserrat, sans-serif", fontSize:13, fontWeight:700, color:"#111" }}>
+                            {(item.price * item.quantity).toLocaleString("tr-TR", { minimumFractionDigits:2 })} ₺
+                          </p>
+                          {item.quantity > 1 && (
+                            <p style={{ margin:"2px 0 0", fontFamily:"Montserrat, sans-serif", fontSize:10, color:"#bbb" }}>
+                              {item.price.toLocaleString("tr-TR", { minimumFractionDigits:2 })} ₺ / adet
+                            </p>
+                          )}
+                        </div>
                       </div>
                     ))}
-                    <div style={{ display:"flex", justifyContent:"space-between", marginTop:10, paddingTop:10, borderTop:"1px solid #e5e7eb" }}>
-                      <span style={{ fontFamily:"Montserrat, sans-serif", fontSize:12, fontWeight:700, color:"#111" }}>Toplam</span>
-                      <span style={{ fontFamily:"Montserrat, sans-serif", fontSize:13, fontWeight:800, color:"#111" }}>{order.total.toLocaleString("tr-TR",{minimumFractionDigits:2})} ₺</span>
+                  </div>
+
+                  {/* Sipariş özeti satırı */}
+                  <div style={{ padding:"14px 20px", borderBottom:"1px solid #f3f4f6", display:"flex", alignItems:"center", gap:16, flexWrap:"wrap" }}>
+                    <div style={{ display:"flex", gap:6, alignItems:"center" }}>
+                      <span style={{ fontFamily:"Montserrat, sans-serif", fontSize:11, color:"#9ca3af" }}>Ara toplam</span>
+                      <span style={{ fontFamily:"Montserrat, sans-serif", fontSize:11, color:"#555", fontWeight:600 }}>{order.subtotal.toLocaleString("tr-TR",{minimumFractionDigits:2})} ₺</span>
+                    </div>
+                    {order.shippingFee > 0 && (
+                      <>
+                        <span style={{ color:"#e5e7eb", fontSize:11 }}>·</span>
+                        <div style={{ display:"flex", gap:6, alignItems:"center" }}>
+                          <span style={{ fontFamily:"Montserrat, sans-serif", fontSize:11, color:"#9ca3af" }}>Kargo</span>
+                          <span style={{ fontFamily:"Montserrat, sans-serif", fontSize:11, color:"#555", fontWeight:600 }}>{order.shippingFee.toLocaleString("tr-TR",{minimumFractionDigits:2})} ₺</span>
+                        </div>
+                      </>
+                    )}
+                    {order.discount > 0 && (
+                      <>
+                        <span style={{ color:"#e5e7eb", fontSize:11 }}>·</span>
+                        <div style={{ display:"flex", gap:6, alignItems:"center" }}>
+                          <span style={{ fontFamily:"Montserrat, sans-serif", fontSize:11, color:"#9ca3af" }}>İndirim</span>
+                          <span style={{ fontFamily:"Montserrat, sans-serif", fontSize:11, color:"#16a34a", fontWeight:600 }}>-{order.discount.toLocaleString("tr-TR",{minimumFractionDigits:2})} ₺</span>
+                        </div>
+                      </>
+                    )}
+                    <div style={{ marginLeft:"auto", display:"flex", alignItems:"center", gap:8 }}>
+                      <span style={{ fontFamily:"Montserrat, sans-serif", fontSize:12, color:"#555" }}>Toplam</span>
+                      <span style={{ fontFamily:"Montserrat, sans-serif", fontSize:16, fontWeight:800, color:"#111" }}>{order.total.toLocaleString("tr-TR",{minimumFractionDigits:2})} ₺</span>
                     </div>
                   </div>
-                  {i < orders.length-1 && <Divider/>}
+
+                  {/* Teslimat & ödeme bilgisi */}
+                  <div style={{ padding:"14px 20px", borderBottom: order.status !== "iptal" ? "1px solid #f3f4f6" : "none", display:"flex", gap:24, flexWrap:"wrap" }}>
+                    <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                      <MapPin size={13} color="#9ca3af"/>
+                      <span style={{ fontFamily:"Montserrat, sans-serif", fontSize:11, color:"#6b7280" }}>{order.city || order.address?.split("/").pop()?.trim() || "—"}</span>
+                    </div>
+                    <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                      <Clock size={13} color="#9ca3af"/>
+                      <span style={{ fontFamily:"Montserrat, sans-serif", fontSize:11, color:"#6b7280" }}>{order.paymentMethod || "Kredi Kartı"}</span>
+                    </div>
+                    {order.shippingFee === 0 && (
+                      <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                        <Truck size={13} color="#16a34a"/>
+                        <span style={{ fontFamily:"Montserrat, sans-serif", fontSize:11, color:"#16a34a", fontWeight:600 }}>Ücretsiz kargo</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* İlerleme çubuğu — iptal değilse göster */}
+                  {order.status !== "iptal" && (
+                    <div style={{ padding:"18px 20px" }}>
+                      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", position:"relative" }}>
+                        {/* Arka çizgi */}
+                        <div style={{ position:"absolute", top:14, left:"7%", right:"7%", height:2, background:"#f0f0f0", zIndex:0 }}/>
+                        {/* Dolu çizgi */}
+                        <div style={{ position:"absolute", top:14, left:"7%", height:2, background:"#111", zIndex:1, transition:"width 0.4s ease",
+                          width: currentStep <= 0 ? "0%" : currentStep === 1 ? "31%" : currentStep === 2 ? "62%" : "86%"
+                        }}/>
+                        {progressSteps.map((s, idx) => {
+                          const done = currentStep > idx;
+                          const active = currentStep === idx;
+                          const labels: Record<string,string> = { "beklemede":"Alındı", "hazırlanıyor":"Hazırlanıyor", "kargoda":"Kargoda", "teslim edildi":"Teslim Edildi" };
+                          return (
+                            <div key={s} style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:6, zIndex:2, flex:1 }}>
+                              <div style={{
+                                width:28, height:28, borderRadius:"50%",
+                                background: done ? "#111" : active ? "#111" : "#f0f0f0",
+                                border: `2px solid ${done || active ? "#111" : "#e5e7eb"}`,
+                                display:"flex", alignItems:"center", justifyContent:"center",
+                                transition:"all 0.3s",
+                                boxShadow: active ? "0 0 0 4px rgba(0,0,0,0.08)" : "none",
+                              }}>
+                                {done ? <Check size={13} color="#fff"/> : active ? <div style={{ width:8, height:8, borderRadius:"50%", background:"#fff" }}/> : null}
+                              </div>
+                              <span style={{ fontFamily:"Montserrat, sans-serif", fontSize:9, fontWeight: active ? 700 : 400, color: active ? "#111" : done ? "#555" : "#bbb", letterSpacing:"0.02em", textAlign:"center", lineHeight:1.3 }}>
+                                {labels[s]}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
                 </div>
               );
             })}

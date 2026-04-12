@@ -70,3 +70,9 @@ export const STATUS_LABELS: Record<OrderStatus, { label: string; color: string; 
   "teslim edildi": { label: "Teslim Edildi", color: "#166534", bg: "#dcfce7" },
   iptal:           { label: "İptal Edildi",  color: "#991b1b", bg: "#fee2e2" },
 };
+
+/** Belirli bir e-postaya ait siparişleri döner */
+export function getOrdersByEmail(email: string): StoredOrder[] {
+  const normalized = email.toLowerCase().trim();
+  return getOrders().filter(o => (o.email || "").toLowerCase().trim() === normalized);
+}

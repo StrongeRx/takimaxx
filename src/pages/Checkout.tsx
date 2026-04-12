@@ -1,7 +1,7 @@
 import PageLayout from "@/components/PageLayout";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronRight, ChevronLeft, Check, Lock, CreditCard, Truck, MapPin, ShoppingBag, Wifi, User, UserCheck } from "lucide-react";
+import { ChevronRight, ChevronLeft, Check, Lock, CreditCard, MapPin, ShoppingBag, Wifi, User, UserCheck } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import AnnouncementBar from "@/components/AnnouncementBar";
@@ -11,7 +11,7 @@ import Footer from "@/components/Footer";
 import { saveOrder } from "@/lib/orderStorage";
 import PhoneInput, { CountryCode, COUNTRY_CODES } from "@/components/PhoneInput";
 
-type Step = 1 | 2 | 3 | 4;
+type Step = 1 | 2 | 3;
 
 /* ─── Kart Marka Tespiti ─── */
 type CardBrand = "visa" | "mastercard" | "troy" | "amex" | null;
@@ -301,8 +301,6 @@ const Checkout = () => {
     }));
   }, [user]);
 
-  const [shippingMethod, setShippingMethod] = useState<"standard" | "express">("standard");
-
   const [payment, setPayment] = useState({
     method: "card" as "card" | "transfer",
     cardNumber: "",
@@ -316,18 +314,12 @@ const Checkout = () => {
 
   // Kargo sabitleri — yeni admin panelinden yönetilecek
   const shippingConfig = {
-    fee: 49.90,
-    expressFee: 89.90,
-    threshold: 400,
+    fee: 129.90,
+    threshold: 850,
     deliveryDays: "3–5 iş günü",
-    expressDeliveryDays: "1–2 iş günü",
   };
 
-  const SHIPPING_COSTS = {
-    standard: totalPrice >= shippingConfig.threshold || appliedCoupon?.type === "shipping" ? 0 : shippingConfig.fee,
-    express: appliedCoupon?.type === "shipping" ? 0 : shippingConfig.expressFee,
-  };
-  const shippingCost = SHIPPING_COSTS[shippingMethod];
+  const shippingCost = totalPrice >= shippingConfig.threshold || appliedCoupon?.type === "shipping" ? 0 : shippingConfig.fee;
   const grandTotal = Math.max(0, totalPrice - discountAmount + shippingCost);
 
   const formatCard = (v: string) => {
@@ -364,7 +356,7 @@ const Checkout = () => {
     return e;
   };
 
-  const validateStep3 = () => {
+  const validateStep2 = () => {
     const e: Record<string, string> = {};
     if (payment.method === "card") {
       const isAmexPayment = detectCardBrand(payment.cardNumber) === "amex";
@@ -390,18 +382,18 @@ const Checkout = () => {
       const e = validateStep1();
       if (Object.keys(e).length > 0) { setErrors(e); return; }
     }
-    if (step === 3) {
-      const e = validateStep3();
+    if (step === 2) {
+      const e = validateStep2();
       if (Object.keys(e).length > 0) { setErrors(e); return; }
     }
     setErrors({});
-    if (step === 3) {
+    if (step === 2) {
       // Admin paneline sipariş kaydet
       try {
         const newOrder = {
           id: orderId,
           customer: address.fullName || user?.name || "Misafir",
-          email: address.email || user?.email || "",
+          email: (isLoggedIn && user?.email) ? user.email : (address.email || ""),
           phone: address.phone || user?.phone || "",
           address: `${address.addressLine}, ${address.district}/${address.city} ${address.zip}`.trim(),
           city: address.city || "",
@@ -424,6 +416,8 @@ const Checkout = () => {
         };
         // Siparişi localStorage'a kaydet — Account sayfasında gösterilecek
         saveOrder(newOrder);
+        // Aynı sekmedeki Account sayfasını uyar
+        window.dispatchEvent(new StorageEvent("storage", { key: "tkx_orders" }));
 
         // "Bu adresi kaydet" işaretliyse adresi de kaydet
         if (address.saveAddress && isLoggedIn) {
@@ -448,7 +442,7 @@ const Checkout = () => {
       }
       setOrderPlaced(true);
       clearCart();
-      setStep(4);
+      setStep(3);
     } else {
       setStep((step + 1) as Step);
     }
@@ -456,9 +450,8 @@ const Checkout = () => {
 
   const steps = [
     { n: 1, label: "Adres", icon: <MapPin size={13} /> },
-    { n: 2, label: "Kargo", icon: <Truck size={13} /> },
-    { n: 3, label: "Ödeme", icon: <CreditCard size={13} /> },
-    { n: 4, label: "Onay", icon: <Check size={13} /> },
+    { n: 2, label: "Ödeme", icon: <CreditCard size={13} /> },
+    { n: 3, label: "Onay", icon: <Check size={13} /> },
   ];
 
   /* ─── Ortak input stili ─── */
@@ -635,7 +628,7 @@ const Checkout = () => {
         @media (max-width: 900px) {
           #checkout-grid { grid-template-columns: 1fr !important; }
           #addr-form-grid { grid-template-columns: 1fr !important; }
-          #step-label-1, #step-label-2, #step-label-3, #step-label-4 { display: none !important; }
+          #step-label-1, #step-label-2, #step-label-3 { display: none !important; }
         }
       `}</style>
 
@@ -773,77 +766,8 @@ const Checkout = () => {
               </>
             )}
 
-            {/* ADIM 2: Kargo */}
+            {/* ADIM 2: Ödeme */}
             {step === 2 && (
-              <>
-                <div style={{ marginBottom: 28 }}>
-                  <h2 style={{ fontFamily: "Montserrat, sans-serif", fontSize: 20, fontWeight: 700, color: "#111", margin: 0 }}>Kargo Seçimi</h2>
-                  <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 13, color: "#888", marginTop: 4 }}>Size en uygun teslimat seçeneğini belirleyin</p>
-                </div>
-
-                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                  {[
-                    { key: "standard", title: "Standart Teslimat", desc: `${shippingConfig.deliveryDays} içinde teslim`, price: SHIPPING_COSTS.standard, tag: totalPrice >= shippingConfig.threshold ? "ÜCRETSİZ" : null },
-                    { key: "express", title: "Hızlı Teslimat", desc: `${shippingConfig.expressDeliveryDays} içinde teslim`, price: SHIPPING_COSTS.express, tag: "HIZLI" },
-                  ].map(opt => (
-                    <label
-                      key={opt.key}
-                      onClick={() => setShippingMethod(opt.key as "standard" | "express")}
-                      style={{
-                        display: "flex", alignItems: "center", justifyContent: "space-between",
-                        padding: "18px 22px",
-                        border: `2px solid ${shippingMethod === opt.key ? "#111" : "#e8e8e8"}`,
-                        cursor: "pointer",
-                        background: shippingMethod === opt.key ? "#f8f8f8" : "#fff",
-                        transition: "all 0.2s",
-                        borderRadius: 10,
-                      }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                        <div style={{
-                          width: 20, height: 20, borderRadius: "50%",
-                          border: `2px solid ${shippingMethod === opt.key ? "#111" : "#ccc"}`,
-                          display: "flex", alignItems: "center", justifyContent: "center",
-                          transition: "all 0.2s",
-                        }}>
-                          {shippingMethod === opt.key && (
-                            <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#111" }} />
-                          )}
-                        </div>
-                        <div>
-                          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                            <span style={{ fontFamily: "Montserrat, sans-serif", fontSize: 14, fontWeight: 600, color: "#111" }}>{opt.title}</span>
-                            {opt.tag && (
-                              <span style={{
-                                fontFamily: "Montserrat, sans-serif", fontSize: 9, fontWeight: 700, letterSpacing: "0.12em",
-                                padding: "2px 8px", borderRadius: 20,
-                                background: opt.tag === "ÜCRETSİZ" ? "#111" : "#f0f0f0",
-                                color: opt.tag === "ÜCRETSİZ" ? "#fff" : "#555",
-                              }}>
-                                {opt.tag}
-                              </span>
-                            )}
-                          </div>
-                          <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 12, color: "#999", marginTop: 2 }}>{opt.desc}</p>
-                        </div>
-                      </div>
-                      <span style={{ fontFamily: "Montserrat, sans-serif", fontSize: 16, fontWeight: 700, color: opt.price === 0 ? "#111" : "#111" }}>
-                        {opt.price === 0 ? "Ücretsiz" : `₺${opt.price.toFixed(2)}`}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-
-                <div style={{ marginTop: 20, padding: 16, background: "#f8f8f8", borderRadius: 10, border: "1px solid #ececec" }}>
-                  <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 12, color: "#666", lineHeight: 1.7, margin: 0 }}>
-                    📦 Hafta içi <strong style={{ color: "#111" }}>13:00'a kadar</strong> verilen siparişler aynı gün kargoya teslim edilir.<br />
-                    📲 Kargo takip numarası SMS ve e-posta ile iletilir.
-                  </p>
-                </div>
-              </>
-            )}
-
-            {/* ADIM 3: Ödeme */}
-            {step === 3 && (
               <>
                 <div style={{ marginBottom: 24 }}>
                   <h2 style={{ fontFamily: "Montserrat, sans-serif", fontSize: 20, fontWeight: 700, color: "#111", margin: 0 }}>Ödeme Bilgileri</h2>
@@ -955,8 +879,8 @@ const Checkout = () => {
               </>
             )}
 
-            {/* ADIM 4: Onay */}
-            {step === 4 && (
+            {/* ADIM 3: Onay */}
+            {step === 3 && (
               <div style={{ textAlign: "center", padding: "40px 20px" }}>
                 <div className="success-icon" style={{
                   width: 80, height: 80, borderRadius: "50%",
@@ -1002,7 +926,7 @@ const Checkout = () => {
             )}
 
             {/* Navigasyon */}
-            {step < 4 && (
+            {step < 3 && (
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 32, paddingTop: 24, borderTop: "1.5px solid #f0f0f0" }}>
                 {step > 1 ? (
                   <button onClick={() => setStep((step - 1) as Step)} style={{
@@ -1027,7 +951,7 @@ const Checkout = () => {
                 }}
                   onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")}
                   onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
-                  {step === 3 ? (
+                  {step === 2 ? (
                     <><Lock size={13} /> Siparişi Onayla</>
                   ) : (
                     <>Devam Et <ChevronRight size={14} /></>
@@ -1038,7 +962,7 @@ const Checkout = () => {
           </div>
 
           {/* Sağ: Sipariş Özeti */}
-          {step < 4 && (
+          {step < 3 && (
             <div style={{ background: "#fff", borderRadius: 14, padding: "24px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)", position: "sticky", top: 100 }}>
               <h3 style={{ fontFamily: "Montserrat, sans-serif", fontSize: 15, fontWeight: 700, color: "#111", marginBottom: 20, paddingBottom: 16, borderBottom: "1.5px solid #f0f0f0" }}>
                 Sipariş Özeti
