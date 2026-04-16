@@ -91,7 +91,7 @@ const CreditCardVisual = ({
 
 
   return (
-    <div style={{ perspective: "1200px", width: "100%", maxWidth: 380, margin: "0 auto 32px" }}>
+    <div id="credit-card-visual" style={{ perspective: "1200px", width: "100%", maxWidth: 380, margin: "0 auto 32px" }}>
       <div
         style={{
           position: "relative",
@@ -461,12 +461,14 @@ const Checkout = () => {
     border: `1.5px solid ${hasError ? "#e53e3e" : "#e0e0e0"}`,
     background: "#fff",
     fontFamily: "Montserrat, sans-serif",
-    fontSize: 14,
+    fontSize: 16, /* iOS zoom engellemek için 16px */
     color: "#111",
     outline: "none",
     boxSizing: "border-box",
     borderRadius: 8,
     transition: "border-color 0.2s, box-shadow 0.2s",
+    WebkitAppearance: "none",
+    appearance: "none",
   });
 
   const lbl: React.CSSProperties = {
@@ -625,17 +627,162 @@ const Checkout = () => {
         }
         .success-icon { animation: successPulse 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 
+        /* ── TABLET ── */
         @media (max-width: 900px) {
           #checkout-grid { grid-template-columns: 1fr !important; }
           #addr-form-grid { grid-template-columns: 1fr !important; }
           #step-label-1, #step-label-2, #step-label-3 { display: none !important; }
         }
+
+        /* ── MOBİL ── */
+        @media (max-width: 600px) {
+          #checkout-wrapper {
+            padding: 12px 12px 80px !important;
+          }
+
+          /* Breadcrumb küçült */
+          #checkout-breadcrumb {
+            margin-bottom: 16px !important;
+            font-size: 11px !important;
+          }
+
+          /* Step bar sıkıştır */
+          #checkout-stepbar {
+            padding: 12px 14px !important;
+            margin-bottom: 16px !important;
+            border-radius: 10px !important;
+          }
+          #checkout-stepbar .step-circle {
+            width: 28px !important;
+            height: 28px !important;
+            font-size: 11px !important;
+          }
+
+          /* Form kutusu */
+          #checkout-form-box {
+            padding: 20px 16px !important;
+            border-radius: 12px !important;
+          }
+
+          /* Form başlığı */
+          #checkout-form-box h2 {
+            font-size: 17px !important;
+          }
+          #checkout-form-box p {
+            font-size: 12px !important;
+          }
+
+          /* Adres formu: tek sütun */
+          #addr-form-grid {
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+          }
+
+          /* İlçe + Şehir yan yana kalsın mobilde */
+          #addr-row-district-city {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 10px !important;
+          }
+
+          /* Tüm inputlar tam genişlik, rahat yükseklik */
+          .checkout-input {
+            font-size: 16px !important; /* iOS zoom engellemek için 16px */
+            padding: 14px 12px !important;
+            border-radius: 8px !important;
+          }
+
+          /* Telefon input grubu */
+          .phone-input-wrap {
+            width: 100% !important;
+          }
+
+          /* Sipariş özeti — mobilde formun altına gelir */
+          #checkout-summary {
+            position: static !important;
+            border-radius: 12px !important;
+            margin-top: 0 !important;
+            padding: 18px 16px !important;
+          }
+
+          /* Sipariş özeti ürün listesi yüksekliği */
+          #checkout-summary .summary-items {
+            max-height: 200px !important;
+          }
+
+          /* Navigasyon butonları */
+          #checkout-nav {
+            margin-top: 24px !important;
+            padding-top: 16px !important;
+          }
+          #checkout-nav button, #checkout-nav a {
+            padding: 14px 18px !important;
+            font-size: 13px !important;
+          }
+
+          /* Ödeme yöntemi butonları */
+          #payment-method-btns button {
+            padding: 10px 8px !important;
+            font-size: 12px !important;
+          }
+
+          /* Kart animasyonu — mobilde tam genişlik */
+          #credit-card-visual {
+            max-width: 100% !important;
+            margin-bottom: 20px !important;
+          }
+
+          /* Kart numarası font küçült */
+          #credit-card-visual .card-number span {
+            font-size: 15px !important;
+            letter-spacing: 0.1em !important;
+          }
+
+          /* Ödeme form grid — tek sütun */
+          #payment-form-grid {
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+          }
+
+          /* Son kullanma + CVV yan yana kalsın */
+          #card-expiry-cvv {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 10px !important;
+          }
+
+          /* Onay sayfası */
+          #order-success {
+            padding: 28px 12px !important;
+          }
+          #order-success h2 {
+            font-size: 20px !important;
+          }
+
+          /* Güvence rozetleri */
+          #checkout-badges {
+            padding: 12px !important;
+          }
+        }
+
+        /* ── EXTRA KÜÇÜK (≤380px) ── */
+        @media (max-width: 380px) {
+          #addr-row-district-city {
+            grid-template-columns: 1fr !important;
+          }
+          #card-expiry-cvv {
+            grid-template-columns: 1fr !important;
+          }
+          .checkout-input {
+            font-size: 15px !important;
+          }
+        }
       `}</style>
 
-      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "32px 20px 72px", width: "100%", boxSizing: "border-box" }}>
+      <div id="checkout-wrapper" style={{ maxWidth: 1080, margin: "0 auto", padding: "32px 20px 72px", width: "100%", boxSizing: "border-box" }}>
 
         {/* Breadcrumb */}
-        <nav style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: "Montserrat, sans-serif", fontSize: 12, color: "#aaa", marginBottom: 32 }}>
+        <nav id="checkout-breadcrumb" style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: "Montserrat, sans-serif", fontSize: 12, color: "#aaa", marginBottom: 32 }}>
           <Link to="/" style={{ color: "#aaa", textDecoration: "none" }}
             onMouseEnter={e => (e.currentTarget.style.color = "#111")}
             onMouseLeave={e => (e.currentTarget.style.color = "#aaa")}>Anasayfa</Link>
@@ -644,7 +791,7 @@ const Checkout = () => {
         </nav>
 
         {/* Step Bar */}
-        <div style={{ display: "flex", alignItems: "center", marginBottom: 40, background: "#fff", borderRadius: 12, padding: "16px 24px", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
+        <div id="checkout-stepbar" style={{ display: "flex", alignItems: "center", marginBottom: 40, background: "#fff", borderRadius: 12, padding: "16px 24px", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
           {steps.map((s, i) => (
             <div key={s.n} style={{ display: "flex", alignItems: "center", flex: i < steps.length - 1 ? 1 : "none" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
@@ -681,7 +828,7 @@ const Checkout = () => {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 20, alignItems: "start" }} id="checkout-grid">
 
           {/* Sol: Form */}
-          <div className="fade-up" key={step} style={{ background: "#fff", borderRadius: 14, padding: "32px 36px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+          <div id="checkout-form-box" className="fade-up" key={step} style={{ background: "#fff", borderRadius: 14, padding: "32px 36px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
 
             {/* ADIM 1: Adres */}
             {step === 1 && (
@@ -725,6 +872,7 @@ const Checkout = () => {
                       style={inp(!!errors.addressLine)} placeholder="Mahalle, Cadde, Sokak, No, Daire" />
                     {errors.addressLine && <FieldError msg={errors.addressLine} />}
                   </div>
+                  <div id="addr-row-district-city" style={{ display: "contents" }}>
                   <div>
                     <label style={lbl}>İlçe</label>
                     <input className="checkout-input" value={address.district} autoComplete="address-level3" inputMode="text"
@@ -737,6 +885,7 @@ const Checkout = () => {
                       onChange={e => { setAddress({ ...address, city: e.target.value }); setErrors({ ...errors, city: "" }); }}
                       style={inp(!!errors.city)} placeholder="İstanbul" />
                     {errors.city && <FieldError msg={errors.city} />}
+                  </div>
                   </div>
                   <div>
                     <label style={lbl}>Posta Kodu</label>
@@ -775,7 +924,7 @@ const Checkout = () => {
                 </div>
 
                 {/* Yöntem seçimi */}
-                <div style={{ display: "flex", gap: 10, marginBottom: 28 }}>
+                <div id="payment-method-btns" style={{ display: "flex", gap: 10, marginBottom: 28 }}>
                   {[
                     { key: "card", label: "Kredi / Banka Kartı" },
                     { key: "transfer", label: "Havale / EFT" },
@@ -805,7 +954,7 @@ const Checkout = () => {
                       flipped={cvvFocused}
                     />
 
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                    <div id="payment-form-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                       <div style={{ gridColumn: "1 / -1" }}>
                         <label style={lbl}>Kart Numarası *</label>
                         <input className="checkout-input" value={payment.cardNumber}
@@ -824,6 +973,7 @@ const Checkout = () => {
                           inputMode="text" autoComplete="cc-name" />
                         {errors.cardName && <FieldError msg={errors.cardName} />}
                       </div>
+                      <div id="card-expiry-cvv" style={{ display: "contents" }}>
                       <div>
                         <label style={lbl}>Son Kullanma Tarihi *</label>
                         <input className="checkout-input" value={payment.expiry}
@@ -844,6 +994,7 @@ const Checkout = () => {
                           placeholder="•••" maxLength={4}
                           inputMode="numeric" autoComplete="cc-csc" />
                         {errors.cvv && <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#e53e3e", marginTop: 5 }}>⚠ {errors.cvv}</p>}
+                      </div>
                       </div>
                     </div>
 
@@ -927,7 +1078,7 @@ const Checkout = () => {
 
             {/* Navigasyon */}
             {step < 3 && (
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 32, paddingTop: 24, borderTop: "1.5px solid #f0f0f0" }}>
+              <div id="checkout-nav" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 32, paddingTop: 24, borderTop: "1.5px solid #f0f0f0" }}>
                 {step > 1 ? (
                   <button onClick={() => setStep((step - 1) as Step)} style={{
                     display: "flex", alignItems: "center", gap: 6, background: "none",
@@ -963,12 +1114,12 @@ const Checkout = () => {
 
           {/* Sağ: Sipariş Özeti */}
           {step < 3 && (
-            <div style={{ background: "#fff", borderRadius: 14, padding: "24px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)", position: "sticky", top: 100 }}>
+            <div id="checkout-summary" style={{ background: "#fff", borderRadius: 14, padding: "24px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)", position: "sticky", top: 100 }}>
               <h3 style={{ fontFamily: "Montserrat, sans-serif", fontSize: 15, fontWeight: 700, color: "#111", marginBottom: 20, paddingBottom: 16, borderBottom: "1.5px solid #f0f0f0" }}>
                 Sipariş Özeti
               </h3>
 
-              <div style={{ maxHeight: 260, overflowY: "auto", marginBottom: 16 }}>
+              <div className="summary-items" style={{ maxHeight: 260, overflowY: "auto", marginBottom: 16 }}>
                 {items.map(item => (
                   <div key={item.product.id} style={{ display: "flex", gap: 12, marginBottom: 14, paddingBottom: 14, borderBottom: "1px solid #f5f5f5" }}>
                     <div style={{ position: "relative", flexShrink: 0 }}>
@@ -1018,7 +1169,7 @@ const Checkout = () => {
               </div>
 
               {/* Güvence rozetleri */}
-              <div style={{ marginTop: 20, padding: "14px 16px", background: "#f8f8f8", borderRadius: 10 }}>
+              <div id="checkout-badges" style={{ marginTop: 20, padding: "14px 16px", background: "#f8f8f8", borderRadius: 10 }}>
                 {[
                   { icon: "🔒", text: "256-bit SSL Şifrelemesi" },
                   { icon: "↩️", text: "14 Gün İade Garantisi" },
