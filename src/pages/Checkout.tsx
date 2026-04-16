@@ -1,7 +1,7 @@
 import PageLayout from "@/components/PageLayout";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronRight, ChevronLeft, Check, Lock, CreditCard, MapPin, ShoppingBag, Wifi, User, UserCheck } from "lucide-react";
+import { ChevronRight, ChevronLeft, Check, Lock, CreditCard, MapPin, ShoppingBag, Wifi, User } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import AnnouncementBar from "@/components/AnnouncementBar";
@@ -269,10 +269,6 @@ const Checkout = () => {
   const navigate = useNavigate();
 
   const [step, setStep] = useState<Step>(1);
-  // checkoutReady: kullanıcı giriş yapmış ya da misafir olarak devam etmeyi seçmişse true
-  const [checkoutReady, setCheckoutReady] = useState<boolean>(isLoggedIn);
-  // isLoggedIn sonradan true olursa (session restore) checkoutReady'i güncelle
-  useEffect(() => { if (isLoggedIn) setCheckoutReady(true); }, [isLoggedIn]);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderId] = useState(`TKM${Date.now().toString().slice(-7)}`);
   const [cvvFocused, setCvvFocused] = useState(false);
@@ -482,108 +478,6 @@ const Checkout = () => {
     textTransform: "uppercase",
   };
 
-  /* ── Giriş / Misafir Seçim Ekranı ── */
-  if (!checkoutReady && !isLoggedIn) {
-    return (
-      <PageLayout title="Ödeme">
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 0" }}>
-          <div style={{ width: "100%", maxWidth: 460 }}>
-
-            {/* Başlık */}
-            <div style={{ textAlign: "center", marginBottom: 32 }}>
-              <div style={{ width: 56, height: 56, borderRadius: "50%", background: "#fff", border: "1px solid #eee", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", boxShadow: "0 2px 12px rgba(0,0,0,0.07)" }}>
-                <ShoppingBag size={24} style={{ color: "#111" }} />
-              </div>
-              <h1 style={{ fontFamily: "Montserrat, sans-serif", fontSize: 22, fontWeight: 700, color: "#111", margin: "0 0 8px" }}>Siparişi Tamamla</h1>
-              <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 13, color: "#999", margin: 0 }}>Devam etmek için bir seçenek belirleyin</p>
-            </div>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-
-              {/* Giriş Yap */}
-              <Link to="/giris" state={{ from: "/odeme" }} style={{ textDecoration: "none" }}>
-                <div style={{
-                  display: "flex", alignItems: "center", gap: 16,
-                  background: "#111", padding: "18px 22px", borderRadius: 12,
-                  cursor: "pointer", transition: "background 0.2s",
-                }}
-                onMouseEnter={e => (e.currentTarget.style.background = "#333")}
-                onMouseLeave={e => (e.currentTarget.style.background = "#111")}
-                >
-                  <div style={{ width: 40, height: 40, borderRadius: 10, background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <User size={18} color="#fff" />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Giriş Yap</p>
-                    <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 12, color: "rgba(255,255,255,0.5)", margin: "2px 0 0" }}>Mevcut hesabınızla devam edin</p>
-                  </div>
-                  <ChevronRight size={16} color="rgba(255,255,255,0.35)" />
-                </div>
-              </Link>
-
-              {/* Üye Ol */}
-              <Link to="/kayit" state={{ from: "/odeme" }} style={{ textDecoration: "none" }}>
-                <div style={{
-                  display: "flex", alignItems: "center", gap: 16,
-                  background: "#fff", padding: "18px 22px", borderRadius: 12,
-                  border: "1.5px solid #e8e8e8", cursor: "pointer", transition: "border-color 0.2s",
-                }}
-                onMouseEnter={e => (e.currentTarget.style.borderColor = "#c9a96e")}
-                onMouseLeave={e => (e.currentTarget.style.borderColor = "#e8e8e8")}
-                >
-                  <div style={{ width: 40, height: 40, borderRadius: 10, background: "#fdf8f0", border: "1px solid #e8d5b0", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <UserCheck size={18} color="#c9a96e" />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 14, fontWeight: 700, color: "#111", margin: 0 }}>Üye Ol</p>
-                    <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 12, color: "#999", margin: "2px 0 0" }}>Yeni hesap oluşturarak devam edin</p>
-                  </div>
-                  <ChevronRight size={16} color="#ccc" />
-                </div>
-              </Link>
-
-              {/* Ayırıcı */}
-              <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "4px 0" }}>
-                <div style={{ flex: 1, height: 1, background: "#e8e8e8" }} />
-                <span style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#bbb", letterSpacing: "0.08em", textTransform: "uppercase" }}>veya</span>
-                <div style={{ flex: 1, height: 1, background: "#e8e8e8" }} />
-              </div>
-
-              {/* Misafir Olarak Devam Et */}
-              <button
-                onClick={() => setCheckoutReady(true)}
-                style={{
-                  display: "flex", alignItems: "center", gap: 16,
-                  background: "#fff", padding: "18px 22px", borderRadius: 12,
-                  border: "1.5px dashed #d0d0d0", cursor: "pointer", width: "100%",
-                  transition: "border-color 0.2s, background 0.2s",
-                }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = "#111"; e.currentTarget.style.background = "#fafafa"; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = "#d0d0d0"; e.currentTarget.style.background = "#fff"; }}
-              >
-                <div style={{ width: 40, height: 40, borderRadius: 10, background: "#f5f5f5", border: "1px solid #eee", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <ShoppingBag size={18} color="#888" />
-                </div>
-                <div style={{ flex: 1, textAlign: "left" }}>
-                  <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 14, fontWeight: 700, color: "#111", margin: 0 }}>Misafir Olarak Devam Et</p>
-                  <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 12, color: "#999", margin: "2px 0 0" }}>Kayıt olmadan hızlıca satın alın</p>
-                </div>
-                <ChevronRight size={16} color="#ccc" />
-              </button>
-            </div>
-
-            {/* Güvenlik notu */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginTop: 24 }}>
-              <Lock size={11} color="#bbb" />
-              <span style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#bbb" }}>256-bit SSL şifreleme ile güvenli ödeme</span>
-            </div>
-
-          </div>
-        </div>
-      </PageLayout>
-    );
-  }
-
   if (items.length === 0 && !orderPlaced) {
     return (
       <PageLayout title="Ödeme">
@@ -695,6 +589,16 @@ const Checkout = () => {
           /* Telefon input grubu */
           .phone-input-wrap {
             width: 100% !important;
+          }
+
+          /* Giriş banner mobil */
+          #login-banner {
+            padding: 16px !important;
+            border-radius: 10px !important;
+          }
+          #login-banner a {
+            font-size: 12px !important;
+            padding: 10px 0 !important;
           }
 
           /* Sipariş özeti — mobilde formun altına gelir */
@@ -828,6 +732,79 @@ const Checkout = () => {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 20, alignItems: "start" }} id="checkout-grid">
 
           {/* Sol: Form */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+
+          {/* ── Üye Girişi Banner (sadece giriş yapılmamışsa) ── */}
+          {!isLoggedIn && step === 1 && (
+            <div id="login-banner" style={{
+              background: "#fff",
+              borderRadius: 14,
+              padding: "20px 24px",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+              border: "1.5px solid #f0ebe0",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+                <div style={{
+                  width: 36, height: 36, borderRadius: "50%",
+                  background: "#fdf8f0", border: "1px solid #e8d5b0",
+                  display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                }}>
+                  <User size={16} color="#c9a96e" />
+                </div>
+                <div>
+                  <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 13, fontWeight: 700, color: "#111", margin: 0 }}>
+                    Hesabınız var mı?
+                  </p>
+                  <p style={{ fontFamily: "Montserrat, sans-serif", fontSize: 12, color: "#999", margin: "2px 0 0" }}>
+                    Giriş yaparak adres bilgilerinizi otomatik doldurun
+                  </p>
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 10 }}>
+                <Link
+                  to="/giris"
+                  state={{ from: "/odeme" }}
+                  style={{
+                    flex: 1, padding: "11px 0", background: "#111", color: "#fff",
+                    textDecoration: "none", borderRadius: 8, textAlign: "center",
+                    fontFamily: "Montserrat, sans-serif", fontSize: 13, fontWeight: 700,
+                    letterSpacing: "0.06em",
+                    transition: "opacity 0.2s",
+                    display: "block",
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")}
+                  onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+                >
+                  Giriş Yap
+                </Link>
+                <Link
+                  to="/kayit"
+                  state={{ from: "/odeme" }}
+                  style={{
+                    flex: 1, padding: "11px 0", background: "#fff", color: "#111",
+                    textDecoration: "none", borderRadius: 8, textAlign: "center",
+                    fontFamily: "Montserrat, sans-serif", fontSize: 13, fontWeight: 600,
+                    border: "1.5px solid #e0e0e0",
+                    letterSpacing: "0.06em",
+                    display: "block",
+                    transition: "border-color 0.2s",
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.borderColor = "#c9a96e")}
+                  onMouseLeave={e => (e.currentTarget.style.borderColor = "#e0e0e0")}
+                >
+                  Üye Ol
+                </Link>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 12 }}>
+                <div style={{ flex: 1, height: 1, background: "#f0f0f0" }} />
+                <span style={{ fontFamily: "Montserrat, sans-serif", fontSize: 11, color: "#ccc", letterSpacing: "0.08em" }}>
+                  veya misafir olarak devam edin
+                </span>
+                <div style={{ flex: 1, height: 1, background: "#f0f0f0" }} />
+              </div>
+            </div>
+          )}
+
           <div id="checkout-form-box" className="fade-up" key={step} style={{ background: "#fff", borderRadius: 14, padding: "32px 36px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
 
             {/* ADIM 1: Adres */}
@@ -1111,6 +1088,7 @@ const Checkout = () => {
               </div>
             )}
           </div>
+          </div>{/* end Sol form wrapper */}
 
           {/* Sağ: Sipariş Özeti */}
           {step < 3 && (
